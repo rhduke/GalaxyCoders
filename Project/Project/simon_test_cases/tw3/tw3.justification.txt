@@ -1,2 +1,0 @@
-Description: The start and end dates in the evaluation period do not appear in the data rows. 
-Justification: Invariant No.1 in RD

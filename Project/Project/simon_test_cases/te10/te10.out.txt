@@ -1,1 +1,0 @@
-Error: Column 2 in row 11 is not a real value for market value
