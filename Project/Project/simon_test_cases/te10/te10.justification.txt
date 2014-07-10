@@ -1,0 +1,2 @@
+Description: The second column of row 11 is expected to be a real value for market value 
+Justification: CSV file specification No 4

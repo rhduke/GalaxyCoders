@@ -1,0 +1,9 @@
+Name: Trudel Stonehead
+Whole period: 1900-01-01 to 2012-07-14
+Part period:  1925-06-16 to 1978-01-13
+ROI (TWR):
+  Whole Period: 243.40
+  Part Period:  308.44
+ROI (precise):
+  Whole Period: 145.29
+  Part Period:  62.65
