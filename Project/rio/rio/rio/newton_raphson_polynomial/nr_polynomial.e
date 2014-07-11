@@ -96,8 +96,33 @@ feature -- Basic operation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NR_POLYNOMIAL} -- Implementation
 
 	poly_list: LIST [TUPLE [x,y: REAL_64]]
+
+	feature --comparison
+
+	equals(other : LIKE CURRENT) : BOOLEAN
+
+	do
+		if poly_list.count = other.poly_list.count then
+
+			across 1 |..| poly_list.count as c loop
+
+			Result:= poly_list [c.item].x ~ other.poly_list[c.item].x and poly_list [c.item].y ~ other.poly_list[c.item].y
+            check Result  end
+
+			end
+
+
+
+		else
+
+			 Result := FALSE
+
+			end
+
+
+	end
 
 end

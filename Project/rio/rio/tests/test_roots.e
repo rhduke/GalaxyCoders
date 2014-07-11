@@ -50,6 +50,9 @@ feature -- Test cases
 			sln, two: REAL_64
 			e: REAL_64
 			ls: ARRAYED_LIST [TUPLE [REAL_64, REAL_64]]
+
+			hell,para,cold: NR_POLYNOMIAL
+			temp,obv: ARRAYED_LIST [TUPLE [REAL_64, REAL_64]]
 		do
 			comment ("t1: test root finding in dummy square root finding class")
 			create fmt.make (10, 10)
@@ -62,6 +65,18 @@ feature -- Test cases
 			check not f.solution_not_found end
 			Result := almost_equal (f.solution * f.solution, 2.0)
 			check Result end
+
+			--just checkin how this works
+
+			create temp.make_from_array (<<[2.0,3.0],[4.0,5.0]>>)
+			create obv.make_from_array (<<[6.0,2.0],[20.0,4.0]>>)
+			create hell.make_from_list (temp)
+		    create cold.make_from_list (obv)
+			para := hell.derivative
+			Result := para.equals (cold)
+			check Result end
+
+
 		end
 
 	t3: BOOLEAN
