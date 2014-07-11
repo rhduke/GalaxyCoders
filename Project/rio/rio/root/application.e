@@ -13,6 +13,7 @@ create
 	make
 
 feature {NONE} -- Initialization
+ --lolll
 
 	make
 			-- Run application.
