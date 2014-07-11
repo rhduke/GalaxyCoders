@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="polynomial" uuid="9F194C07-B697-4641-A498-06C95C138E0C">
+	<target name="polynomial">
+		<root class="ROOT" feature="make"/>
+		<option warning="true" full_class_checking="true" is_attached_by_default="false" void_safety="none" syntax="standard">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="espec" location="$ISE_LIBRARY\contrib\library\testing\framework\espec\library\espec.ecf"/>
+		<cluster name="root" location=".\" recursive="true">
+			<option void_safety="none">
+			</option>
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^/tests$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^/testing$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<!--target name="roi_dotnet" extends="polynomial">
+		<setting name="msil_generation" value="true"/>
+	</target-->
+</system>
