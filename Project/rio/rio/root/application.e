@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
  --lolll
 
 	make
-			-- Run application.
+			-- Run application. -- Tessssst
 		do
 			add_test (create {TEST_ROOTS}.make)
 			add_test (create {TEST_CSV_USE}.make)
