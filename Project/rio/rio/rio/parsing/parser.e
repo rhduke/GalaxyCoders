@@ -17,6 +17,7 @@ feature -- extract
 			csv_doc : CSV_DOCUMENT
 			cursor : CSV_DOC_ITERATION_CURSOR
 			text : ARRAY[FIELD]
+			--lala
 			row : ROW
 			num_rows : INTEGER
 			data_rows : INTEGER
