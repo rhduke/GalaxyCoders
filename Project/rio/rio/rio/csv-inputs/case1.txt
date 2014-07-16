@@ -1,4 +1,4 @@
-Name: Khurram Saleem
+Name : Khurram Saleem
 Description: BMO RRSP bonds and equities			
 Account#: 478902				
 Email: trudel@gmail.com				
@@ -6,11 +6,17 @@ Address: 4700 Keele Street Toronto M3J 1P3
 Phone: 416-736-2100 x70000				
 Evaluation Period: 2008-01-01 to 2009-04-01				
 
-Transaction Date,Market Value,Cash Flow,Agent Fees,Benchmark
-2007-01-01, 100000, , ,	2.5%	
-2007-07-01, 105000,20000, , 4.2%	
-2008-01-01, 135000 , ,	, 2.3%	
-2008-01-01, 135000.70 , , ,
-dsjfnsngfkdsnfkjgnk
-fngkjdfngkndf
-fdgndfkjgn
+fgdfg
+fgdfgdfgdfghdfhbdf
+gngfngfnfg
+ngfngfn
+
+Transaction Date,Market Value,Cash Flow,Agent Fees,Benchmark,,,,,,,,,,,
+
+
+2007-01-01, 100000,,,
+2007-07-01, 105000,20000.2,, 4.2%	
+2008-01-01, 135000,56,22,2.3%
+2008-01-02, 135000, 25, 45,3.2%
+
+,,,,,,,,,,,,
