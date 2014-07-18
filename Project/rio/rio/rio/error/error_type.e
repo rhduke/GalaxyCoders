@@ -4,12 +4,14 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	ERROR_TYPE
+inherit ANY
 create
-	make
+	 {SHARED_ERROR_TYPE}
+	 make
 
-feature -- initialize
+feature {NONE} -- initialize
 	make
 	local
 		err_list : LINKED_LIST[STRING]
@@ -19,7 +21,7 @@ feature -- initialize
 	  	check err_list.is_empty end
 	  	error_list := err_list
 	 end
-feature -- Error types
+feature  -- Error types
 	name_error ( line_number : INTEGER_32)
 		require
 			line_num_pos: line_number >=1
@@ -29,7 +31,7 @@ feature -- Error types
 			error_added : error_list.count = old error_list.count + 1
 		end
 
-feature --  arbitrary data errors
+feature  --  arbitrary data errors
 
 		description_error ( line_number: INTEGER_32)
 			require
@@ -77,14 +79,12 @@ feature --  arbitrary data errors
 			end
 feature
 	print_errors
-		require
-			list_not_void : error_list /= void
 		do
 
 			across error_list as c  loop io.put_string (c.item)  end
 		end
 
-feature -- add error
+feature {NONE}  -- add error
 
 	error_list : LIST[STRING]
 
