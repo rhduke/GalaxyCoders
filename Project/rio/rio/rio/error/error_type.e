@@ -81,7 +81,7 @@ feature
 	print_errors
 		do
 
-			across error_list as c  loop io.put_string (c.item)  end
+			across error_list as c  loop io.put_string (c.item) ; io.put_new_line  end
 		end
 
 feature {NONE}  -- add error
