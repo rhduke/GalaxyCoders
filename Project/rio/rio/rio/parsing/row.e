@@ -193,7 +193,7 @@ feature -- Queries on status
 					 some field.item.out.has_substring (s) end
 		end
 	matches_regex( pattern : STRING) : BOOLEAN
-			-- does the current row fields match the string from string regex?
+			-- does the current row's fields match the string from string regex?
 		require
 			is_well_formatted
 			pattern_not_void : pattern /= void
@@ -204,9 +204,35 @@ feature -- Queries on status
 			Result = across contents as fields
 					  some found_match(fields.item.out,pattern)  end
 		end
+	capture_substring( n : INTEGER_32 ; pattern : STRING) : STRING
+		-- return the captured string that has matched the pattern in the row's field
+		require
+			positive_input : n >= 0
+			pattern_has_match : matches_regex(pattern)
+		local
+			i : INTEGER
+			regex : RX_PCRE_REGULAR_EXPRESSION
+		do
+			create regex.make
+			regex.compile(pattern)
+			check regex.is_compiled end
+			from
+				i := contents.lower
+			until
+				i > contents.upper
+			loop
+				regex.match (contents[i].out)
+				if regex.has_matched then
+					Result := regex.captured_substring (n)
+				end
+
+				i := i + 1
+			end
+		end
+
 
 	index_of( string : STRING) : INTEGER
-		-- return the index of string matched assuming it found regex match
+		-- return the index of string in row matched assuming it found regex match
 		require
 			contains_it : contains(string)
 		local
@@ -227,7 +253,7 @@ feature -- Queries on status
 		end
 feature {NONE} -- agents
 	found_match ( string : STRING ; pattern : STRING) : BOOLEAN
-
+				-- is the string matches the pattern ?
 	local
 		match : RX_PCRE_REGULAR_EXPRESSION
 	do
@@ -238,6 +264,25 @@ feature {NONE} -- agents
 		Result := match.has_matched
 	ensure
 		Result /= void
+	end
+
+	captured_macthed_substring ( n : INTEGER_32 ; string : STRING ; pattern : STRING) : STRING
+		-- return the captured subtring of string that matched the pattern
+	require
+			string_has_match : found_match(string , pattern)
+			n_positive : n >= 0
+	local
+		regex : RX_PCRE_REGULAR_EXPRESSION
+	do
+		create regex.make
+		regex.compile (pattern)
+		check regex.is_compiled end
+		 regex.match (string)
+		 if regex.has_matched then
+		 	result := regex.captured_substring (n)
+		 end
+	ensure
+		result /= void
 	end
 
 feature --ASCII
