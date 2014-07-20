@@ -11,7 +11,11 @@ class
 create
 	make
 feature {NONE}
-	make do  end;
+	make
+	do
+		error := sh_error.singlenton
+		obtained_data := false
+	end
 
 feature
 	parseRow ( row : ROW)
@@ -29,16 +33,22 @@ feature
 				end
 				regexp.match (row[1].out)
 				if regexp.has_matched then
-					io.put_string (regexp.captured_substring (1))
+					io.put_string (regexp.captured_substring (1) + "%N")
+					obtained_data := true
 				else
 					error.description_error (row.number)
 				end
+			end
+
+	is_successfully_obtain_data : BOOLEAN
+	do
+		result := obtained_data
 	end
 
 feature {NONE}
 	sh_error : SHARED_ERROR_TYPE
 
-	error : ERROR_TYPE do
-		result := sh_error.singlenton
-	end
+	error : ERROR_TYPE
+
+	obtained_data : BOOLEAN
 end

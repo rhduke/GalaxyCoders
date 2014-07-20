@@ -31,7 +31,15 @@ feature -- global access
 		parsing_strategy.parseRow(row)
 	end
 
-feature -- constructor
+	has_obtained_data : BOOLEAN
+		-- did that parsing able to obtain the data
+	do
+		result := parsing_strategy.is_successfully_obtain_data
+	ensure
+		result_equal: result = parsing_strategy.is_successfully_obtain_data
+	end
+
+feature {NONE} -- constructor
 make do end;
 
 end

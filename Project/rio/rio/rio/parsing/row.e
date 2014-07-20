@@ -192,6 +192,53 @@ feature -- Queries on status
 			Result = across contents as field
 					 some field.item.out.has_substring (s) end
 		end
+	matches_regex( pattern : STRING) : BOOLEAN
+			-- does the current row fields match the string from string regex?
+		require
+			is_well_formatted
+			pattern_not_void : pattern /= void
+		do
+			Result := across contents as fields
+					  some found_match(fields.item.out,pattern)  end
+		ensure
+			Result = across contents as fields
+					  some found_match(fields.item.out,pattern)  end
+		end
+
+	index_of( string : STRING) : INTEGER
+		-- return the index of string matched assuming it found regex match
+		require
+			contains_it : contains(string)
+		local
+			i : INTEGER
+		do
+			from
+				i := contents.lower
+			until
+				i > contents.upper
+			loop
+				if contents[i].out.has_substring (string) then
+					result := i
+				end
+			i := i + 1
+			end
+		ensure
+			result /= void
+		end
+feature {NONE} -- agents
+	found_match ( string : STRING ; pattern : STRING) : BOOLEAN
+
+	local
+		match : RX_PCRE_REGULAR_EXPRESSION
+	do
+		create match.make
+		match.compile (pattern)
+		check match.is_compiled end
+		match.match (string)
+		Result := match.has_matched
+	ensure
+		Result /= void
+	end
 
 feature --ASCII
 	was_ascii: BOOLEAN
