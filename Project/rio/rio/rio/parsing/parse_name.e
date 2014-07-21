@@ -52,13 +52,15 @@ feature
 										-- the fields contain valid name
 										if row_temp.number = 1 then
 											-- on first line
-											io.put_string (row_temp.capture_substring (0, "^ *[a-zA-Z]+[\s|,]*[a-zA-Z]* *$") + "valid on different field%N")
+											row_temp.capture_strings_in_row ("^ *[a-zA-Z]+[\s|,]*[a-zA-Z]* *$").do_all (agent io.put_string (?))
+											io.put_string ("valid name and on first line , on sperate fields%N")
 										else
 
 											-- other than first line
-											io.put_string (row_temp.capture_substring (0, "^ *[a-zA-Z]+[\s|,]*[a-zA-Z]* *$") + "valid on different field and not on first line%N")
+											row_temp.capture_strings_in_row ("^ *[a-zA-Z]+[\s|,]*[a-zA-Z]* *$").do_all (agent io.put_string (?))
+											io.put_string ("valid name  not on  first line , on sperate fields%N")
 										end
-
+										obtained_data := true
 									else
 										io.put_string ("the row does not contain person's name %N")
 
@@ -70,7 +72,7 @@ feature
 					-- this contains keyword name and full name is one field
 						if row.number = 1 then -- its valid csv sytnax
 							io.put_string ("yes.Vaild  %N") -- store in object
-
+							obtained_data := true
 						else
 							io.put_string ("yes Name found but different line%N") -- call this in error class
 						end

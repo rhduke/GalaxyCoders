@@ -204,26 +204,27 @@ feature -- Queries on status
 			Result = across contents as fields
 					  some found_match(fields.item.out,pattern)  end
 		end
-	capture_substring( n : INTEGER_32 ; pattern : STRING) : STRING
+	capture_strings_in_row(pattern : STRING) : ARRAY[STRING]
 		-- return the captured string that has matched the pattern in the row's field
 		require
-			positive_input : n >= 0
 			pattern_has_match : matches_regex(pattern)
 		local
-			i : INTEGER
+			i, j : INTEGER
 			regex : RX_PCRE_REGULAR_EXPRESSION
 		do
 			create regex.make
 			regex.compile(pattern)
 			check regex.is_compiled end
+			create result.make_empty
 			from
-				i := contents.lower
+				i := contents.lower ; j := 1
 			until
 				i > contents.upper
 			loop
 				regex.match (contents[i].out)
 				if regex.has_matched then
-					Result := regex.captured_substring (n)
+					Result.force (regex.captured_substring (0), j)
+					j := j + 1
 				end
 
 				i := i + 1
