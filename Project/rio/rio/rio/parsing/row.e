@@ -229,6 +229,8 @@ feature -- Queries on status
 
 				i := i + 1
 			end
+		ensure
+			result.for_all (agent found_match(?,pattern))
 		end
 
 
@@ -252,7 +254,7 @@ feature -- Queries on status
 		ensure
 			result /= void
 		end
-feature {NONE} -- agents
+feature  -- agents
 	found_match ( string : STRING ; pattern : STRING) : BOOLEAN
 				-- is the string matches the pattern ?
 	local
