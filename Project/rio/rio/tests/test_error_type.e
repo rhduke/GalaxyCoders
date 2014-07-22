@@ -34,7 +34,7 @@ feature
 	do
 		create par.make
 		create list.make_empty
-		list.grow (3)
+		list.grow (4)
 		from
 			i := list.lower
 		until
@@ -48,6 +48,7 @@ feature
 		list[1].setparsingstrategy (create {PARSE_DESCR}.make)
 		list[2].setparsingstrategy (create {PARSE_NAME}.make)
 		list[3].setparsingstrategy (create {PARSE_EMAIL}.make)
+		list[4].setparsingstrategy (create {PARSE_PHONE}.make)
 	end
 	pass_to_list ( row : ROW)
 	local
