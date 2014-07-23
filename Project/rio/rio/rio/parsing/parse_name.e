@@ -21,27 +21,13 @@ feature
 	parseRow (row : ROW)
 			local
 				row_temp : ROW
-				pattern , string: STRING
-				regexp , valid_name: RX_PCRE_REGULAR_EXPRESSION
 			do
-				pattern := " *Name *: *(.+)"
-
-				create regexp.make
-				regexp.compile (pattern)
-				check
-					regexp.is_compiled
-				end
-				create valid_name.make
-					valid_name.compile ("^[a-zA-Z]+[\s|,]*[a-zA-Z]*$") -- assume that name is following
-					--  N.A convention
-				check valid_name.is_compiled  end
-
 				row_temp := row
 
 				if row_temp.is_empty and row_temp.number  = 1 then
 					error.name_error (1)
 				else
-					if row_temp.matches_regex("^ *Name *:? *$") then -- keyword name is found
+					if row_temp.matches_regex("^\s*(?i)Name\s*:?\s*$") then -- keyword name is found
 					--  but does not contains person's name
 						if row_temp.is_empty_from (row_temp.index_of ("Name")+1) then
 							-- the line does not contain person's name
@@ -68,7 +54,7 @@ feature
 
 
 						end
-					elseif row_temp.matches_regex("^ *Name *: *[a-zA-Z]+[\s|,]*[a-zA-Z]*$") then
+					elseif row_temp.matches_regex("^\s*(?i)Name\s*:\s*[a-zA-Z]+[\s|,]*[a-zA-Z]*$") then
 					-- this contains keyword name and full name is one field
 						if row.number = 1 then -- its valid csv sytnax
 							io.put_string ("yes.Vaild  %N") -- store in object

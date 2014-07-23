@@ -234,10 +234,10 @@ feature -- Queries on status
 		end
 
 
-	index_of( string : STRING) : INTEGER
-		-- return the index of string in row matched assuming it found regex match
+	index_of( keyword : STRING) : INTEGER
+		-- return the index of string in row matched ignoring case sensitivity
 		require
-			contains_it : contains(string)
+			contains_it : contains(keyword) or contains(string_to_lower(keyword))
 		local
 			i : INTEGER
 		do
@@ -246,7 +246,7 @@ feature -- Queries on status
 			until
 				i > contents.upper
 			loop
-				if contents[i].out.has_substring (string) then
+				if  string_to_lower(contents[i].out).has_substring (string_to_lower(keyword)) then
 					result := i
 				end
 			i := i + 1
@@ -287,6 +287,7 @@ feature  -- agents
 	ensure
 		result /= void
 	end
+
 
 feature --ASCII
 	was_ascii: BOOLEAN
@@ -372,6 +373,17 @@ feature --ASCII
 		ensure
 			correct_result: (c.code = 9 or c.code = 10 ) implies Result
 		end
+feature -- some routines needed for other routines
+	string_to_lower ( string : STRING) : STRING
+	-- convert the string to lower case and returns it
+	require
+			not_void : string /= void
+	do
+		string.to_lower
+		create result.make_from_string(string)
+	ensure
+		result.is_case_insensitive_equal_general (string)
+	end
 
 feature -- Query on string representation
 

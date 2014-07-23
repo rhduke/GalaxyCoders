@@ -26,12 +26,11 @@ feature
 				i : INTEGER
 			do
 						row_temp := row
-						io.put_string (row.contents.capacity.out)
 						if row_temp.is_empty  then -- need to implented , should be end of file
 --							error.name_error (1) -- should be description
 						else
 
-							if row_temp.matches_regex("^ *Description *:? *$") then -- field only contain
+							if row_temp.matches_regex("^\s*(?i)Description\s*:?\s*$") then -- field only contain
 							--   keyword description but does not contains contents
 								if row_temp.is_empty_from (row_temp.index_of ("Description")+1) then
 									-- the line does not contain any contents
@@ -51,7 +50,7 @@ feature
 								end
 
 							end
-							if row_temp.matches_regex("^ *Description *:? *.+$") then
+							if row_temp.matches_regex("^\s*(?i)Description\s*:?\s*[\w]+.*$") then
 							-- this contains keyword Description and content might be the same Description's field or spread over fields
 								if row_temp.is_empty_from (row_temp.index_of ("Description")+1)  then
 									-- the content and Description are on same field as Description
@@ -72,7 +71,7 @@ feature
 									variant
 										row_temp.contents.capacity +1 - i
 									end
-									io.put_string (descr) -- store decr in object
+									io.put_string (descr + "%N") -- store decr in object
 								end
 								obtained_data := true
 							end

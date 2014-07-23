@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {PARSE_EMAIL}."
+	description: "Summary description for {PARSE_Account}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PARSE_EMAIL
+	PARSE_ACCOUNT
 	inherit
 		PARSING_STRATEGY
 create
@@ -25,37 +25,36 @@ feature
 				regexp: RX_PCRE_REGULAR_EXPRESSION
 			do
 						row_temp := row
-
 						if row_temp.is_empty  then -- need to implented , should be end of file
 --							error.name_error (1) -- should be description
 
 						else
 
-							if row_temp.matches_regex("^\s*(?i)Email\s*:?\s*$") then -- keyword name is found
+							if row_temp.matches_regex("^\s*(?i)Account\s*#?\s*:?\s*$") then -- keyword name is found
 
 							--  but does not contains person's name
-								if row_temp.is_empty_from (row_temp.index_of ("Email")+1) then
+								if row_temp.is_empty_from (row_temp.index_of ("Account")+1) then
 									-- the line does not contain person's name
-									io.put_string ("Email field is empty. only Email keyword is found%N")
+									io.put_string ("Account field is empty. only Account keyword is found%N")
 								else
 									 -- contains words	
-											if row_temp.matches_regex ("\s*[\w]+@[\w]+.[\w]{1,3}\s*") then
+											if row_temp.matches_regex ("\s*\d+\s*") then
 												-- the fields contain valid name
-													row_temp.capture_strings_in_row ("\s*[\w]+@[\w]+.[\w]{1,3}\s*").do_all (agent io.put_string (?))
-													io.put_string (" valid Email%N")
-												obtained_data := true
+													row_temp.capture_strings_in_row ("\s*\d+\s*").do_all (agent io.put_string (?))
+													io.put_string (" valid Account%N")
+													obtained_data := true
 
 											else
-												io.put_string ("the Email field has empty strings %N")
+												io.put_string ("the Account field has empty strings %N")
 											end
 
 
 								end
 
 							end
-							if row_temp.matches_regex("^\s*(?i)Email\s*:?\s*[\w]+@[\w]+.[\w]{1,3}\s*$") then
+							if row_temp.matches_regex("^\s*(?i)Account\s*#?\s*:?\s*\d+\s*$") then
 							-- this contains keyword name and full name is one field
-								row_temp.capture_strings_in_row ("^\s*(?i)Email\s*:?\s*[\w]+@[\w]+.[\w]{1,3}\s*$").do_all (agent io.put_string (?)) -- store in object
+								row_temp.capture_strings_in_row ("^\s*(?i)Account\s*#?\s*:?\s*\d+\s*$").do_all (agent io.put_string (?)) -- store in object
 								io.put_new_line
 								obtained_data := true
 							end

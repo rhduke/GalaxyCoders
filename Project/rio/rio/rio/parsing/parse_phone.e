@@ -31,7 +31,7 @@ feature
 
 						else
 
-							if row_temp.matches_regex("^ *Phone *:? *$") then -- keyword name is found
+							if row_temp.matches_regex("^\s*(?i)Phone\s*:?\s*$") then -- keyword name is found
 
 							--  but does not contains person's name
 								if row_temp.is_empty_from (row_temp.index_of ("Phone")+1) then
@@ -74,28 +74,12 @@ feature
 								end
 
 							end
-							if row_temp.matches_regex("^ *Phone *:? \s*\(?[1-9]\d{2}\)?-?\d{3}-?\d{4}\s*(x\d+)?") then
+							if row_temp.matches_regex("^\s*(?i)Phone\s*:?\s*\(?[1-9]\d{2}\)?-?\d{3}-?\d{4}\s*(x\d+)?\s*") then
 							-- this contains keyword name and full name is one field
 								io.put_string ("Phone is found %N") -- store in object
 								obtained_data := true
 							end
 						end
-
-
---				pattern := " *Description *: *(.+)"
-
---				create regexp.make
---				regexp.compile (pattern)
---				check
---					regexp.is_compiled
---				end
---				regexp.match (row[1].out)
---				if regexp.has_matched then
---					io.put_string (regexp.captured_substring (1) + "%N")
---					obtained_data := true
---				else
---					error.description_error (row.number)
---				end
 			end
 
 	is_successfully_obtain_data : BOOLEAN
