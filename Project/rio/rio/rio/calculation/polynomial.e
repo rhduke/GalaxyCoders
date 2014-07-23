@@ -23,14 +23,7 @@ feature
 	set_poly (poly:ANY)
 		require
 			poly_not_null: poly /= void
-			poly_is_valid: valid_poly(poly)
 		deferred
 		ensure
-		end
-
-	valid_poly (poly:ANY): BOOLEAN
-		require
-			poly_not_null: poly /= void
-		deferred
 		end
 end
