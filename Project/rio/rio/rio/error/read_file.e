@@ -18,7 +18,6 @@ feature
 	require
 		path_not_void: path /= void
 	do
-
 		create csv_doc.make_from_file_name (path)
 		csv_iteration_cursor := csv_doc.new_cursor
 	ensure
@@ -42,6 +41,8 @@ feature
 	doc_is_not_void : BOOLEAN
 	do
 		Result := csv_doc /= void
+	ensure
+		Result = csv_doc /= void
 	end
 feature {NONE }
 	csv_doc : CSV_DOCUMENT
