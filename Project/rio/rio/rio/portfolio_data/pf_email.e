@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (em : STRING_32)
+	make (em : like email)
 		do
 			exist := true
 			email := em
@@ -26,7 +26,7 @@ feature {NONE} -- constructor
 		end
 
 feature -- inherited
-	getValue : STRING_32
+	getValue : like email
 		do
 			Result := email
 		end

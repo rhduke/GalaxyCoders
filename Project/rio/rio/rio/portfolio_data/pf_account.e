@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (acc : INTEGER_32)
+	make (acc : like account)
 		do
 			exist := true
 			account := acc
@@ -26,7 +26,7 @@ feature {NONE} -- constructor
 		end
 
 feature -- inherited
-	getValue : INTEGER_32
+	getValue : like account
 		do
 			Result := account
 		end

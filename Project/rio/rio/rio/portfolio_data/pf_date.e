@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (d : DATE)
+	make (d : like date)
 		do
 			exist := true
 			date := d
@@ -26,7 +26,7 @@ feature {NONE} -- constructor
 		end
 
 feature -- inherited
-	getValue : DATE
+	getValue : like date
 		do
 			Result := date
 		end

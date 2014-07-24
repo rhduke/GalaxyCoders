@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (mk : REAL_64)
+	make (mk : like market_value)
 		do
 			exist := true
 			market_value := mk
@@ -26,7 +26,7 @@ feature {NONE} -- constructor
 		end
 
 feature -- inherited
-	getValue : REAL_64
+	getValue : like market_value
 		do
 			Result := market_value
 		end

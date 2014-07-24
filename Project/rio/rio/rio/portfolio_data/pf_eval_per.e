@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (ep : TUPLE[x,y:DATE])
+	make (ep : like evaluation_period)
 		do
 			exist := true
 			evaluation_period := ep
@@ -26,7 +26,7 @@ feature {NONE} -- constructor
 		end
 
 feature -- inherited
-	getValue : TUPLE[x,y:DATE]
+	getValue : like evaluation_period
 		do
 			Result := evaluation_period
 		end

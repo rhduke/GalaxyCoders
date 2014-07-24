@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (cf : REAL_64)
+	make (cf : like cash_flow)
 		do
 			exist := true
 			cash_flow := cf
@@ -26,7 +26,7 @@ feature {NONE} -- constructor
 		end
 
 feature -- inherited
-	getValue : REAL_64
+	getValue : like cash_flow
 		do
 			Result := cash_flow
 		end

@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (addr : STRING_32)
+	make (addr : like address)
 		do
 			exist := true
 			address := addr
@@ -26,7 +26,7 @@ feature {NONE} -- constructor
 		end
 
 feature -- inherited
-	getValue : STRING_32
+	getValue : like address
 		do
 			Result := address
 		end

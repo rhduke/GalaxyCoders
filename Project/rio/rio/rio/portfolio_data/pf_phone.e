@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (p : STRING_32)
+	make (p : like phone)
 		do
 			exist := true
 			phone := p
@@ -26,7 +26,7 @@ feature {NONE} -- constructor
 		end
 
 feature -- inherited
-	getValue : STRING_32
+	getValue : like phone
 		do
 			Result := phone
 		end

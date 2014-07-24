@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (des : STRING_32)
+	make (des : like description)
 		do
 			exist := true
 			description := des
@@ -26,7 +26,7 @@ feature {NONE} -- constructor
 		end
 
 feature -- inherited
-	getValue : STRING_32
+	getValue : like description
 		do
 			Result := description
 		end

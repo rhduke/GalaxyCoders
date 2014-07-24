@@ -16,7 +16,7 @@ feature
 		deferred
 		end
 
---	is_valid : BOOLEAN
+--	valid : BOOLEAN
 --		deferred
 --		end
 

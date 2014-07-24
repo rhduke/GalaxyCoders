@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (af : REAL_64)
+	make (af : like agent_fee)
 		do
 			exist := true
 			agent_fee := af
@@ -26,7 +26,7 @@ feature {NONE} -- constructor
 		end
 
 feature -- inherited
-	getValue : REAL_64
+	getValue : like agent_fee
 		do
 			Result := agent_fee
 		end

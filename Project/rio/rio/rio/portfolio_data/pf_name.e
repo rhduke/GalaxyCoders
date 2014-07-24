@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (n : STRING_32)
+	make (n : like name)
 		do
 			exist := true
 			name := n
@@ -26,7 +26,7 @@ feature {NONE} -- constructor
 		end
 
 feature -- inherited
-	getValue : STRING_32
+	getValue : like name
 		do
 			Result := name
 		end

@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (bm : REAL_64)
+	make (bm : like bench_mark)
 		do
 			exist := true
 			bench_mark := bm
@@ -26,7 +26,7 @@ feature {NONE} -- constructor
 		end
 
 feature -- inherited
-	getValue : REAL_64
+	getValue : like bench_mark
 		do
 			Result := bench_mark
 		end
