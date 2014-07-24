@@ -5,17 +5,23 @@ note
 	revision: "$Revision$"
 
 expanded class
-	SHARED_ERROR_TYPE
+	SHARED_CLASSES
 inherit
 ANY
 
 feature
-	singlenton : ERROR_TYPE
+	init_error : ERROR_TYPE
+	once ("PROCESS")
+		create result.make
+	end
+
+	init_file_read : READ_FILE
 	once ("PROCESS")
 		create result.make
 	end
 invariant
-	inistante_once : singlenton = singlenton
+	init_error = init_error
+	init_file_read = init_file_read
 
 
 end

@@ -13,7 +13,7 @@ create
 feature {NONE}
 	make
 	do
-		error := sh_error.singlenton
+		error := sh_classes.init_error
 		obtained_data := false
 	end
 
@@ -25,12 +25,6 @@ feature
 				regexp: RX_PCRE_REGULAR_EXPRESSION
 			do
 						row_temp := row
-
-						if row_temp.is_empty  then -- need to implented , should be end of file
---							error.name_error (1) -- should be description
-
-						else
-
 							if row_temp.matches_regex("^\s*(?i)Phone\s*:?\s*$") then -- keyword name is found
 
 							--  but does not contains person's name
@@ -79,7 +73,6 @@ feature
 								io.put_string ("Phone is found %N") -- store in object
 								obtained_data := true
 							end
-						end
 			end
 
 	is_successfully_obtain_data : BOOLEAN
@@ -88,7 +81,7 @@ feature
 	end
 
 feature {NONE}
-	sh_error : SHARED_ERROR_TYPE
+	sh_classes : SHARED_CLASSES
 
 	error : ERROR_TYPE
 

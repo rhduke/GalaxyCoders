@@ -12,18 +12,23 @@ feature
 	make ( path : STRING)
 	local
 		err : ERROR_TYPE
+		rd_file : READ_FILE
+		csv_iteration_cursor: CSV_DOC_ITERATION_CURSOR
 	do
-			create csv_doc.make_from_file_name(path)
+--			create csv_doc.make_from_file_name(path)
+			rd_file := sh_classes.init_file_read
+			rd_file.open_file (path)
 			add_to_list
 			from
-				csv_iteration_cursor := csv_doc.new_cursor
+--				csv_iteration_cursor := csv_doc.new_cursor
+				csv_iteration_cursor := rd_file.get_cursor
 			until
-				csv_iteration_cursor.after
+				rd_file.is_end_of_file
 			loop
 				pass_to_list(csv_iteration_cursor.item)
 				csv_iteration_cursor.forth
 			end
-			err := error.singlenton
+			err := sh_classes.init_error
 			err.print_errors
 	end
 feature
@@ -89,9 +94,9 @@ feature
 		list.remove_tail (1)
 	end
 feature
-	csv_doc: CSV_DOCUMENT
-	csv_iteration_cursor: CSV_DOC_ITERATION_CURSOR
+--	csv_doc: CSV_DOCUMENT
+--	csv_iteration_cursor: CSV_DOC_ITERATION_CURSOR
 	list : ARRAY[PARSING_CONTEXT]
-	error : SHARED_ERROR_TYPE
+	sh_classes : SHARED_CLASSES
 
 end

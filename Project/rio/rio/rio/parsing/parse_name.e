@@ -13,7 +13,7 @@ create
 feature {NONE}
 	make
 	do
-		error := sh_error.singlenton
+		error := sh_classes.init_error
 		obtained_data := false
 	end
 
@@ -23,10 +23,6 @@ feature
 				row_temp : ROW
 			do
 				row_temp := row
-
-				if row_temp.is_empty and row_temp.number  = 1 then
-					error.name_error (1)
-				else
 					if row_temp.matches_regex("^\s*(?i)Name\s*:?\s*$") then -- keyword name is found
 					--  but does not contains person's name
 						if row_temp.is_empty_from (row_temp.index_of ("Name")+1) then
@@ -51,10 +47,9 @@ feature
 										io.put_string ("the row does not contain person's name %N")
 
 									end
-
-
 						end
-					elseif row_temp.matches_regex("^\s*(?i)Name\s*:\s*[a-zA-Z]+[\s|,]*[a-zA-Z]*$") then
+				end
+				if row_temp.matches_regex("^\s*(?i)Name\s*:\s*[a-zA-Z]+[\s|,]*[a-zA-Z]*$") then
 					-- this contains keyword name and full name is one field
 						if row.number = 1 then -- its valid csv sytnax
 							io.put_string ("yes.Vaild  %N") -- store in object
@@ -63,23 +58,16 @@ feature
 							io.put_string ("yes Name found but different line%N") -- call this in error class
 						end
 
-					end
 				end
-
-
-
 	end
 
 	is_successfully_obtain_data : BOOLEAN
 	do
 		result := obtained_data
 	end
-feature
 feature {NONE} -- global variable
-	sh_error : SHARED_ERROR_TYPE
-
+	sh_classes : SHARED_CLASSES
 	error : ERROR_TYPE
-
 	obtained_data : BOOLEAN
 
 end

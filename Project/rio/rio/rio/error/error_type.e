@@ -8,7 +8,7 @@ frozen class
 	ERROR_TYPE
 inherit ANY
 create
-	 {SHARED_ERROR_TYPE}
+	 {SHARED_CLASSES}
 	 make
 
 feature {NONE} -- initialize
