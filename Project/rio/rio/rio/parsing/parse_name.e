@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {PARSE_NAME}."
+	Name: "Summary Name for {PARSE_NAME}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,8 @@ feature
 	parseRow (row : ROW)
 			local
 				row_temp : ROW
+				name : STRING
+				i : INTEGER
 			do
 				row_temp := row
 				if row_temp.number = 1 then
@@ -41,14 +43,34 @@ feature
 							end
 						end
 					end
-				if row_temp.matches_regex("^\s*(?i)Name\s*:\s*[a-zA-Z]+[\s|,]*[a-zA-Z]*$") then
-					-- this contains keyword name and full name is one field
-						row_temp.capture_strings_in_row ("^\s*(?i)Name\s*:\s*[a-zA-Z]+[\s|,]*[a-zA-Z]*$").do_all (agent io.put_string (?)) -- store in object
-						io.put_new_line
-						obtained_data := true
+			if row_temp.matches_regex("^\s*(?i)Name\s*:?\s*[a-zA-Z]+.*$") then
+				-- this contains keyword Name and content might be the same Name's field or spread over fields
+				if row_temp.is_empty_from (row_temp.index_of ("Name")+1)  then
+					-- the content and Name are on same field as Name
+					io.put_string (row_temp[row_temp.index_of ("Name")].out)
+					io.put_new_line
+				else
+					-- the content and Name are on different  field of Name
+					name := row[row_temp.index_of ("Name")].out
+					from
+						i := row_temp.index_of ("Name")+1;
+					invariant
+						i >= row_temp.index_of ("Name")+1
+						i <= row_temp.contents.capacity +1
+					until
+						i > row_temp.contents.capacity
+					loop
+						name :=name +  row_temp[i].out
+						i := i + 1
+					variant
+						row_temp.contents.capacity +1 - i
+					end
+					io.put_string (name + "%N") -- store decr in object
 				end
+				obtained_data := true
+			end
 
-				end
+		end
 
 	end
 
