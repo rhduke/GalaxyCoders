@@ -13,7 +13,7 @@ create
 	make_from_list
 
 feature {NONE}
-	make_from_list (given : LIST[TUPLE [x,y: REAL_64]])
+	make_from_list (given : like list)
 	do
 		list := given
 	end
@@ -29,22 +29,9 @@ feature
 			solution := nr.solution
 		end
 
-	set_poly (poly : ANY)
+	set_poly (poly : like list)
 		do
-			if attached {LIST[TUPLE[x,y: REAL_64]]} poly as cs then
-				list := cs
-			end
-		ensure then
-			valid_set : valid_poly(list)
-		end
-
-	valid_poly (poly : ANY) : BOOLEAN
-		do
-			if attached {LIST[TUPLE[x,y: REAL_64]]} poly as cs then
-				Result := true
-			else
-				Result := false
-			end
+			list := poly
 		end
 
 feature {POLYNOMIAL_NR} -- implementation
