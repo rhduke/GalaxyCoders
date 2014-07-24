@@ -22,7 +22,6 @@ feature
 			local
 				row_temp : ROW
 				address: STRING
-				regexp: RX_PCRE_REGULAR_EXPRESSION
 				i : INTEGER
 			do
 						row_temp := row

@@ -21,8 +21,6 @@ feature
 	parseRow ( row : ROW)
 			local
 				row_temp : ROW
-				pattern: STRING
-				regexp: RX_PCRE_REGULAR_EXPRESSION
 			do
 						row_temp := row
 							if row_temp.matches_regex("^\s*(?i)Account\s*#?\s*:?\s*$") then -- keyword name is found

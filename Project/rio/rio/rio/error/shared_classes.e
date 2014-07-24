@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {SHARED_ERROR_TYPE}."
+	description: "Summary description for {SHARED_CLASSES}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

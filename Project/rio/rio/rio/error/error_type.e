@@ -7,8 +7,7 @@ note
 frozen class
 	ERROR_TYPE
 inherit ANY
-create
-	 {SHARED_CLASSES}
+create {SHARED_CLASSES}
 	 make
 
 feature {NONE} -- initialize

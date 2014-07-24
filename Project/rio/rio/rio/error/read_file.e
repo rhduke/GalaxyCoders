@@ -7,8 +7,7 @@ note
 frozen class
 	READ_FILE
 inherit ANY
-create
-	{SHARED_CLASSES}
+create {SHARED_CLASSES}
 	make
 feature {NONE}
 
@@ -43,8 +42,6 @@ feature
 	doc_is_not_void : BOOLEAN
 	do
 		Result := csv_doc /= void
-	ensure
-		Result = csv_doc /= void
 	end
 feature {NONE }
 	csv_doc : CSV_DOCUMENT
