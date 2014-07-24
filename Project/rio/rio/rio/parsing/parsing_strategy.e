@@ -20,6 +20,13 @@ feature
 		ensure
 			not_void : result /= void
 		end
+
+	detect_error
+		-- if there is error add to error type class
+		deferred
+
+		end
+
 feature {NONE} -- note this
 	sh_classes : SHARED_CLASSES deferred end
 

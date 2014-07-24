@@ -29,17 +29,16 @@ feature
 							--   keyword description but does not contains contents
 								if row_temp.is_empty_from (row_temp.index_of ("Description")+1) then
 									-- the line does not contain any contents
-									io.put_string ("Description field is empty. only Description keyword is found%N")
+									error.custom_msg ("Description field is empty on line" + row_temp.number.out+". only Description keyword is found.%N")
 								else
 									 -- contains contents	
 											if row_temp.matches_regex ("^(?!\s*$).+") then
 												-- the fields contain contents
 													row_temp.capture_strings_in_row ("^(?!\s*$).+").do_all (agent io.put_string (?))
-													io.put_string ("valid Description%N")
 												obtained_data := true
 											else
 												-- the fields have empty string
-												io.put_string ("the Description field has empty strings %N")
+												error.custom_msg ("Description field is invalid on line" + row_temp.number.out+". make sure to have non_empty content.%N")
 
 											end
 								end
@@ -76,6 +75,13 @@ feature
 	do
 		result := obtained_data
 	end
+
+	detect_error
+			-- detect errors and call error class
+	do
+			-- nothing to do here since account # is not manditory
+	end
+
 
 feature {NONE}
 	sh_classes : SHARED_CLASSES

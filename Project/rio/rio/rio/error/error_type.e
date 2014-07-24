@@ -17,20 +17,18 @@ feature {NONE} -- initialize
 
 	  do
 		create err_list.make
-	  	check err_list.is_empty end
 	  	error_list := err_list
 	 end
-feature  -- Error types
-	name_error ( line_number : INTEGER_32)
-		require
-			line_num_pos: line_number >=1
-		do
-		 	error_list.extend("Error!. Name was not found on the " + line_number.out + " . Check the input file")
-		ensure
-			error_added : error_list.count = old error_list.count + 1
-		end
+
+
 
 feature  --  arbitrary data errors
+		name_error
+			do
+			 	error_list.extend("Error!. Name was not found on the first line")
+			ensure
+				error_added : error_list.count = old error_list.count + 1
+			end
 
 		description_error ( line_number: INTEGER_32)
 			require
@@ -63,7 +61,7 @@ feature  --  arbitrary data errors
 			require
 				line_num_pos: line_num >=1
 			do
-				error_list.extend("Error!. The line "+ line_num.out + " is valid adress. ")
+				error_list.extend("Error!. The line "+ line_num.out + " is valid address. ")
 			ensure
 				error_added : error_list.count = old error_list.count + 1
 			end
@@ -76,11 +74,21 @@ feature  --  arbitrary data errors
 			ensure
 				error_added : error_list.count = old error_list.count + 1
 			end
+		custom_msg ( string : STRING)
+		require
+				string_not_void: string /= void
+			do
+				error_list.extend(string)
+			ensure
+				error_added : error_list.count = old error_list.count + 1
+			end
+
 feature
 	print_errors
 		do
-
-			across error_list as c  loop io.put_string (c.item) ; io.put_new_line  end
+			if not error_list.is_empty then
+				across error_list as c  loop io.put_string (c.item) ; io.put_new_line  end
+			end
 		end
 
 feature {NONE}  -- add error

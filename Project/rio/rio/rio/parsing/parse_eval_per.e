@@ -29,7 +29,7 @@ feature
 							--   keyword Evaluation period but does not contains contents
 								if row_temp.is_empty_from (row_temp.index_of ("Evaluation")+1) then
 									-- the line does not contain any contents
-									io.put_string ("Evaluation period field is empty. only Evaluation period keyword is found%N")
+									error.custom_msg ("Evaluation period field is empty on line" + row_temp.number.out+". only Evaluation period keyword is found.%N")
 								else
 									 -- contains contents	
 											if row_temp.matches_regex (
@@ -37,11 +37,10 @@ feature
 												-- the fields contain contents
 													row_temp.capture_strings_in_row (
 													"(19|20)\d\d([- /.])(0[1-9]|1[012])\2(0[1-9]|[12][0-9]|3[01])\s*(to)?\s*((19|20)\d\d([- /.])(0[1-9]|1[012])\2(0[1-9]|[12][0-9]|3[01]))*\s*").do_all (agent io.put_string (?))
-													io.put_string ("valid Evaluation%N")
 												obtained_data := true
 											else
 												-- the fields have empty string
-												io.put_string ("the Evaluation field has empty strings %N")
+												error.custom_msg ("Evaluation period is invalid on line" + row_temp.number.out+". make sure to have the right date format.%N")
 
 											end
 								end
@@ -78,6 +77,11 @@ feature
 	is_successfully_obtain_data : BOOLEAN
 	do
 		result := obtained_data
+	end
+	detect_error
+			-- detect errors and call error class
+	do
+			-- nothing to do here since account # is not manditory
 	end
 
 feature {NONE}

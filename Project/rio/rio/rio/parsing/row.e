@@ -251,8 +251,8 @@ feature -- Queries on status
 				end
 			i := i + 1
 			end
-		ensure
-			result /= void
+--		ensure
+--			result /= void
 		end
 feature  -- agents
 	found_match ( string : STRING ; pattern : STRING) : BOOLEAN
@@ -265,8 +265,8 @@ feature  -- agents
 		check match.is_compiled end
 		match.match (string)
 		Result := match.has_matched
-	ensure
-		Result /= void
+--	ensure
+--		Result /= void
 	end
 
 	captured_macthed_substring ( n : INTEGER_32 ; string : STRING ; pattern : STRING) : STRING

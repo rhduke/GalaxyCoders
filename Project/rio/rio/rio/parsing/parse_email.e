@@ -28,17 +28,16 @@ feature
 							--  but does not contains person's name
 								if row_temp.is_empty_from (row_temp.index_of ("Email")+1) then
 									-- the line does not contain person's name
-									io.put_string ("Email field is empty. only Email keyword is found%N")
+									error.custom_msg ("Email field is empty on line" + row_temp.number.out+". only Email keyword is found.%N")
 								else
 									 -- contains words	
 											if row_temp.matches_regex ("\s*[\w]+@[\w]+.[\w]{1,3}\s*") then
 												-- the fields contain valid name
-													row_temp.capture_strings_in_row ("\s*[\w]+@[\w]+.[\w]{1,3}\s*").do_all (agent io.put_string (?))
-													io.put_string (" valid Email%N")
+												row_temp.capture_strings_in_row ("\s*[\w]+@[\w]+.[\w]{1,3}\s*").do_all (agent io.put_string (?))
 												obtained_data := true
 
 											else
-												io.put_string ("the Email field has empty strings %N")
+												error.custom_msg ("Email field is invalid on line" + row_temp.number.out+". make sure to valid email.%N")
 											end
 
 
@@ -56,6 +55,11 @@ feature
 	is_successfully_obtain_data : BOOLEAN
 	do
 		result := obtained_data
+	end
+	detect_error
+			-- detect errors and call error class
+	do
+			-- nothing to do here since account # is not manditory
 	end
 
 feature {NONE}
