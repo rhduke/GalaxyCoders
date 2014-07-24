@@ -39,6 +39,11 @@ feature -- global access
 		result_equal: result = parsing_strategy.is_successfully_obtain_data
 	end
 
+	error_examine
+		 -- detect if there is error
+	do
+		parsing_strategy.detect_error
+	end
 feature {NONE} -- constructor
 make do end;
 

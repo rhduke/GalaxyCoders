@@ -28,8 +28,12 @@ feature
 				pass_to_list(csv_iteration_cursor.item)
 				csv_iteration_cursor.forth
 			end
+			across list as  c  loop c.item.error_examine end
+
 			err := sh_classes.init_error
 			err.print_errors
+
+
 	end
 feature
 	add_to_list

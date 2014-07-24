@@ -32,7 +32,7 @@ feature
 			do
 				row_temp := row
 
-				if row_temp [1].is_date then
+		if row_temp [1].is_date then
 
 		   if row_temp[1].is_date and (row_temp [2].is_double or row_temp [2] ~ "") --b
 		      	        and (row_temp [3].is_float or row_temp [3].out ~ "") -- cf
@@ -71,18 +71,11 @@ feature
 		      		create invest.make ([trans_date,market_value,cash_flow,agent_fee,bench_mark])
 
 
-              else
-             error.custom_msg ("Row number " + row_temp.number.out
-                 + ": is invalid.")
+             	 else
+            		 error.custom_msg ("Row number " + row_temp.number.out
+                 	 + ": is invalid.")
               end --b
-
-         elseif row.is_empty then
-					obtained_data := true
-				else
-
-					error.custom_msg ( "Row number " + row.number.out
-                   			+ ": a data item row should have a date as its first field.")
-				end
+		end
 
 end --parse
 
