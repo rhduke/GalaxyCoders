@@ -32,7 +32,6 @@ feature -- getters and adders
 
 		end
 
-
 feature {PORTFOLIO_DATA} -- implementation
 	invest_history : ARRAY[INVESTMENT]
 
