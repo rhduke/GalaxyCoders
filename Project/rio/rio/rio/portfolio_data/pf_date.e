@@ -28,6 +28,7 @@ feature {NONE} -- constructor
 	valid : BOOLEAN
 		do
 				Result := true
+				ensure then
 				result = true
 		end
 

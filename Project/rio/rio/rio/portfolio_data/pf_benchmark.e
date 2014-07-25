@@ -39,7 +39,7 @@ feature -- inherited
 	valid : BOOLEAN -- not done
 		do
 			Result := true
-			ensure
+			ensure then
 				Result = true
 		end
 
