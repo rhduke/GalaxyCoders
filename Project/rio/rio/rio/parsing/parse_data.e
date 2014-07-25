@@ -32,9 +32,7 @@ feature
 
 			do
 				row_temp := row
-
 		if row_temp [1].is_date then
-
 		   if row_temp[1].is_date and (row_temp [2].is_double or row_temp [2] ~ "") --b
 		      	        and (row_temp [3].is_float or row_temp [3].out ~ "") -- cf
 						and (row_temp [4].is_float or row_temp [4].out ~ "") -- af
