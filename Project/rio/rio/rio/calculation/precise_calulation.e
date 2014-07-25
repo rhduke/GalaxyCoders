@@ -65,27 +65,17 @@ create
 --		require
 --			dates.has (d)  this is wrong
 
-		local
-			i : INTEGER
+
            do
 
-				from
-					i:=1
-				until
-					i > count
+
+				across
+					1 |..| count as i
 				loop
-					if tr[i].date.getvalue.is_equal (d.getvalue) then
-						result := i
+					if tr [i.item].date.getvalue ~ d.getvalue then
+						result := i.item
 					end
-					i := i + 1
-				end
---				across
---					1 |..| count as i
---				loop
---					if tr [i.item].date.getvalue ~ d.getvalue then
---						result := i.item
---					end
---				end --loop
+				end --loop
 
 				end
 
