@@ -72,12 +72,15 @@ feature
 			tr [Result].date.getvalue ~ d.getvalue
 		end
 	twr ( a_start , a_end : PF_DATE) : REAL_64
+
 		require
 			a_start_is_date_domain : dates.has(a_start)
 			a_end_is_date_domain :dates.has(a_end)
 			a_end_is_after_a_start : a_end.getvalue.is_greater (a_start.getvalue)
 			across 2 |..| count  as i all tr[i.item-1].mv.getvalue + tr[i.item-1].cf.getvalue /= 0   end
 	do
+		Result := product_of_wealth(di(a_start),di(a_end))-1
+
 		ensure
 --			across di(a_start) |..| di(a_end) as i all  result.getvalue. = i.item     end
 			Result= product_of_wealth(di(a_start),di(a_end)) - 1
@@ -88,8 +91,11 @@ feature
 			Result = twr(start_date,end_date)
 	end
 
-	anual_compounded_twr : REAL
+	anual_compounded_twr : REAL_64
 	do
+
+		Result := exponent((1+ compounded_twr) , (1/duration))-1
+
 		ensure
 			(duration >= 1) implies Result = exponent ( (1 + compounded_twr) , (1/duration)) - 1
 			(duration < 1) implies Result = compounded_twr
