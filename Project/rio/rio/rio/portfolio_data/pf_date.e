@@ -27,9 +27,10 @@ feature {NONE} -- constructor
 
 	valid : BOOLEAN
 		do
-
+				Result := true
+				result = true
 		end
-		
+
 feature -- inherited
 	getValue : like date
 		do

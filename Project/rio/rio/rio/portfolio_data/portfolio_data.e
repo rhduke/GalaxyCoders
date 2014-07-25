@@ -31,6 +31,7 @@ feature -- getters and adders
 		do
 
 		end
+	
 
 feature {PORTFOLIO_DATA} -- implementation
 	list : ARRAY[INVESTMENT]

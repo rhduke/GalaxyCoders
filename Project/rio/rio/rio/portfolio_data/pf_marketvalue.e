@@ -6,15 +6,17 @@ note
 
 class
 	PF_MARKETVALUE
+
 inherit
+
 	PF_DATATYPE
 
 create
-	make,
-	make_not_exist
+	make, make_not_exist
 
 feature {NONE} -- constructor
-	make (mk : like market_value)
+
+	make (mk: like market_value)
 		do
 			exist := true
 			market_value := mk
@@ -25,23 +27,30 @@ feature {NONE} -- constructor
 			exist := false
 		end
 
-	valid : BOOLEAN
+	valid: BOOLEAN
+			-- is market value positive
 		do
-
+			Result := market_value.is_greater (0.0)
+		ensure then
+			result_not_void: Result = market_value.is_greater (0.0)
 		end
 
 feature -- inherited
-	getValue : like market_value
+
+	getValue: like market_value
 		do
 			Result := market_value
 		end
 
-	exists : BOOLEAN
+	exists: BOOLEAN
 		do
 			Result := exist
 		end
 
 feature {PF_MARKETVALUE} -- implementation
-	market_value : REAL_64
-	exist : BOOLEAN
+
+	market_value: REAL_64
+
+	exist: BOOLEAN
+
 end

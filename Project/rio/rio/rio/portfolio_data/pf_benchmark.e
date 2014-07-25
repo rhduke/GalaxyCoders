@@ -36,9 +36,11 @@ feature -- inherited
 			Result := exist
 		end
 
-	valid : BOOLEAN
+	valid : BOOLEAN -- not done
 		do
-
+			Result := true
+			ensure
+				Result = true
 		end
 
 feature {PF_BENCHMARK} -- implementation

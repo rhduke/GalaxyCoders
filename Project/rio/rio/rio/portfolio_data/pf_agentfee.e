@@ -37,8 +37,11 @@ feature -- inherited
 		end
 
 	valid : BOOLEAN
+		-- is portfolio positive ?
 		do
-
+			Result := agent_fee.is_greater (0.0)
+			ensure then
+				agent_is_positive : Result = agent_fee.is_greater (0)
 		end
 
 feature {PF_AGENTFEE} -- implementation
