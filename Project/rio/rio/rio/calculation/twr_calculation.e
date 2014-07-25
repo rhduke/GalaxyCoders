@@ -80,7 +80,7 @@ feature
 	do
 		ensure
 --			across di(a_start) |..| di(a_end) as i all  result.getvalue. = i.item     end
-			Result= sum_of_wealth(di(a_start),di(a_end)) - 1
+			Result= product_of_wealth(di(a_start),di(a_end)) - 1
 	end
 	compounded_twr : REAL_64
 	do
@@ -100,17 +100,17 @@ feature
 	require
 		across 2 |..| count as j some i = j.item end
 	do
-		Result := tr[i].mv.getvalue / (tr[i].mv.getvalue + tr[i].cf.getvalue + tr[i].af.getvalue)
+		Result := tr[i].mv.getvalue / (tr[i-1].mv.getvalue + tr[i-1].cf.getvalue + tr[i-1].af.getvalue)
 		ensure
-			Result = create {REAL_64}.make_from_reference (tr[i].mv.getvalue / (tr[i].mv.getvalue + tr[i].cf.getvalue + tr[i].af.getvalue))
+			Result = create {REAL_64}.make_from_reference (tr[i].mv.getvalue / (tr[i-1].mv.getvalue + tr[i-1].cf.getvalue + tr[i-1].af.getvalue))
 	end
 
-	sum_of_wealth ( i , j : INTEGER) : REAL_64
+	product_of_wealth ( i , j : INTEGER) : REAL_64
 	require
 			i >= 2 and j >= 2
 	do
 		create result.make_from_reference (0.0)
-		across i |..| j  as c loop Result := Result + wealth(i)  end
+		across i |..| j  as c loop Result := Result * wealth(i)  end
 
 	end
 	exponent ( value , power : REAL_64) : REAL_64
