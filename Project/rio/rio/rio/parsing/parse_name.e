@@ -27,8 +27,6 @@ feature
 	parseRow (row: ROW)
 		local
 			row_temp: ROW
-			name: STRING
-			i: INTEGER
 		do
 			row_temp := row
 			if row_temp.number = 1 then
