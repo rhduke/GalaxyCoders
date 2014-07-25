@@ -16,6 +16,7 @@ feature {NONE}
 	do
 		error := sh_classes.init_error
 		obtained_data := false
+		inv_history := sh_classes.init_portfolio_data
 	end
 
 feature
@@ -69,7 +70,7 @@ feature
 		      		obtained_data := true
 
 		      		create invest.make ([trans_date,market_value,cash_flow,agent_fee,bench_mark])
-
+					inv_history.add (invest)
 
              	 else
             		 error.custom_msg ("Row number " + row_temp.number.out
@@ -94,6 +95,7 @@ end --parse
 feature {NONE} -- global variable
 	sh_classes : SHARED_CLASSES
 	error : ERROR_TYPE
+	inv_history : PORTFOLIO_DATA
 	obtained_data : BOOLEAN
 
 end

@@ -4,10 +4,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	PORTFOLIO_DATA
 
-create
+create {SHARED_CLASSES}
 	make_empty
 
 feature {NONE} -- constructor
@@ -31,9 +31,9 @@ feature -- getters and adders
 		do
 
 		end
-	
+
 
 feature {PORTFOLIO_DATA} -- implementation
-	list : ARRAY[INVESTMENT]
+	invest_history : ARRAY[INVESTMENT]
 
 end
