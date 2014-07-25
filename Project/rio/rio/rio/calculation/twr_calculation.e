@@ -107,10 +107,11 @@ feature
 
 	product_of_wealth ( i , j : INTEGER) : REAL_64
 	require
-			i >= 2 and j >= 2
+			across 2 |..| count as c some i = c.item end
+			across 2 |..| count as c some j = c.item end
 	do
 		create result.make_from_reference (0.0)
-		across i |..| j  as c loop Result := Result * wealth(i)  end
+		across i |..| j  as c loop Result := Result * wealth(c.item)  end
 
 	end
 	exponent ( value , power : REAL_64) : REAL_64
