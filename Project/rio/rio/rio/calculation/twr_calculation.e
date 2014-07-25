@@ -108,7 +108,7 @@ feature
 	do
 		Result := tr[i].mv.getvalue / (tr[i-1].mv.getvalue + tr[i-1].cf.getvalue - tr[i-1].af.getvalue)
 		ensure
-			Result = create {REAL_64}.make_from_reference (tr[i].mv.getvalue / (tr[i-1].mv.getvalue + tr[i-1].cf.getvalue + tr[i-1].af.getvalue))
+			Result = create {REAL_64}.make_from_reference (tr[i].mv.getvalue / (tr[i-1].mv.getvalue + tr[i-1].cf.getvalue - tr[i-1].af.getvalue))
 	end
 
 	product_of_wealth ( i , j : INTEGER) : REAL_64
