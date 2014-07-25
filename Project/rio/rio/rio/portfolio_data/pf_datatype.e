@@ -16,8 +16,8 @@ feature
 		deferred
 		end
 
---	valid : BOOLEAN
---		deferred
---		end
+	valid : BOOLEAN
+		deferred
+		end
 
 end

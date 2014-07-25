@@ -36,6 +36,11 @@ feature -- inherited
 			Result := exist
 		end
 
+	valid : BOOLEAN
+		do
+
+		end
+
 feature {PF_CASHFLOW} -- implementation
 	cash_flow : REAL_64
 	exist : BOOLEAN

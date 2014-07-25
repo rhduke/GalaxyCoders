@@ -36,6 +36,11 @@ feature -- inherited
 			Result := exist
 		end
 
+	valid : BOOLEAN
+		do
+
+		end
+
 feature {PF_AGENTFEE} -- implementation
 	agent_fee : REAL_64
 	exist : BOOLEAN

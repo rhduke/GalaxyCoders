@@ -36,6 +36,11 @@ feature -- inherited
 			Result := exist
 		end
 
+	valid : BOOLEAN
+		do
+
+		end
+
 feature {PF_BENCHMARK} -- implementation
 	bench_mark : REAL_64
 	exist : BOOLEAN

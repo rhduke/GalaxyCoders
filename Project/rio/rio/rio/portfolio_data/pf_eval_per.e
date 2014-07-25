@@ -25,6 +25,11 @@ feature {NONE} -- constructor
 			exist := false
 		end
 
+	valid : BOOLEAN
+		do
+
+		end
+		
 feature -- inherited
 	getValue : like evaluation_period
 		do
