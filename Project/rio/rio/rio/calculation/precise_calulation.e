@@ -72,6 +72,12 @@ feature
 		end
 
 	precise (a_start, a_end: PF_DATE): REAL_64
+
+	require
+			a_start_is_date_domain: dates.has (a_start)
+			a_end_is_date_domain: dates.has (a_end)
+			a_end_is_after_a_start: a_end.getvalue.is_greater (a_start.getvalue)
+
 		local
 			ls: ARRAYED_LIST [TUPLE [REAL_64, REAL_64]]
 			c: CALCULATION
