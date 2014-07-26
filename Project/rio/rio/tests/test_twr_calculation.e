@@ -92,7 +92,7 @@ feature -- Test cases
 			twr : TWR_CALCULATION
 			soln : REAL_64
 		do
-			comment ("t1: checks the compounded TWR is 0.4952")
+			comment ("t2: checks the compounded TWR is 0.4952")
 			create twr.make
 			soln := twr.compounded_twr
 			Result := almost_equal(soln,0.4952)
@@ -104,7 +104,7 @@ feature -- Test cases
 			twr : TWR_CALCULATION
 			soln : REAL_64
 		do
-			comment ("t1: checks the compounded Annual TWR is 0.22245")
+			comment ("t3: checks the compounded Annual TWR is 0.22245")
 			create twr.make
 			soln := twr.anual_compounded_twr
 			Result := almost_equal(soln,0.22245)
