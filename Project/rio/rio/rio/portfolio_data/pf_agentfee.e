@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (af : like agent_fee)
+	make (af : REAL_64)
 		do
 			exist := true
 			agent_fee := af
@@ -23,10 +23,11 @@ feature {NONE} -- constructor
 	make_not_exist
 		do
 			exist := false
+			agent_fee := 0.0
 		end
 
 feature -- inherited
-	getValue : like agent_fee
+	getValue : REAL_64
 		do
 			Result := agent_fee
 		end
@@ -34,14 +35,8 @@ feature -- inherited
 	exists : BOOLEAN
 		do
 			Result := exist
-		end
-
-	valid : BOOLEAN
-		-- is portfolio positive ?
-		do
-			Result := agent_fee.is_greater (0.0)
 			ensure then
-				agent_is_positive : Result = agent_fee.is_greater (0)
+				not_null : result /= void
 		end
 
 feature {PF_AGENTFEE} -- implementation

@@ -15,9 +15,4 @@ feature
 	exists : BOOLEAN
 		deferred
 		end
-
-	valid : BOOLEAN
-		deferred
-		end
-
 end

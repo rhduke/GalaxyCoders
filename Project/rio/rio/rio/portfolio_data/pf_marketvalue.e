@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- constructor
 
-	make (mk: like market_value)
+	make (mk: REAL_64)
 		do
 			exist := true
 			market_value := mk
@@ -25,21 +25,16 @@ feature {NONE} -- constructor
 	make_not_exist
 		do
 			exist := false
+			market_value := 0.0
 		end
-
-	valid: BOOLEAN
-			-- is market value positive
-		do
-			Result := market_value.is_greater (0.0)
-		ensure then
-			result_not_void: Result = market_value.is_greater (0.0)
-		end
-
 feature -- inherited
 
-	getValue: like market_value
+	getValue: REAL_64
 		do
 			Result := market_value
+
+			ensure then
+				not_null : result /= void
 		end
 
 	exists: BOOLEAN

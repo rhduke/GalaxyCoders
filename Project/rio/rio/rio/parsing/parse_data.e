@@ -44,25 +44,25 @@ feature
                     if row_temp[2].is_float then
 		      			create market_value.make(row_temp[2].as_float)
 		      		else
-		      			create market_value.make(0.0)
+		      			create market_value.make_not_exist
 		      		end  --1
 
 		      		if row_temp[3].is_float then
 		      			create cash_flow.make(row_temp[3].as_float)
 		      		else
-		      			create cash_flow.make(0.0)
+		      			create cash_flow.make_not_exist
 		      		end --2
 
 		      		if row_temp[4].is_float then
 		      			create agent_fee.make(row_temp[4].as_float)
 		      		else
-		      			create agent_fee.make(0.0)
+		      			create agent_fee.make_not_exist
 		      		end --3
 
 		      		if row_temp[5].is_percentage then
 		      			create bench_mark.make(row_temp[5].as_percentage)
 		      		else
-		      			create bench_mark.make(0.0)
+		      			create bench_mark.make_not_exist
 		      		end --4
 
 		      		obtained_data := true

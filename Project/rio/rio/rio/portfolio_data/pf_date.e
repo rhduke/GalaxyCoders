@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (d : like date)
+	make (d : DATE)
 		do
 			exist := true
 			date := d
@@ -25,17 +25,12 @@ feature {NONE} -- constructor
 			exist := false
 		end
 
-	valid : BOOLEAN
-		do
-				Result := true
-				ensure then
-				result = true
-		end
-
 feature -- inherited
-	getValue : like date
+	getValue : DATE
 		do
 			Result := date
+			ensure then
+				not_null : result /= void
 		end
 
 	exists : BOOLEAN

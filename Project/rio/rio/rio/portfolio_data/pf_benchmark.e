@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (bm : like bench_mark)
+	make (bm : REAL_64)
 		do
 			exist := true
 			bench_mark := bm
@@ -23,24 +23,20 @@ feature {NONE} -- constructor
 	make_not_exist
 		do
 			exist := false
+			bench_mark := 0.0
 		end
 
 feature -- inherited
-	getValue : like bench_mark
+	getValue : REAL_64
 		do
 			Result := bench_mark
+			ensure then
+				not_null : result /= void
 		end
 
 	exists : BOOLEAN
 		do
 			Result := exist
-		end
-
-	valid : BOOLEAN -- not done
-		do
-			Result := true
-			ensure then
-				Result = true
 		end
 
 feature {PF_BENCHMARK} -- implementation

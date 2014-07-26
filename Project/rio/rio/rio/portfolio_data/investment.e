@@ -17,9 +17,30 @@ feature {NONE} -- constructor
 		end
 
 feature -- getter
-	get : like investment
+
+	date : PF_DATE
 		do
-			Result := investment
+			Result := investment.date
+		end
+
+	mv : PF_MARKETVALUE
+		do
+			Result := investment.mk
+		end
+
+	cf : PF_CASHFLOW
+		do
+			Result := investment.cf
+		end
+
+	af : PF_AGENTFEE
+		do
+			Result := investment.af
+		end
+
+	bm : PF_BENCHMARK
+		do
+			Result := investment.bm
 		end
 
 feature {INVESTMENT} -- implementation

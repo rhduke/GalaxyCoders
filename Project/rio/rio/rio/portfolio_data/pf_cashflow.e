@@ -14,7 +14,7 @@ create
 	make_not_exist
 
 feature {NONE} -- constructor
-	make (cf : like cash_flow)
+	make (cf : REAL_64)
 		do
 			exist := true
 			cash_flow := cf
@@ -23,22 +23,20 @@ feature {NONE} -- constructor
 	make_not_exist
 		do
 			exist := false
+			cash_flow := 0.0
 		end
 
 feature -- inherited
-	getValue : like cash_flow
+	getValue : REAL_64
 		do
 			Result := cash_flow
+			ensure then
+				not_null : result /= void
 		end
 
 	exists : BOOLEAN
 		do
 			Result := exist
-		end
-
-	valid : BOOLEAN
-		do
-
 		end
 
 feature {PF_CASHFLOW} -- implementation
