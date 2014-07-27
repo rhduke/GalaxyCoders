@@ -69,7 +69,7 @@ feature -- Queries on status
 			check regexp.is_compiled end
 			regexp.match (rep)
 			-- pattern 2
-			pattern2 := "(\d\d/\d\d/\d\d\d\d)"
+			pattern2 := "(\d?\d/\d?\d/\d\d\d\d)"
 			create regexp2.make
 			regexp2.compile (pattern2)
 			check regexp2.is_compiled end
@@ -123,7 +123,7 @@ feature -- Conversion
 			check regexp.is_compiled end
 			regexp.match (rep)
 			-- pattern 2
-			pattern2 := "(\d\d/\d\d/\d\d\d\d)"
+			pattern2 := "(\d?\d/\d?\d/\d\d\d\d)"
 			create regexp2.make
 			regexp2.compile (pattern2)
 			check regexp2.is_compiled end
