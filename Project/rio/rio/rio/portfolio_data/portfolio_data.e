@@ -24,6 +24,8 @@ feature -- getters and adders
 	add (inv: INVESTMENT; line_num: INTEGER_32)
 		do
 			invest_history.force (inv)
+			line_numbers.extend (line_num)
+
 		end
 
 	item alias "[]" (i: INTEGER_32): INVESTMENT
@@ -35,20 +37,17 @@ feature -- getters and adders
 			contain_pt_data: getList.has (result)
 		end
 
-	getList: like invest_history
+	getList:  ARRAYED_LIST [INVESTMENT]
 		do
 			Result := invest_history.twin
 		end
 
-	get_valid_list: like invest_history
+	is_valid_portfolio : BOOLEAN
 		do
-			run_validation
-			if statements_size < 2 then
-				error.two_or_less_stm
-				create result.make (0)
-			else
-				Result := getList
-			end
+				Result := statements_size >= 2
+			ensure
+				Result = (statements_size >= 2)
+
 		end
 
 feature {NONE} -- checking validity of data
@@ -161,33 +160,17 @@ feature {NONE}
 feature
 
 	printOut
-		local
-			i: INTEGER
 		do
-			from
-				i := 1
-			until
-				i > invest_history.count
-			loop
-				io.put_new_line
-				print ("index ")
-				print (i)
-				print (": ")
-				print (invest_history [i].date.getvalue)
-				print (",")
-				print (invest_history [i].mv.getvalue)
-				print (",")
-				print (invest_history [i].cf.getvalue)
-				print (",")
-				print (invest_history [i].af.getvalue)
-				print (",")
-				print (invest_history [i].bm.getvalue)
-				io.new_line
-				i := i + 1
-			end
+		across invest_history as iv loop
+			io.put_string ("[ " + iv.item.date.getvalue.out+ ", ")
+			io.put_string (iv.item.mv.getvalue.out+  ", ")
+			io.put_string (iv.item.cf.getvalue.out+  ", ")
+			io.put_string (iv.item.af.getvalue.out+  ", ")
+			io.put_string (iv.item.bm.getvalue.out+  " ]%N")
+		end
 		end
 
-	statements_size: INTEGER
+	statements_size: INTEGER_32
 			-- return how many statment we have currently
 		do
 			Result := invest_history.upper
