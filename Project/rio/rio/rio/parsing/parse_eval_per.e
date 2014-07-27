@@ -15,6 +15,7 @@ feature {NONE}
 	do
 		error := sh_classes.init_error
 		obtained_data := false
+		string_err := ""
 	end
 
 feature
@@ -23,13 +24,14 @@ feature
 				row_temp : ROW
 				Evaluation_period: STRING
 				i : INTEGER
+				pf_eval : PF_EVAL_PER
 			do
 						row_temp := row
 							if row_temp.matches_regex("^\s*(?i)Evaluation\s*(?i)Period\s*:?\s*$") then -- field only contain
 							--   keyword Evaluation period but does not contains contents
 								if row_temp.is_empty_from (row_temp.index_of ("Evaluation")+1) then
 									-- the line does not contain any contents
-									error.custom_msg ("Evaluation period field is empty on line" + row_temp.number.out+". only Evaluation period keyword is found.%N")
+									string_err := "Evaluation period field is empty on line" + row_temp.number.out+". only Evaluation period keyword is found.%N"
 								else
 									 -- contains contents	
 											if row_temp.matches_regex (
@@ -40,7 +42,7 @@ feature
 												obtained_data := true
 											else
 												-- the fields have empty string
-												error.custom_msg ("Evaluation period is invalid on line" + row_temp.number.out+". make sure to have the right date format.%N")
+												string_err := "Evaluation period is invalid on line" + row_temp.number.out+". make sure to have the right date format.%N"
 
 											end
 								end
@@ -50,7 +52,7 @@ feature
 							-- this contains keyword Evaluation period and content might be the same Evaluation period's field or spread over fields
 								if row_temp.is_empty_from (row_temp.index_of ("Evaluation")+1)  then
 									-- the content and Evaluation period are on same field as Evaluation period
-									io.put_string (row_temp[row_temp.index_of ("Evaluation")].out)
+									Evaluation_period := row_temp[row_temp.index_of ("Evaluation")].out
 								else
 									-- the content and Evaluation period are on different  field of Evaluation period
 									Evaluation_period := row[row_temp.index_of ("Evaluation")].out
@@ -67,8 +69,11 @@ feature
 									variant
 										row_temp.contents.capacity +1 - i
 									end
-									io.put_string (Evaluation_period + "%N") -- store decr in object
+
 								end
+--								create pf_eval.make(Evaluation_period)
+--									pf_eval.extract_date
+									io.put_string (Evaluation_period + "%N") -- store decr in object
 								obtained_data := true
 							end
 
@@ -81,13 +86,14 @@ feature
 	detect_error
 			-- detect errors and call error class
 	do
-			-- nothing to do here since account # is not manditory
+			if not string_err.is_empty then
+				error.custom_msg(string_err)
+			end
 	end
 
 feature {NONE}
 	sh_classes : SHARED_CLASSES
-
+	string_err : STRING
 	error : ERROR_TYPE
-
 	obtained_data : BOOLEAN
 end

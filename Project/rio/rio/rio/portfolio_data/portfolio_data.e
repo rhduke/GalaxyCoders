@@ -49,7 +49,11 @@ feature -- getters and adders
 			invest_history [i.item - 1].cf.getvalue = 0 implies invest_history [i.item].mv.getvalue = 0 end and
 			across 2 |..| statements_size as i all invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue >= 0 end
 		ensure
-			Result = (statements_size >= 2)
+			Result = (statements_size >= 2) and across 1 |..| statements_size as i all invest_history [i.item].mv.getvalue >= 0 end and
+					across 2 |..| statements_size as i all invest_history [i.item].date.getvalue.is_greater (invest_history [i.item - 1].date.getvalue) end and
+					across 2 |..| statements_size as i all invest_history [i.item - 1].mv.getvalue = 0 and
+					invest_history [i.item - 1].cf.getvalue = 0 implies invest_history [i.item].mv.getvalue = 0 end and
+					across 2 |..| statements_size as i all invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue >= 0 end
 		end
 
 feature {NONE} -- checking validity of data
