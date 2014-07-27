@@ -52,7 +52,7 @@ create
 			across
 				tr as c
 			loop
-				create Result.force(c.item)
+				 Result.force(c.item)
 			end
 		end
 
