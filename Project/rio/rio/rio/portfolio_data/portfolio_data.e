@@ -42,6 +42,7 @@ feature -- getters and adders
 			until
 				i > invest_history.count
 			loop
+				io.put_new_line
 				print("index ")
 				print(i)
 				print(": ")

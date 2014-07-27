@@ -64,16 +64,13 @@ feature
 		      		else
 		      			create bench_mark.make_not_exist
 		      		end --4
-
-		      		obtained_data := true
-
 		      		create invest.make ([trans_date,market_value,cash_flow,agent_fee,bench_mark])
 					inv_history.add (invest)
-
              	 else
             		 error.custom_msg ("Row number " + row_temp.number.out
                  	 + ": is invalid.")
               end --b
+
 		end
 
 end --parse

@@ -32,7 +32,7 @@ feature
 
 			err := sh_classes.init_error
 			err.print_errors
-
+			sh_classes.init_portfolio_data.printout
 
 	end
 feature
