@@ -48,10 +48,11 @@ create
 
 		dates: ARRAYED_LIST [PF_DATE]
 		do
+			create Result.make_empty
 			across
 				tr as c
 			loop
-				Result.force(c.item)
+				create Result.force(c.item)
 			end
 		end
 
