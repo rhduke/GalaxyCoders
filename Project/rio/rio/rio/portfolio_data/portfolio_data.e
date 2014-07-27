@@ -25,7 +25,6 @@ feature -- getters and adders
 		do
 			invest_history.force (inv)
 			line_numbers.extend (line_num)
-
 		end
 
 	item alias "[]" (i: INTEGER_32): INVESTMENT
@@ -37,17 +36,20 @@ feature -- getters and adders
 			contain_pt_data: getList.has (result)
 		end
 
-	getList:  ARRAYED_LIST [INVESTMENT]
+	getList: ARRAYED_LIST [INVESTMENT]
 		do
 			Result := invest_history.twin
 		end
 
-	is_valid_portfolio : BOOLEAN
+	is_valid_portfolio: BOOLEAN
 		do
-				Result := statements_size >= 2
-			ensure
-				Result = (statements_size >= 2)
-
+			Result := statements_size >= 2 and across 1 |..| statements_size as i all invest_history [i.item].mv.getvalue >= 0 end and
+			across 2 |..| statements_size as i all invest_history [i.item].date.getvalue.is_greater (invest_history [i.item - 1].date.getvalue) end and
+			across 2 |..| statements_size as i all invest_history [i.item - 1].mv.getvalue = 0 and
+			invest_history [i.item - 1].cf.getvalue = 0 implies invest_history [i.item].mv.getvalue = 0 end and
+			across 2 |..| statements_size as i all invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue >= 0 end
+		ensure
+			Result = (statements_size >= 2)
 		end
 
 feature {NONE} -- checking validity of data
@@ -56,23 +58,23 @@ feature {NONE} -- checking validity of data
 			-- checks , fix and report if row has
 			--negative market value
 		do
-			across
-				1 |..| statements_size as i
-			loop
-				if invest_history [i.item].mv.getvalue < 0 then
-					error.statement_error ("has market value that is negative. ", line_numbers.array_at (i.item))
-					remove_investment_line (i.item)
+			if statements_size > 0 then
+				across
+					1 |..| statements_size as i
+				loop
+					if invest_history [i.item].mv.getvalue < 0 then
+						error.statement_error ("has market value that is negative. ", line_numbers.array_at (i.item))
+						remove_investment_line (i.item)
+					end
 				end
 			end
-		ensure
-			across 1 |..| statements_size as i all invest_history [i.item].mv.getvalue >= 0 end
 		end
 
 	dates_uniq_ordered
 			-- checks , fix and report if dates are uniqe and ordered
 			-- if not then it attempts to delete the row that has invalid date
 		do
-			if statements_size > 2 then
+			if statements_size >= 2 then
 				across
 					2 |..| statements_size as i
 				loop
@@ -82,15 +84,13 @@ feature {NONE} -- checking validity of data
 					end
 				end
 			end
-		ensure
-			across 2 |..| statements_size as i all invest_history [i.item].date.getvalue.is_greater (invest_history [i.item - 1].date.getvalue) end
 		end
 
 	no_grow_from_zero
 			-- checks , fix and report if market has grown from previous
 			-- zero cash flow and market value
 		do
-			if statements_size > 2 then
+			if statements_size >= 2 then
 				across
 					2 |..| statements_size as i
 				loop
@@ -100,15 +100,13 @@ feature {NONE} -- checking validity of data
 					end
 				end
 			end
-		ensure
-			across 2 |..| statements_size as i all invest_history [i.item - 1].mv.getvalue = 0 and invest_history [i.item - 1].cf.getvalue = 0 implies invest_history [i.item].mv.getvalue = 0 end
 		end
 
 	cant_withdraw_more_market_value
 			-- checks , fix and report if cash flow
 			-- withdraw more than  its current market value
 		do
-			if statements_size > 2 then
+			if statements_size >= 2 then
 				across
 					2 |..| statements_size as i
 				loop
@@ -118,8 +116,6 @@ feature {NONE} -- checking validity of data
 					end
 				end
 			end
-		ensure
-			across 2 |..| statements_size as i all invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue >= 0 end
 		end
 
 feature {NONE}
@@ -161,13 +157,15 @@ feature
 
 	printOut
 		do
-		across invest_history as iv loop
-			io.put_string ("[ " + iv.item.date.getvalue.out+ ", ")
-			io.put_string (iv.item.mv.getvalue.out+  ", ")
-			io.put_string (iv.item.cf.getvalue.out+  ", ")
-			io.put_string (iv.item.af.getvalue.out+  ", ")
-			io.put_string (iv.item.bm.getvalue.out+  " ]%N")
-		end
+			across
+				invest_history as iv
+			loop
+				io.put_string ("[ " + iv.item.date.getvalue.out + ", ")
+				io.put_string (iv.item.mv.getvalue.out + ", ")
+				io.put_string (iv.item.cf.getvalue.out + ", ")
+				io.put_string (iv.item.af.getvalue.out + ", ")
+				io.put_string (iv.item.bm.getvalue.out + " ]%N")
+			end
 		end
 
 	statements_size: INTEGER_32
