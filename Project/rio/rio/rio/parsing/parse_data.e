@@ -39,18 +39,18 @@ feature
 			if row_temp [1].is_date then
 			--	print ("d1%N")
 				if row_temp [1].is_date and (row_temp [2].is_double or row_temp [2] ~ "") --b
-					and (row_temp [3].is_float or row_temp [3].out ~ "") -- cf
-					and (row_temp [4].is_float or row_temp [4].out ~ "") -- af
+					and (row_temp [3].is_float or row_temp [3].out ~ "" or row_temp[3].is_double) -- cf
+					and (row_temp [4].is_float or row_temp [4].out ~ "" or row_temp[3].is_double) -- af
 					and (row_temp [5].is_percentage or row_temp [5].out ~ "") -- bm
 
 				then
 				--	print ("d2%N")
 					create trans_date.make (row_temp [1].as_date)
-					if row_temp [2].is_float then
-				--		print ("d31%N")
+					if row_temp [2].is_float  then
+					--	print ("d31%N")
 						create market_value.make (row_temp [2].as_float)
-					else
-				--		print ("d32%N")
+                	else
+					--	print ("d32%N")
 						create market_value.make_not_exist
 					end --1
 
