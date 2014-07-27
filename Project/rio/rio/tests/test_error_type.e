@@ -36,7 +36,7 @@ feature
 --		    sh_classes.init_portfolio_data.printout
 --		    create p.make
 --		    print(p.anual_precise)
-            create twr.make
+           create twr.make
     		print(twr.compounded_twr)
 		    print("%N" + twr.anual_compounded_twr.out)
 --			err.print_errors
