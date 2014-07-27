@@ -56,21 +56,32 @@ feature -- Queries on status
 	is_date : BOOLEAN
 			-- Does the current field represent a date?
 		local
-			pattern : STRING
-			regexp : RX_PCRE_REGULAR_EXPRESSION
+			pattern, pattern2 : STRING
+			regexp, regexp2 : RX_PCRE_REGULAR_EXPRESSION
 			rep_trimmed : STRING
 			l_date: DATE
 		do
 			create l_date.make_day_month_year (1,1,1900)
+			-- pattern 1
 			pattern := "(\d\d\d\d-\d\d-\d\d)"
 			create regexp.make
 			regexp.compile (pattern)
 			check regexp.is_compiled end
 			regexp.match (rep)
+			-- pattern 2
+			pattern2 := "(\d\d/\d\d/\d\d\d\d)"
+			create regexp2.make
+			regexp2.compile (pattern2)
+			check regexp2.is_compiled end
+			regexp2.match (rep)
 
 			--test
 			if regexp.has_matched
 				and then l_date.date_valid (rep, "yyyy-mm-dd")
+			then
+				Result := true
+			elseif regexp2.has_matched
+				and then l_date.date_valid (rep, "mm/dd/yyyy")
 			then
 				Result := true
 			else
@@ -101,9 +112,30 @@ feature -- Conversion
 	as_date: DATE
 		require
 			is_date
+		local
+			pattern, pattern2 : STRING
+			regexp, regexp2 : RX_PCRE_REGULAR_EXPRESSION
 		do
+			-- pattern 1
+			pattern := "(\d\d\d\d-\d\d-\d\d)"
+			create regexp.make
+			regexp.compile (pattern)
+			check regexp.is_compiled end
+			regexp.match (rep)
+			-- pattern 2
+			pattern2 := "(\d\d/\d\d/\d\d\d\d)"
+			create regexp2.make
+			regexp2.compile (pattern2)
+			check regexp2.is_compiled end
+			regexp2.match (rep)
+
 			create Result.make_day_month_year (1,1,1900)
-			Result.make_from_string (rep, "yyyy-mm-dd")
+			if regexp.has_matched then
+				Result.make_from_string (rep, "yyyy-mm-dd")
+			elseif regexp2.has_matched then
+				Result.make_from_string (rep, "mm/dd/yyyy")
+			end
+
 		end
 
 	as_int : INTEGER_64
