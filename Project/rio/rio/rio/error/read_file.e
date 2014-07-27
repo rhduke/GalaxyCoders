@@ -44,6 +44,17 @@ feature
 	ensure
 		Result = csv_doc /= void
 	end
+
+	flush
+		do
+			if csv_doc /= void then
+				csv_doc.stream.close
+			end
+			if csv_iteration_cursor /= void then
+				csv_iteration_cursor.exit
+			end
+
+		end
 feature {NONE }
 	csv_doc : CSV_DOCUMENT
 	csv_iteration_cursor: CSV_DOC_ITERATION_CURSOR
