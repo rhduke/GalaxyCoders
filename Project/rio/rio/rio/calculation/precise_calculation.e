@@ -5,16 +5,17 @@ note
 	revision: "$Revision$"
 
 class
-	PRECISE_CALULATION
+	PRECISE_CALCULATION
 
 create
 	make
 
 feature
 
-	make (l: ARRAYED_LIST [TUPLE [PF_DATE, PF_MARKETVALUE, PF_CASHFLOW, PF_AGENTFEE]])
+	make
 		do
-			tr := l
+			inv_history := sh_classes.init_portfolio_data
+			tr := inv_history.getlist
 		end
 
 feature
@@ -99,8 +100,19 @@ feature
 			Result := (c.solution - 1) * 100
 		end
 
+	anual_precise : REAL_64
+		do
+			Result := precise (start_date, end_date)
+		ensure
+			Result = precise (start_date, end_date)
+		end
+
 feature --class variables
 
-	tr: LIST [TUPLE [date: PF_DATE; mv: PF_MARKETVALUE; cf: PF_CASHFLOW; af: PF_AGENTFEE]]
+	sh_classes: SHARED_CLASSES
+
+	inv_history: PORTFOLIO_DATA
+
+	tr: LIST [INVESTMENT]
 
 end
