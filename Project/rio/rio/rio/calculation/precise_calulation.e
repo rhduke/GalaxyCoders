@@ -46,12 +46,12 @@ create
 			Result = tr [tr.count].date
 		end
 
-		dates: LIST [PF_DATE]
+		dates: ARRAYED_LIST [PF_DATE]
 		do
 			across
 				tr as c
 			loop
-				Result.extend (c.item.date)
+				Result.force(c.item)
 			end
 		end
 
@@ -62,8 +62,8 @@ create
 
 		di (d: PF_DATE): INTEGER
 
---		require
---			dates.has (d)  this is wrong
+		require
+			dates.has (d)  this is wrong
 
 
            do

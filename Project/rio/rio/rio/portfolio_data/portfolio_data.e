@@ -23,9 +23,11 @@ feature -- getters and adders
 		end
 
 
-	item (i : INTEGER_32) : INVESTMENT
+	item alias "[]" (i : INTEGER_32) : INVESTMENT
+		require
+			index_bounded : across 1 |..| invest_statements_size  as j  some i = j.item   end
 		do
-			Result := invest_history[i]
+			Result := invest_history[i]	
 		end
 
 	getList : like invest_history
@@ -59,6 +61,15 @@ feature -- getters and adders
 				i := i + 1
 			end
 		end
+	invest_statements_size : INTEGER
+			-- return how many statment we have currently
+	do
+		Result := invest_history.upper
+	ensure
+		Result = invest_history.upper
+	end
+
+
 
 feature {PORTFOLIO_DATA} -- implementation
 	invest_history : ARRAYED_LIST[INVESTMENT]
