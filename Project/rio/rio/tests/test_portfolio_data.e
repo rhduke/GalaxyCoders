@@ -24,8 +24,12 @@ feature -- Constructor
 			add_boolean_case (agent t8)
 			add_boolean_case (agent t9)
 			add_boolean_case (agent t10)
-			add_boolean_case (agent t11)
+--			add_boolean_case (agent t11)
 			add_boolean_case (agent t12)
+			add_boolean_case (agent t13)
+			add_boolean_case (agent t14)
+			add_boolean_case (agent t15)
+
 
 
 		end
@@ -124,9 +128,9 @@ feature -- tests
 	do
 		comment("Testing non-existing date")
 
+		create date.make_by_days (0)
 		create d.make_not_exist
-		date := d.getvalue
-		Result := date = void
+		Result := d.getvalue ~ date
 		check Result end
 		Result := d.exists = false
 
@@ -155,23 +159,23 @@ feature -- tests
 
 	end
 
-	t11 : BOOLEAN
-	local
-		ep : PF_EVAL_PER
-		d1 : DATE
-		d2 : DATE
-		tup : TUPLE[x,y:DATE]
-	do
-		comment("Testing existing evaluation period")
-		create d1.make (1993, 8, 30)
-		create d2.make (1994, 9, 25)
+--	t11 : BOOLEAN
+--	local
+--		ep : PF_EVAL_PER
+--		d1 : DATE
+--		d2 : DATE
+--		tup : TUPLE[x,y:DATE]
+--	do
+--		comment("Testing existing evaluation period")
+--		create d1.make (1993, 8, 30)
+--		create d2.make (1994, 9, 25)
 
-		tup := [d1, d2]
-		create ep.make (tup)
-		Result := ep.getvalue = tup
-		check Result end
-		Result := ep.exists = true
-	end
+--		tup := [d1, d2]
+--		create ep.make (tup)
+--		Result := ep.getvalue = tup
+--		check Result end
+--		Result := ep.exists = true
+--	end
 
 	t12 : BOOLEAN
 	local
@@ -181,17 +185,125 @@ feature -- tests
 		tup : TUPLE[x,y:DATE]
 	do
 		comment("Testing non-existing evaluation period")
---		create d1.make (1993, 8, 30)
---		create d2.make (1994, 9, 25)
 
---		tup := [d1, d2]
 		create ep.make_not_exist
-		Result := ep.getvalue = void
---		check Result end
 		Result := ep.exists = false
 	end
 
+	t13 : BOOLEAN
+	local
+		mk : PF_MARKETVALUE
+		af : PF_AGENTFEE
+		bm : PF_BENCHMARK
+		cf : PF_CASHFLOW
+		d : PF_DATE
+		i : INVESTMENT
+		date : DATE
+		t : TUPLE[date:PF_DATE; mk:PF_MARKETVALUE; cf:PF_CASHFLOW; af:PF_AGENTFEE; bm:PF_BENCHMARK]
+	do
+		comment("Testing Investment tuple with values [(1993,08,30),12.03,45.13,0,0.1")
 
+		create date.make (1993, 08, 30)
+
+		create mk.make(12.03)
+		create af.make(45.13)
+		create bm.make(0)
+		create cf.make(0.1)
+		create d.make (date)
+
+		t := [d, mk, cf, af, bm]
+		create i.make(t)
+
+		Result := i.af.getvalue = af.getvalue
+		check Result end
+		Result := i.mv.getvalue = mk.getvalue
+		check Result end
+		Result := i.bm.getvalue = bm.getvalue
+		check Result end
+		Result := i.cf.getvalue = cf.getvalue
+		check Result end
+		Result := i.date.getvalue ~ date
+		check Result end
+	end
+
+	t14 : BOOLEAN
+	local
+		mk : PF_MARKETVALUE
+		af : PF_AGENTFEE
+		bm : PF_BENCHMARK
+		cf : PF_CASHFLOW
+		d : PF_DATE
+		i : INVESTMENT
+		date : DATE
+		t : TUPLE[date:PF_DATE; mk:PF_MARKETVALUE; cf:PF_CASHFLOW; af:PF_AGENTFEE; bm:PF_BENCHMARK]
+	do
+		comment("Testing Investment tuple with non-existant values")
+
+		create date.make_by_days (0)
+
+		create mk.make_not_exist
+		create af.make_not_exist
+		create bm.make_not_exist
+		create cf.make_not_exist
+		create d.make_not_exist
+
+		t := [d, mk, cf, af, bm]
+		create i.make(t)
+
+		Result := i.af.getvalue = af.getvalue
+		check Result end
+		Result := i.mv.getvalue = mk.getvalue
+		check Result end
+		Result := i.bm.getvalue = bm.getvalue
+		check Result end
+		Result := i.cf.getvalue = cf.getvalue
+		check Result end
+		Result := i.date.getvalue ~ date
+		check Result end
+	end
+
+	t15 : BOOLEAN
+	local
+		inv1, inv2 : INVESTMENT
+		date : DATE
+		PF : PORTFOLIO_DATA
+		sc : SHARED_CLASSES
+		t : TUPLE[date:PF_DATE; mk:PF_MARKETVALUE; cf:PF_CASHFLOW; af:PF_AGENTFEE; bm:PF_BENCHMARK]
+	do
+		comment("Testing portfolio data with two investments")
+
+		create date.make (1993, 08, 30)
+
+		t := [create {PF_DATE}.make (date),
+			  create {PF_MARKETVALUE}.make(34),
+			  create {PF_CASHFLOW}.make (36),
+		      create {PF_AGENTFEE}.make (47),
+		      create {PF_BENCHMARK}.make (58)]
+
+		create inv1.make(t)
+
+		t := [create {PF_DATE}.make_not_exist,
+			  create {PF_MARKETVALUE}.make_not_exist,
+			  create {PF_CASHFLOW}.make_not_exist,
+		      create {PF_AGENTFEE}.make_not_exist,
+		      create {PF_BENCHMARK}.make_not_exist]
+
+		create inv2.make(t)
+
+		PF := sc.init_portfolio_data
+
+		Result := PF.getlist.is_empty
+		check Result end
+		
+		PF.add (inv1, 1)
+		PF.add (inv2, 2)
+
+		Result := PF[1] = inv1
+		check Result end
+		Result := PF[2] = inv2
+		check Result end
+
+	end
 
 end
 
