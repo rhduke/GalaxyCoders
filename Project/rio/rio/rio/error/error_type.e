@@ -119,6 +119,11 @@ feature
 			end
 		end
 
+	flush
+		do
+			error_list.wipe_out
+		end
+
 feature {NONE} -- add error
 
 	error_list: LIST [STRING]

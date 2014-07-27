@@ -73,18 +73,16 @@ feature
 		end
 
 	precise (a_start, a_end: PF_DATE): REAL_64
-
-	require
+		require
 			a_start_is_date_domain: dates.has (a_start)
 			a_end_is_date_domain: dates.has (a_end)
 			a_end_is_after_a_start: a_end.getvalue.is_greater (a_start.getvalue)
-
 		local
 			ls: ARRAYED_LIST [TUPLE [REAL_64, REAL_64]]
 			c: CALCULATION
-			i: INTEGER
+			i: INTEGER_32
 		do
-			create ls.make (0)
+			create ls.make (di (a_end))
 			ls.force ([tr [1].mv.getValue, duration (a_start)])
 			from
 				i := 2
@@ -97,10 +95,14 @@ feature
 			ls.force ([((tr [di (a_end)].mv.getValue) * -1), 0.0])
 			create c.make (create {POLYNOMIAL_NR}.make_from_list (ls))
 			c.calculate
-			Result := (c.solution - 1) * 100
+			if c.solution_not_found then
+				Result := 0.0
+			else
+				Result := (c.solution - 1) * 100
+			end
 		end
 
-	anual_precise : REAL_64
+	anual_precise: REAL_64
 		do
 			Result := precise (start_date, end_date)
 		ensure

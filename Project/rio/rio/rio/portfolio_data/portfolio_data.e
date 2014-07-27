@@ -41,6 +41,12 @@ feature -- getters and adders
 			Result := invest_history.twin
 		end
 
+	flush
+		do
+			invest_history.wipe_out
+			line_numbers.wipe_out
+		end
+
 	is_valid_portfolio: BOOLEAN
 		do
 			Result := statements_size >= 2 and across 1 |..| statements_size as i all invest_history [i.item].mv.getvalue >= 0 end and
