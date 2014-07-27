@@ -81,7 +81,7 @@ feature
 				--	print ("d7%N")
 					create invest.make ([trans_date, market_value, cash_flow, agent_fee, bench_mark])
 				--	print ("d8%N")
-					inv_history.add (invest)
+					inv_history.add (invest,row_temp.number)
 				--	print ("d9%N")
 				else
 				--	print ("d10%N")

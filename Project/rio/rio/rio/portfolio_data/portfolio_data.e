@@ -11,33 +11,158 @@ create {SHARED_CLASSES}
 	make_empty
 
 feature {NONE} -- constructor
+
 	make_empty
 		do
 			create invest_history.make (0)
+			create line_numbers.make (0)
+			error := sh_classes.init_error
 		end
 
 feature -- getters and adders
-	add (inv : INVESTMENT)
+
+	add (inv: INVESTMENT; line_num: INTEGER_32)
 		do
 			invest_history.force (inv)
 		end
 
-
-	item alias "[]" (i : INTEGER_32) : INVESTMENT
+	item alias "[]" (i: INTEGER_32): INVESTMENT
 		require
-			index_bounded : across 1 |..| invest_statements_size  as j  some i = j.item   end
+			index_bounded: across getList.lower |..| getList.upper as j some i = j.item end
 		do
-			Result := invest_history[i]	
+			Result := invest_history [i]
+		ensure
+			contain_pt_data: getList.has (result)
 		end
 
-	getList : like invest_history
+	getList: like invest_history
 		do
-			Result := invest_history
+			Result := invest_history.twin
 		end
+
+	get_valid_list: like invest_history
+		do
+			run_validation
+			if statements_size < 2 then
+				error.two_or_less_stm
+				create result.make (0)
+			else
+				Result := getList
+			end
+		end
+
+feature {NONE} -- checking validity of data
+
+	row_has_non_negative_mk
+			-- checks , fix and report if row has
+			--negative market value
+		do
+			across
+				1 |..| statements_size as i
+			loop
+				if invest_history [i.item].mv.getvalue < 0 then
+					error.statement_error ("has market value that is negative. ", line_numbers.array_at (i.item))
+					remove_investment_line (i.item)
+				end
+			end
+		ensure
+			across 1 |..| statements_size as i all invest_history [i.item].mv.getvalue >= 0 end
+		end
+
+	dates_uniq_ordered
+			-- checks , fix and report if dates are uniqe and ordered
+			-- if not then it attempts to delete the row that has invalid date
+		do
+			if statements_size > 2 then
+				across
+					2 |..| statements_size as i
+				loop
+					if not invest_history [i.item].date.getvalue.is_greater (invest_history [i.item - 1].date.getvalue) then
+						error.statement_error ("has date that earlier than previous statements ", line_numbers.array_at (i.item))
+						remove_investment_line (i.item)
+					end
+				end
+			end
+		ensure
+			across 2 |..| statements_size as i all invest_history [i.item].date.getvalue.is_greater (invest_history [i.item - 1].date.getvalue) end
+		end
+
+	no_grow_from_zero
+			-- checks , fix and report if market has grown from previous
+			-- zero cash flow and market value
+		do
+			if statements_size > 2 then
+				across
+					2 |..| statements_size as i
+				loop
+					if invest_history [i.item].mv.getvalue > 0 and invest_history [i.item - 1].mv.getvalue = 0 and invest_history [i.item - 1].cf.getvalue = 0 then
+						error.statement_error ("has grown market value from previous zero cash flow and market value. ", line_numbers.array_at (i.item))
+						remove_investment_line (i.item)
+					end
+				end
+			end
+		ensure
+			across 2 |..| statements_size as i all invest_history [i.item - 1].mv.getvalue = 0 and invest_history [i.item - 1].cf.getvalue = 0 implies invest_history [i.item].mv.getvalue = 0 end
+		end
+
+	cant_withdraw_more_market_value
+			-- checks , fix and report if cash flow
+			-- withdraw more than  its current market value
+		do
+			if statements_size > 2 then
+				across
+					2 |..| statements_size as i
+				loop
+					if invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue < 0 then
+						error.statement_error ("has amount of cash flow greater than its current value. ", line_numbers.array_at (i.item))
+						remove_investment_line (i.item)
+					end
+				end
+			end
+		ensure
+			across 2 |..| statements_size as i all invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue >= 0 end
+		end
+
+feature {NONE}
+
+	remove_investment_line (i: INTEGER_32)
+		require
+			index_bounded: across getList.lower |..| getList.upper as j some i = j.item end
+		do
+			across
+				i |..| (statements_size - 1) as index
+			loop
+				invest_history [index.item] := invest_history [index.item + 1]
+			end
+			invest_history.resize (statements_size - 1)
+		ensure
+			less_statments: invest_history.capacity = old invest_history.capacity - 1
+		end
+
+	run_validation
+			-- run the routines that checks the data
+		local
+			commands: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+		do
+			commands.extend (agent row_has_non_negative_mk)
+			commands.extend (agent dates_uniq_ordered)
+			commands.extend (agent no_grow_from_zero)
+			commands.extend (agent cant_withdraw_more_market_value)
+			from
+				commands.start
+			until
+				commands.after
+			loop
+				commands.item.call ([])
+				commands.forth
+			end
+		end
+
+feature
 
 	printOut
 		local
-			i : INTEGER
+			i: INTEGER
 		do
 			from
 				i := 1
@@ -45,33 +170,39 @@ feature -- getters and adders
 				i > invest_history.count
 			loop
 				io.put_new_line
-				print("index ")
-				print(i)
-				print(": ")
-				print(invest_history[i].date.getvalue)
-				print(",")
-				print(invest_history[i].mv.getvalue)
-				print(",")
-				print(invest_history[i].cf.getvalue)
-				print(",")
-				print(invest_history[i].af.getvalue)
-				print(",")
-				print(invest_history[i].bm.getvalue)
+				print ("index ")
+				print (i)
+				print (": ")
+				print (invest_history [i].date.getvalue)
+				print (",")
+				print (invest_history [i].mv.getvalue)
+				print (",")
+				print (invest_history [i].cf.getvalue)
+				print (",")
+				print (invest_history [i].af.getvalue)
+				print (",")
+				print (invest_history [i].bm.getvalue)
 				io.new_line
 				i := i + 1
 			end
 		end
-	invest_statements_size : INTEGER
+
+	statements_size: INTEGER
 			-- return how many statment we have currently
-	do
-		Result := invest_history.upper
-	ensure
-		Result = invest_history.upper
-	end
-
-
+		do
+			Result := invest_history.upper
+		ensure
+			Result = invest_history.upper
+		end
 
 feature {PORTFOLIO_DATA} -- implementation
-	invest_history : ARRAYED_LIST[INVESTMENT]
+
+	invest_history: ARRAYED_LIST [INVESTMENT]
+
+	line_numbers: ARRAYED_LIST [INTEGER_32]
+
+	sh_classes: SHARED_CLASSES
+
+	error: ERROR_TYPE
 
 end
