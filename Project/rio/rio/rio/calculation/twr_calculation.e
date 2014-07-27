@@ -96,7 +96,12 @@ feature
 
 	anual_compounded_twr: REAL_64
 		do
-			Result := exponent ((1 + compounded_twr), (1 / duration)) - 1
+			if (duration >= 1) then
+				Result := exponent ((1 + compounded_twr), (1 / duration)) - 1
+			else
+			  REsult:= 	compounded_twr
+			end
+
 		ensure
 			(duration >= 1) implies Result = exponent ((1 + compounded_twr), (1 / duration)) - 1
 			(duration < 1) implies Result = compounded_twr

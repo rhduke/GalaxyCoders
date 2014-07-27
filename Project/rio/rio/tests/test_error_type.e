@@ -14,6 +14,7 @@ feature
 		err : ERROR_TYPE
 		rd_file : READ_FILE
 		csv_iteration_cursor: CSV_DOC_ITERATION_CURSOR
+		pt : PORTFOLIO_DATA
 	do
 --			create csv_doc.make_from_file_name(path)
 			rd_file := sh_classes.init_file_read
@@ -31,6 +32,10 @@ feature
 			across list as  c  loop c.item.error_examine end
 
 			err := sh_classes.init_error
+		     pt := sh_classes.init_portfolio_data
+		    create twr.make
+		    print(twr.compounded_twr)
+		    print("%N" + twr.anual_compounded_twr.out)
 			err.print_errors
 
 	end
@@ -102,5 +107,6 @@ feature
 --	csv_iteration_cursor: CSV_DOC_ITERATION_CURSOR
 	list : ARRAY[PARSING_CONTEXT]
 	sh_classes : SHARED_CLASSES
-
+	twr : TWR_CALCULATION
+	soln : REAL_64
 end
