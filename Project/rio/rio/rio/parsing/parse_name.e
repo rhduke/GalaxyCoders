@@ -36,7 +36,7 @@ feature
 						--  but does not contains person's name
 					if row_temp.is_empty_from (row_temp.index_of ("Name") + 1) then
 							-- the line does not contain person's name
-						error.error_custom ("Name content is empty on line 1. only Name keyword is found%N")
+						error.custom_msg ("Name content is empty on line 1. only Name keyword is found%N")
 					else
 							-- contains words
 						if row_temp.matches_regex ("^\s*[a-zA-Z]+[\s|,]*[a-zA-Z]*\s*$") then
@@ -52,7 +52,7 @@ feature
 							gen_info.add_name (name)
 							obtained_data := true
 						else
-							error.error_custom ("Name content is empty on line 1. only Name keyword is found%N")
+							error.custom_msg ("Name content is empty on line 1. only Name keyword is found%N")
 						end
 					end
 				end
@@ -81,7 +81,7 @@ feature
 			-- detect errors and call error class
 		do
 			if not is_successfully_obtain_data then
-				error.error_name
+				error.name_error
 			end
 		end
 

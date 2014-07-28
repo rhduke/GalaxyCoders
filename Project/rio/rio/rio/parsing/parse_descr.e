@@ -84,7 +84,7 @@ feature
 			-- detect errors and call error class
 		do
 			if not str_err.is_empty then
-				error.error_custom (str_err)
+				error.custom_msg (str_err)
 			end
 		end
 
