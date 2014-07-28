@@ -33,12 +33,12 @@ feature
 
 			err := sh_classes.init_error
 		     pt := sh_classes.init_portfolio_data
-		    sh_classes.init_portfolio_data.printout
---		    create p.make
---		    print(p.anual_precise)
---          create twr.make
---		    print(twr.compounded_twr)
---		    print("%N" + twr.anual_compounded_twr.out)
+--		    sh_classes.init_portfolio_data.printout
+		    create p.make
+		    print("PRECISE: " + p.anual_precise.answer.out + "%N")
+            create twr.make
+		    print("COMPOUNDED: " + twr.compounded_twr.out + "%N")
+		    print("ANNUAL: " + twr.anual_compounded_twr.out + "%N")
 --			err.print_errors
 
 	end

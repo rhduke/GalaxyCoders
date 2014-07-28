@@ -108,8 +108,7 @@ feature
 	anual_precise: TUPLE[answer : REAL_64 ; found : BOOLEAN]
 		do
 			Result := precise (start_date, end_date)
-		ensure
-			Result = precise (start_date, end_date)
+
 		end
 
 feature --class variables

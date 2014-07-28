@@ -80,7 +80,7 @@ feature
 			a_start_is_date_domain: dates.has (a_start)
 			a_end_is_date_domain: dates.has (a_end)
 			a_end_is_after_a_start: a_end.getvalue.is_greater (a_start.getvalue)
-			across 2 |..| count as i all tr [i.item - 1].mv.getvalue + tr [i.item - 1].cf.getvalue /= 0 end
+			--across 2 |..| count as i all tr [i.item - 1].mv.getvalue + tr [i.item - 1].cf.getvalue /= 0 end
 		do
 			Result := product_of_wealth (di (a_start) + 1, di (a_end)) - 1
 		ensure
@@ -99,9 +99,8 @@ feature
 			if (duration >= 1) then
 				Result := exponent ((1 + compounded_twr), (1 / duration)) - 1
 			else
-			  REsult:= 	compounded_twr
+				REsult := compounded_twr
 			end
-
 		ensure
 			(duration >= 1) implies Result = exponent ((1 + compounded_twr), (1 / duration)) - 1
 			(duration < 1) implies Result = compounded_twr
@@ -109,13 +108,20 @@ feature
 
 feature
 
-	wealth (i: INTEGER): REAL_64
+	wealth (i: INTEGER): TUPLE [answer: REAL_64; found: BOOLEAN]
 		require
 			across 2 |..| count as j some i = j.item end
 		do
-			Result := tr [i].mv.getvalue / (tr [i - 1].mv.getvalue + tr [i - 1].cf.getvalue - tr [i - 1].af.getvalue)
+			create Result.default_create
+			if ((tr [i - 1].mv.getvalue + tr [i - 1].cf.getvalue - tr [i - 1].af.getvalue) = 0) or (tr [i].mv.getvalue = 0) then
+				Result.answer := 0
+				Result.found := false
+			else
+				Result.answer := tr [i].mv.getvalue / (tr [i - 1].mv.getvalue + tr [i - 1].cf.getvalue - tr [i - 1].af.getvalue)
+				Result.found := true
+			end
 		ensure
-			Result = (tr [i].mv.getvalue / (tr [i - 1].mv.getvalue + tr [i - 1].cf.getvalue - tr [i - 1].af.getvalue))
+			Result.answer = (tr [i].mv.getvalue / (tr [i - 1].mv.getvalue + tr [i - 1].cf.getvalue - tr [i - 1].af.getvalue)) or Result.answer = 0
 		end
 
 	product_of_wealth (i, j: INTEGER): REAL_64
@@ -126,7 +132,11 @@ feature
 			across
 				i |..| j as c
 			loop
-				Result := Result * wealth (c.item)
+				if wealth (c.item).answer = 0 then
+					Result := Result * 0.0
+				else
+					Result := Result * wealth (c.item).answer
+				end
 			end
 		end
 
