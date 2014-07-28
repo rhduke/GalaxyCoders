@@ -43,6 +43,7 @@ feature
 													across row_temp.capture_strings_in_row ("(\d{4}-\d{2}-\d{2}|\d{2}/\d{2}/\d{4})\s*(to)?\s*(\d{4}-\d{2}-\d{2}|\d{2}/\d{2}/\d{4})*\s*") as
 													c loop Evaluation_period := Evaluation_period + c.item + " " end
 												create pf_eval.make(Evaluation_period)
+												sh_classes.init_portfolio_data.add_eval_pr (pf_eval)
 												obtained_data := true
 											else
 												-- the fields have empty string
@@ -76,6 +77,7 @@ feature
 
 								end
 								create pf_eval.make(Evaluation_period)
+								sh_classes.init_portfolio_data.add_eval_pr (pf_eval)
 								obtained_data := true
 							end
 
