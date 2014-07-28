@@ -165,12 +165,13 @@ feature -- Test cases
 			err := sh_classes.init_error
 			parsedata("rio/csv-inputs/test-validity/date_order.csv")
 			inv_hist.run_validation
+			err.print_errors
 			from
 				i := 1
 			until
 				i > err.size
 			loop
-				if (err[i] ~ "Warning! the statment at line 13 has date that's earlier than or equal to previous statements. Dates must be in increasing order and unique. This statement will be ignored in ROI calculation.%N") then
+				if (err[i] ~ "Warning! the statment at line 12 has date that's earlier than or equal to previous statements. Dates must be in increasing order and unique. This statement will be ignored in ROI calculation.%N") then
 					Result := true
 					check Result end
 				end
@@ -188,7 +189,7 @@ feature -- Test cases
 			err := sh_classes.init_error
 			parsedata("rio/csv-inputs/test-validity/same_date.csv")
 			inv_hist.run_validation
-			err.print_errors
+--			err.print_errors
 ----			from
 ----				i := 1
 ----			until

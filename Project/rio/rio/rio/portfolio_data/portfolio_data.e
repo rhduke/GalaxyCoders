@@ -139,7 +139,7 @@ feature {NONE} -- checking validity of data
 					i > statements_size
 				loop
 					if not invest_history [i.item].date.getvalue.is_greater (invest_history [i.item - 1].date.getvalue) then
-						error.error_statement (" has date that's earlier than or equal to previous statements. Dates must be in increasing order and unique. ", line_numbers.array_at (i.item))
+						error.error_statement (" has date that's earlier than or equal to previous statements. Dates must be in increasing order and unique. ", line_numbers[i.item])
 						remove_investment_line (i.item)
 					else
 						i := i + 1
@@ -158,7 +158,7 @@ feature {NONE} -- checking validity of data
 					2 |..| statements_size as i
 				loop
 					if invest_history [i.item].mv.getvalue > 0 and invest_history [i.item - 1].mv.getvalue = 0 and invest_history [i.item - 1].cf.getvalue = 0 then
-						error.error_statement ("has grown market value from previous zero cash flow and market value. ", line_numbers.array_at (i.item))
+						error.error_statement ("has grown market value from previous zero cash flow and market value. ", line_numbers[i.item])
 						remove_investment_line (i.item)
 					end
 				end
@@ -176,8 +176,7 @@ feature {NONE} -- checking validity of data
 					2 |..| statements_size as i
 				loop
 					if invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue < 0 then
-						temp := line_numbers.array_at (i.item)
-						error.error_statement ("has amount of cash flow greater than its current value. ", temp)
+						error.error_statement ("has amount of cash flow greater than its current value. ", line_numbers[i.item])
 						remove_investment_line (i.item)
 					end
 				end
