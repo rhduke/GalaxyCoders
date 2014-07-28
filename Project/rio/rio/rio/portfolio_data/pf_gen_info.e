@@ -41,7 +41,7 @@ feature -- inherited routines
 			end
 		end
 
-feature -- add info routines
+feature {PARSING_STRATEGY} -- add info routines
 
 	add_name (name: STRING)
 		local
@@ -99,7 +99,7 @@ feature -- add info routines
 			end
 		end
 
-feature
+feature {NONE}
 
 	gen_info: ARRAYED_LIST [STRING]
 

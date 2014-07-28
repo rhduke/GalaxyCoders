@@ -100,7 +100,9 @@ feature
 	detect_error
 			-- detect errors and call error class
 		do
-				-- nothing to do here since account # is not manditory
+				if not str_err.is_empty then
+				error.custom_msg (str_err)
+			end
 		end
 
 feature {NONE}
