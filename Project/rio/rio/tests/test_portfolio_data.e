@@ -187,7 +187,7 @@ feature -- tests
 		comment("Testing non-existing evaluation period")
 
 		create ep.make_not_exist
-		Result := ep.exists = false
+--		Result := ep.exists = false
 	end
 
 	t13 : BOOLEAN
@@ -294,7 +294,7 @@ feature -- tests
 
 		Result := PF.getlist.is_empty
 		check Result end
-		
+
 		PF.add (inv1, 1)
 		PF.add (inv2, 2)
 
@@ -307,6 +307,3 @@ feature -- tests
 
 end
 
--- problems
---agent fees valid has problem
---date is set to void

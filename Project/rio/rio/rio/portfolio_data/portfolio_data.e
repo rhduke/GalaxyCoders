@@ -70,8 +70,8 @@ feature -- getters and adders
 			commands.extend (agent has_at_least_two_investments)
 			commands.extend (agent row_has_non_negative_mk)
 			commands.extend (agent dates_uniq_order)
---			commands.extend (agent no_grow_from_zero)
---			commands.extend (agent cant_withdraw_more_market_value)
+			commands.extend (agent no_grow_from_zero)
+			commands.extend (agent cant_withdraw_more_market_value)
 			from
 				commands.start
 			until
@@ -174,6 +174,7 @@ feature {NONE} -- checking validity of data
 					if not invest_history [i].date.getvalue.is_greater (invest_history [i- 1].date.getvalue) then
 						error.error_statement (" has date that's earlier than or equal to previous statements. Dates must be in increasing order and unique. ", line_numbers[i.item])
 						remove_investment_line (i)
+						has_at_least_two_investments
 					else
 						i := i + 1
 					end
@@ -199,9 +200,10 @@ feature {NONE} -- checking validity of data
 				until
 					i > statements_size
 				loop
-					if invest_history [i].mv.getvalue > 0 and invest_history [i - 1].mv.getvalue = 0 and invest_history [i.item].cf.getvalue = 0 then
-						error.error_statement ("has grown market value from previous zero cash flow and market value. ", line_numbers[i])
-						remove_investment_line (i)
+					if invest_history [i].mv.getvalue > 0 and invest_history [i - 1].mv.getvalue = 0 and invest_history [i - 1].cf.getvalue = 0 then
+						error.error_statement (" has grown market value from previous zero cash flow and market value. ", line_numbers[i])
+						remove_investment_line (i-1)
+						has_at_least_two_investments
 					else
 						i := i + 1
 					end
@@ -226,9 +228,10 @@ feature {NONE} -- checking validity of data
 				until
 					i > statements_size
 				loop
-					if invest_history [i].mv.getvalue + invest_history [i].cf.getvalue < 0 then
-						error.error_statement ("has amount of cash flow greater than its current value. ", line_numbers[i])
+					if (invest_history [i].mv.getvalue + invest_history [i].cf.getvalue - invest_history[i].af.getvalue) < 0 then
+						error.error_statement (" has amount of cash flow greater than its current value. ", line_numbers[i])
 						remove_investment_line (i)
+						has_at_least_two_investments
 					else
 						i := i + 1
 					end
