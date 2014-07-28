@@ -12,19 +12,21 @@ create
 feature {NONE} -- execution
 	make
 	do
-		read_from_input
+--		read_from_input
+		file_path := "rio/csv-inputs/new_ac1.csv"
 		read_file
-		calculation_output
+		twr_calc_output
+		precise_calc_output
 	end
 
 feature {NONE} -- reading
 
 	read_from_input
-	do
-		io.put_string ("rio/csv-inputs/new_ac1.csv")
-		io.read_line
-		file_path := io.last_string
-	end
+		do
+			io.put_string ("roi ")
+			io.read_line
+			file_path := io.last_string
+		end
 
 
 	read_file
@@ -51,11 +53,11 @@ feature {NONE} -- parse implementation
 				until
 					csv_iteration_cursor.after
 				loop
-					obtain_data(csv_iteration_cursor.item)	-- will obtain data from filr
+					obtain_data(csv_iteration_cursor.item)	-- will obtain data from file
 					csv_iteration_cursor.forth
 				end
 				across context_list as  c  loop c.item.error_examine end -- if any parsing class left an error will be reported
-				sh_classes.init_portfolio_data.printout -- just test to print portfolio data
+				--sh_classes.init_portfolio_data.printout -- just test to print portfolio data
 
 
 		end
@@ -64,22 +66,25 @@ feature {NONE} -- parse implementation
 		local
 			i : INTEGER
 		do
-			init_context_list
-			from
+				init_context_list
+
+				from
 					i := context_list.lower
-					invariant
-							i >= context_list.lower
-							i <= context_list.count + 1
+				invariant
+					i >= context_list.lower
+					i <= context_list.upper + 1
 				until
 					i > context_list.upper
 				loop
+
 					context_list[i].getrowinfo (row)
 					if context_list[i].has_obtained_data then
 						remove_at(i)
+					else
+						i := i + 1
 					end
-					i := i + 1
 				variant
-				context_list.count + 1 - i
+					context_list.count + 1 - i
 				end
 
 		end
@@ -87,7 +92,7 @@ feature {NONE} -- parse implementation
 	init_context_list
 		do
 			create context_list.make_empty
-			context_list.grow (9)
+--			context_list.grow (9)
 			across 1 |..| 9 as i loop context_list.force (create {PARSING_CONTEXT}.make, i.item)  end
 			context_list[1].setparsingstrategy (create {PARSE_DESCR}.make)
 			context_list[2].setparsingstrategy (create {PARSE_NAME}.make)
@@ -125,20 +130,20 @@ feature{NONE} -- parse routine helpers\
 
 feature {NONE} -- calculation implementation
 
-	calculation_output
+	twr_calc_output
 		local
-			twr_soln, precise_soln : TUPLE[whole : TUPLE [sol:REAL_64; found:BOOLEAN];
+			twr_soln : TUPLE[whole : TUPLE [sol:REAL_64; found:BOOLEAN];
 									part_exists:BOOLEAN;
 									part : TUPLE[sol:REAL_64; found:BOOLEAN]]
 		do
-			twr_soln := calculate_twr
-			precise_soln := calculate_precise
 
-			-- OUPTUT TWR
+			-- OUPTUT TWR	
+			twr_soln := calculate_twr
+
 			print("ROI (TWR):")
 			io.new_line
 			-- whole
-			print("\tWhole Period: ")
+			print("  Whole Period: ")
 			if twr_soln.whole.found then
 				print(twr_soln.whole.sol)
 			else
@@ -146,21 +151,33 @@ feature {NONE} -- calculation implementation
 			end
 			io.new_line
 			-- part
-			if twr_soln.part_exists then
-				print("\tPart Period: ")
-				if twr_soln.part.found then
-					print(twr_soln.part.sol)
-				else
-					print("Could not be calculated!")
-				end
-				io.new_line
-			end
+--			if twr_soln.part_exists then
+--				print("\tPart Period: ")
+--				if twr_soln.part.found then
+--					print(twr_soln.part.sol)
+--				else
+--					print("Could not be calculated!")
+--				end
+--				io.new_line
+--			end
 
+
+
+		end
+
+	precise_calc_output
+		local
+			precise_soln : TUPLE[whole : TUPLE [sol:REAL_64; found:BOOLEAN];
+									part_exists:BOOLEAN;
+									part : TUPLE[sol:REAL_64; found:BOOLEAN]]
+		do
 			-- OUPTUT PRECISE
+			precise_soln := calculate_precise
+
 			print("ROI (Precise):")
 			io.new_line
 			-- whole
-			print("\tWhole Period: ")
+			print("  Whole Period: ")
 			if precise_soln.whole.found then
 				print(precise_soln.whole.sol)
 			else
@@ -168,16 +185,15 @@ feature {NONE} -- calculation implementation
 			end
 			io.new_line
 			-- part
-			if precise_soln.part_exists then
-				print("\tPart Period: ")
-				if twr_soln.part.found then
-					print(precise_soln.part.sol)
-				else
-					print("Could not be calculated!")
-				end
-				io.new_line
-			end
-
+--			if precise_soln.part_exists then
+--				print("\tPart Period: ")
+--				if precise_soln.part.found then
+--					print(precise_soln.part.sol)
+--				else
+--					print("Could not be calculated!")
+--				end
+--				io.new_line
+--			end
 		end
 
 	calculate_twr : TUPLE[whole : TUPLE [sol:REAL_64; found:BOOLEAN];
@@ -188,6 +204,7 @@ feature {NONE} -- calculation implementation
 			inv_hist : PORTFOLIO_DATA
 			a_start, a_end : PF_DATE -- for Evaliation period
 		do
+			create Result.default_create
 			inv_hist := sh_classes.init_portfolio_data
 			create twr.make
 
@@ -195,12 +212,12 @@ feature {NONE} -- calculation implementation
 				Result.whole := twr.anual_compounded_twr
 
 			-- TWR Part period
-			Result.part_exists := inv_hist.get_eval_per.exists
-			if inv_hist.get_eval_per.exists then
-				create a_start.make(inv_hist.get_eval_per.getvalue.x)
-				create a_end.make(inv_hist.get_eval_per.getvalue.y)
-				Result.part := twr.twr (a_start,a_end)
-			end
+--			Result.part_exists := inv_hist.get_eval_per.exists
+--			if inv_hist.get_eval_per.exists then
+--				create a_start.make(inv_hist.get_eval_per.getvalue.x)
+--				create a_end.make(inv_hist.get_eval_per.getvalue.y)
+--				Result.part := twr.twr (a_start,a_end)
+--			end
 		end
 
 	calculate_precise : TUPLE[whole : TUPLE [sol:REAL_64; found:BOOLEAN];
@@ -211,6 +228,7 @@ feature {NONE} -- calculation implementation
 			inv_hist : PORTFOLIO_DATA
 			a_start, a_end : PF_DATE -- for Evaliation period
 		do
+			create Result.default_create
 			inv_hist := sh_classes.init_portfolio_data
 			create precise.make
 
@@ -218,12 +236,12 @@ feature {NONE} -- calculation implementation
 			Result.whole := precise.anual_precise
 
 			-- Precise part
-			Result.part_exists := inv_hist.get_eval_per.exists
-			if inv_hist.get_eval_per.exists then
-				create a_start.make(inv_hist.get_eval_per.getvalue.x)
-				create a_end.make(inv_hist.get_eval_per.getvalue.y)
-				Result.part := precise.precise (a_start,a_end)
-			end
+--			Result.part_exists := inv_hist.get_eval_per.exists
+--			if inv_hist.get_eval_per.exists then
+--				create a_start.make(inv_hist.get_eval_per.getvalue.x)
+--				create a_end.make(inv_hist.get_eval_per.getvalue.y)
+--				Result.part := precise.precise (a_start,a_end)
+--			end
 		end
 
 feature {NONE} -- implementation
