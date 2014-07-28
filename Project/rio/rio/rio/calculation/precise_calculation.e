@@ -72,7 +72,7 @@ feature
 
 		end
 
-	precise (a_start, a_end: PF_DATE): REAL_64
+	precise (a_start, a_end: PF_DATE): TUPLE[answer : REAL_64 ; found : BOOLEAN]
 		require
 			a_start_is_date_domain: dates.has (a_start)
 			a_end_is_date_domain: dates.has (a_end)
@@ -95,14 +95,17 @@ feature
 			ls.force ([((tr [di (a_end)].mv.getValue) * -1), 0.0])
 			create c.make (create {POLYNOMIAL_NR}.make_from_list (ls))
 			c.calculate
+			create Result.default_create
 			if c.solution_not_found then
-				Result := 0.0
+				Result.answer := -100
+				Result.found := false
 			else
-				Result := (c.solution - 1) * 100
+				Result.answer := (c.solution - 1) * 100
+				Result.found := true
 			end
 		end
 
-	anual_precise: REAL_64
+	anual_precise: TUPLE[answer : REAL_64 ; found : BOOLEAN]
 		do
 			Result := precise (start_date, end_date)
 		ensure
