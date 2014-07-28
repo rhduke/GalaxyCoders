@@ -145,20 +145,37 @@ feature
 	product_of_wealth (i, j: INTEGER):  TUPLE [answer: REAL_64; found: BOOLEAN]
 		require
 			across 2 |..| count as c some i = c.item end
+
+			local
+				terminate : BOOLEAN
+				index : INTEGER
 		do
 			create Result.default_create
 			Result.answer := 1.0
-			across
-				i |..| j as c
-			loop
-				if not  wealth (c.item).found  then
-					Result.answer := 	Result.answer * 0
+			terminate := false
+
+            from
+            	index := i
+            	invariant
+
+            	 index >= i
+            	 index <= j+1
+
+            until
+            	index > j or terminate
+            loop
+            	if not  wealth (index).found  then
+					Result.answer := Result.answer * 0
 					Result.found := false
+					terminate := true
 				else
-					Result.answer := Result.answer * wealth (c.item).answer
+					Result.answer := Result.answer * wealth (index).answer
 					Result.found := true
 				end
-			end
+                index := index + 1
+                variant
+                	j + 1 - index
+            end
 		end
 
 	exponent (value, power: REAL_64): REAL_64
