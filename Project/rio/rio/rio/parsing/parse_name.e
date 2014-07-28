@@ -27,6 +27,8 @@ feature
 	parseRow (row: ROW)
 		local
 			row_temp: ROW
+			name: STRING
+			gen_info: PF_GEN_INFO
 		do
 			row_temp := row
 			if row_temp.number = 1 then
@@ -37,9 +39,17 @@ feature
 						error.custom_msg ("Name content is empty on line 1. only Name keyword is found%N")
 					else
 							-- contains words
-						if row_temp.matches_regex ("^ *[a-zA-Z]+[\s|,]*[a-zA-Z]* *$") then
+						if row_temp.matches_regex ("^\s*[a-zA-Z]+[\s|,]*[a-zA-Z]*\s*$") then
 								-- the fields contain valid name
-							row_temp.capture_strings_in_row ("^ *[a-zA-Z]+[\s|,]*[a-zA-Z]* *$").do_all (agent io.put_string(?))
+							create name.make_empty
+							across
+								row_temp.capture_strings_in_row ("^\s*[a-zA-Z]+[\s|,]*[a-zA-Z]*\s*$") as c
+							loop
+								c.item.trim
+								name := name + c.item
+							end
+							gen_info := sh_classes.init_genaral_info
+							gen_info.add_name (name)
 							obtained_data := true
 						else
 							error.custom_msg ("Name content is empty on line 1. only Name keyword is found%N")
@@ -48,8 +58,14 @@ feature
 				end
 				if row_temp.matches_regex ("^\s*(?i)Name\s*:?\s*\w+\s*\w+\s*$") then
 						-- this contains keyword Name and content might be the same Name's field or spread over fields
-					row_temp.capture_strings_in_row ("^\s*(?i)Name\s*:?\s*\w+\s*\w+\s*$").do_all (agent io.put_string(?))
-					io.put_new_line
+					create name.make_empty
+					across
+						row_temp.capture_strings_in_row ("^\s*(?i)Name\s*:?\s*\w+\s*\w+\s*$") as c
+					loop
+						name := name + c.item
+					end
+					gen_info := sh_classes.init_genaral_info
+					gen_info.add_name (name)
 					obtained_data := true
 				end
 			end
