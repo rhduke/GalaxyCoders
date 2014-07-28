@@ -120,8 +120,8 @@ feature
 				Result.found := compounded_twr.found
 			end
 		ensure
-			(duration >= 1) implies Result.answer = exponent ((1 + compounded_twr.answer), (1 / duration)) - 1 and Result.found = compounded_twr.found
-			(duration < 1) implies Result.answer = compounded_twr.answer and  Result.found = compounded_twr.found
+			(duration >= 1) implies (Result.answer = exponent ((1 + compounded_twr.answer), (1 / duration)) - 1) and (Result.found = compounded_twr.found)
+			(duration < 1) implies (Result.answer = compounded_twr.answer) and  (Result.found = compounded_twr.found)
 		end
 
 feature
