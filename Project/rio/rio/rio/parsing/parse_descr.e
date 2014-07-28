@@ -71,7 +71,6 @@ feature
 				end
 				sh_classes.init_genaral_info.add_decr (descr)
 				obtained_data := true
-				obtained_data := true
 			end
 		end
 
