@@ -14,6 +14,8 @@ create
 feature -- Constructor
 	make
 		do
+			create flush.make
+			flush.flushall
 			parsedata
 			add_boolean_case (agent t1)
 			add_boolean_case (agent t2)
@@ -22,6 +24,7 @@ feature -- Constructor
 
 feature -- Data Storage
 	sh_classes : SHARED_CLASSES
+	flush : FLUSH_SHARED
 
 feature -- Globals
 	csv_doc: CSV_DOCUMENT
