@@ -81,8 +81,8 @@ feature {NONE}
 	init_context_list
 	do
 		create context_list.make_empty
-		context_list.grow (8)
-		across 1 |..| 8 as i loop context_list.force (create {PARSING_CONTEXT}.make, i.item)  end
+		context_list.grow (9)
+		across 1 |..| 9 as i loop context_list.force (create {PARSING_CONTEXT}.make, i.item)  end
 		context_list[1].setparsingstrategy (create {PARSE_DESCR}.make)
 		context_list[2].setparsingstrategy (create {PARSE_NAME}.make)
 		context_list[3].setparsingstrategy (create {PARSE_EMAIL}.make)
@@ -91,6 +91,7 @@ feature {NONE}
 		context_list[6].setparsingstrategy (create {PARSE_ACCOUNT}.make)
 		context_list[7].setparsingstrategy (create {PARSE_EVAL_PER}.make)
 		context_list[8].setparsingstrategy (create {PARSE_DATA}.make)
+		context_list[9].setparsingstrategy (create {PARSE_TABLE}.make)
 	end
 
 feature -- routine helpers\
