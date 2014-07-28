@@ -33,13 +33,23 @@ feature
 
 			err := sh_classes.init_error
 		     pt := sh_classes.init_portfolio_data
+		     pt.run_validation
+--		     if pt.is_valid_portfolio then
+
 		    sh_classes.init_portfolio_data.printout
 --		    create p.make
---		    print(p.anual_precise)
---          create twr.make
---		    print(twr.compounded_twr)
---		    print("%N" + twr.anual_compounded_twr.out)
---			err.print_errors
+--		    print("PRECISE: " + p.anual_precise.out + "%N")
+--            create twr.make
+--		    print("COMPOUNDED: " + twr.compounded_twr.out + "%N")
+--		    print("ANNUAL: " + twr.anual_compounded_twr.out + "%N")
+
+--		    else
+
+--		    	print("error")
+
+--		     end
+
+
 
 	end
 feature
