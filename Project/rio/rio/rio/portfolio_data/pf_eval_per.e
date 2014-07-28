@@ -10,9 +10,12 @@ class
 inherit
 
 	PF_DATATYPE
+	redefine
+	is_equal
+	end
 
-create
-	make, make_not_exist
+
+create make, make_not_exist
 
 feature {NONE} -- constructor
 
@@ -25,10 +28,11 @@ feature {NONE} -- constructor
 
 	make_not_exist
 		do
+			make("")
 			exist := false
 		end
 
-feature -- inherited
+feature {PORTFOLIO_DATA} -- inherited
 
 	getValue: TUPLE [x, y: DATE]
 		do
@@ -86,6 +90,15 @@ feature {NONE} -- routines to help extract and validate dates
 			end
 
 		end
+	is_equal ( other : like current) : BOOLEAN
+	do
+		Result := other.evaluation_period.x.is_equal (evaluation_period.x) and
+				other.evaluation_period.y.is_equal (evaluation_period.y)
+		ensure then
+			Result = other.evaluation_period.x.is_equal (evaluation_period.x) and
+				other.evaluation_period.y.is_equal (evaluation_period.y)
+
+	end
 
 feature {PF_EVAL_PER} -- implementation
 

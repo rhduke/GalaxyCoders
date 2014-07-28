@@ -16,6 +16,7 @@ feature {NONE} -- constructor
 		do
 			create invest_history.make (0)
 			create line_numbers.make (0)
+			create eval_pr.make_not_exist
 			error := sh_classes.init_error
 		end
 
@@ -26,6 +27,13 @@ feature -- getters and adders
 			invest_history.force (inv)
 			line_numbers.extend (line_num)
 		end
+
+	add_eval_pr ( eval_per : PF_EVAL_PER)
+	require
+			not_void : eval_per /= void
+	do
+		eval_pr  := eval_per
+	end
 
 	item alias "[]" (i: INTEGER_32): INVESTMENT
 		require
@@ -40,7 +48,12 @@ feature -- getters and adders
 		do
 			Result := invest_history.twin
 		end
-
+	get_eval_per : TUPLE[x,y:DATE]
+	do
+		Result := eval_pr.getvalue.twin
+		ensure
+			Result.is_equal (eval_pr.getvalue)
+	end
 	flush
 		do
 			invest_history.wipe_out
@@ -83,6 +96,16 @@ feature -- getters and adders
 					invest_history [i.item - 1].cf.getvalue = 0 implies invest_history [i.item].mv.getvalue = 0 end and
 					across 2 |..| statements_size as i all invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue >= 0 end
 		end
+	is_eval_per_in_range : BOOLEAN
+	do
+		Result := across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.x) end and
+		across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.y) end and
+		is_valid_portfolio
+	ensure
+		Result = across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.x) end and
+		across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.y) end and
+		is_valid_portfolio
+	end
 
 feature {NONE} -- checking validity of data
 
@@ -268,7 +291,7 @@ feature
 			Result = invest_history.upper
 		end
 
-feature {PORTFOLIO_DATA} -- implementation
+feature {NONE} -- implementation
 
 	invest_history: ARRAYED_LIST [INVESTMENT]
 
@@ -277,5 +300,7 @@ feature {PORTFOLIO_DATA} -- implementation
 	sh_classes: SHARED_CLASSES
 
 	error: ERROR_TYPE
+
+	eval_pr : PF_EVAL_PER
 
 end
