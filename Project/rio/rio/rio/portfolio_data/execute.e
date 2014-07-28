@@ -14,13 +14,14 @@ feature {NONE} -- execution
 	do
 		read_from_input
 		read_file
+		calculation_output
 	end
 
 feature {NONE} -- reading
 
 	read_from_input
 	do
-		io.put_string ("roi ")
+		io.put_string ("rio/csv-inputs/new_ac1.csv")
 		io.read_line
 		file_path := io.last_string
 	end
@@ -124,44 +125,105 @@ feature{NONE} -- parse routine helpers\
 
 feature {NONE} -- calculation implementation
 
-	calculate_twr : TUPLE[whole_found:BOOLEAN; whole:REAL_64;
-						part_exists:BOOLEAN; part_found:BOOLEAN; part:REAL_64]
+	calculation_output
+		local
+			twr_soln, precise_soln : TUPLE[whole : TUPLE [sol:REAL_64; found:BOOLEAN];
+									part_exists:BOOLEAN;
+									part : TUPLE[sol:REAL_64; found:BOOLEAN]]
+		do
+			twr_soln := calculate_twr
+			precise_soln := calculate_precise
+
+			-- OUPTUT TWR
+			print("ROI (TWR):")
+			io.new_line
+			-- whole
+			print("\tWhole Period: ")
+			if twr_soln.whole.found then
+				print(twr_soln.whole.sol)
+			else
+				print("Could not be calculated!")
+			end
+			io.new_line
+			-- part
+			if twr_soln.part_exists then
+				print("\tPart Period: ")
+				if twr_soln.part.found then
+					print(twr_soln.part.sol)
+				else
+					print("Could not be calculated!")
+				end
+				io.new_line
+			end
+
+			-- OUPTUT PRECISE
+			print("ROI (Precise):")
+			io.new_line
+			-- whole
+			print("\tWhole Period: ")
+			if precise_soln.whole.found then
+				print(precise_soln.whole.sol)
+			else
+				print("Could not be calculated!")
+			end
+			io.new_line
+			-- part
+			if precise_soln.part_exists then
+				print("\tPart Period: ")
+				if twr_soln.part.found then
+					print(precise_soln.part.sol)
+				else
+					print("Could not be calculated!")
+				end
+				io.new_line
+			end
+
+		end
+
+	calculate_twr : TUPLE[whole : TUPLE [sol:REAL_64; found:BOOLEAN];
+						part_exists:BOOLEAN;
+						part : TUPLE[sol:REAL_64; found:BOOLEAN]]
 		local
 			twr : TWR_CALCULATION
 			inv_hist : PORTFOLIO_DATA
+			a_start, a_end : PF_DATE -- for Evaliation period
 		do
 			inv_hist := sh_classes.init_portfolio_data
 			create twr.make
 
-			-- TWR If not a full year
---			Result.whole := twr.compounded_twr
---			Result.whole_found := twr.found
-
-			-- TWR More than a year
-			Result.whole := twr.anual_compounded_twr
---			Result.whole_found := twr.found
+			-- TWR Whole
+				Result.whole := twr.anual_compounded_twr
 
 			-- TWR Part period
 			Result.part_exists := inv_hist.get_eval_per.exists
 			if inv_hist.get_eval_per.exists then
-				Result.part := twr.twr (inv_hist.get_eval_per.getvalue.x, inv_hist.get_eval_per.getvalue.y)
---				Result.part_found := twr.found
+				create a_start.make(inv_hist.get_eval_per.getvalue.x)
+				create a_end.make(inv_hist.get_eval_per.getvalue.y)
+				Result.part := twr.twr (a_start,a_end)
 			end
 		end
 
-	calculate_precise : TUPLE[whole_found:BOOLEAN; whole:REAL_64;
-						part_exists:BOOLEAN; part_found:BOOLEAN; part:REAL_64]
+	calculate_precise : TUPLE[whole : TUPLE [sol:REAL_64; found:BOOLEAN];
+						part_exists:BOOLEAN;
+						part : TUPLE[sol:REAL_64; found:BOOLEAN]]
 		local
 			precise : PRECISE_CALCULATION
 			inv_hist : PORTFOLIO_DATA
+			a_start, a_end : PF_DATE -- for Evaliation period
 		do
 			inv_hist := sh_classes.init_portfolio_data
 			create precise.make
 
 			-- Precise whole
-			
+			Result.whole := precise.anual_precise
 
 			-- Precise part
+			Result.part_exists := inv_hist.get_eval_per.exists
+			if inv_hist.get_eval_per.exists then
+				create a_start.make(inv_hist.get_eval_per.getvalue.x)
+				create a_end.make(inv_hist.get_eval_per.getvalue.y)
+				Result.part := precise.precise (a_start,a_end)
+			end
 		end
 
 feature {NONE} -- implementation
