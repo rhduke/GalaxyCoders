@@ -38,9 +38,9 @@ feature
 			row_temp := row
 			if row_temp [1].is_date then
 			--	print ("d1%N")
-				if row_temp [1].is_date and (row_temp [2].is_double or row_temp [2] ~ "") --b
+				if row_temp [1].is_date and (row_temp[2].is_float or row_temp [2].is_double or row_temp [2] ~ "") --b
 					and (row_temp [3].is_float or row_temp [3].out ~ "" or row_temp[3].is_double) -- cf
-					and (row_temp [4].is_float or row_temp [4].out ~ "" or row_temp[3].is_double) -- af
+					and (row_temp [4].is_float or row_temp [4].out ~ "" or row_temp[4].is_double) -- af
 					and (row_temp [5].is_percentage or row_temp [5].out ~ "") -- bm
 
 				then
