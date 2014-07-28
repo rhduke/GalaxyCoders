@@ -111,16 +111,21 @@ feature {NONE} -- checking validity of data
 			if statements_size > 0 then
 				from
 					i := 1
+				invariant
+					i >= 1
+					i <= statements_size + 1
 				until
 					i > statements_size
 				loop
-					if invest_history [i.item].mv.getvalue < 0 then
-						error.error_statement (" has market value that is negative. ", line_numbers[i.item])
-						remove_investment_line (i.item)
+					if invest_history [i].mv.getvalue < 0 then
+						error.error_statement (" has market value that is negative. ", line_numbers[i])
+						remove_investment_line (i)
 						has_at_least_two_investments
 					else
 						i := i + 1
 					end
+				variant
+					statements_size + 1 - i
 				end
 			end
 		end
@@ -135,15 +140,20 @@ feature {NONE} -- checking validity of data
 			if statements_size >= 2 then
 				from
 					i := 2
+				invariant
+					i >= 1
+					i <= statements_size + 1
 				until
 					i > statements_size
 				loop
-					if not invest_history [i.item].date.getvalue.is_greater (invest_history [i.item - 1].date.getvalue) then
+					if not invest_history [i].date.getvalue.is_greater (invest_history [i- 1].date.getvalue) then
 						error.error_statement (" has date that's earlier than or equal to previous statements. Dates must be in increasing order and unique. ", line_numbers[i.item])
-						remove_investment_line (i.item)
+						remove_investment_line (i)
 					else
 						i := i + 1
 					end
+				variant
+					statements_size + 1 - i
 				end
 
 			end
@@ -152,15 +162,26 @@ feature {NONE} -- checking validity of data
 	no_grow_from_zero
 			-- checks , fix and report if market has grown from previous
 			-- zero cash flow and market value
+		local
+			i : INTEGER_32
 		do
 			if statements_size >= 2 then
-				across
-					2 |..| statements_size as i
+				from
+					i := 2
+				invariant
+					i >= 1
+					i <= statements_size + 1
+				until
+					i > statements_size
 				loop
-					if invest_history [i.item].mv.getvalue > 0 and invest_history [i.item - 1].mv.getvalue = 0 and invest_history [i.item - 1].cf.getvalue = 0 then
-						error.error_statement ("has grown market value from previous zero cash flow and market value. ", line_numbers[i.item])
-						remove_investment_line (i.item)
+					if invest_history [i].mv.getvalue > 0 and invest_history [i - 1].mv.getvalue = 0 and invest_history [i.item].cf.getvalue = 0 then
+						error.error_statement ("has grown market value from previous zero cash flow and market value. ", line_numbers[i])
+						remove_investment_line (i)
+					else
+						i := i + 1
 					end
+				variant
+					statements_size + 1 - i
 				end
 			end
 		end
@@ -169,16 +190,25 @@ feature {NONE} -- checking validity of data
 			-- checks , fix and report if cash flow
 			-- withdraw more than  its current market value
 		local
-			temp : INTEGER_32
+			i : INTEGER_32
 		do
 			if statements_size >= 2 then
-				across
-					2 |..| statements_size as i
+				from
+					i := 2
+				invariant
+					i >= 1
+					i <= statements_size + 1
+				until
+					i > statements_size
 				loop
-					if invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue < 0 then
-						error.error_statement ("has amount of cash flow greater than its current value. ", line_numbers[i.item])
-						remove_investment_line (i.item)
+					if invest_history [i].mv.getvalue + invest_history [i].cf.getvalue < 0 then
+						error.error_statement ("has amount of cash flow greater than its current value. ", line_numbers[i])
+						remove_investment_line (i)
+					else
+						i := i + 1
 					end
+				variant
+					statements_size + 1 - i
 				end
 			end
 		end
