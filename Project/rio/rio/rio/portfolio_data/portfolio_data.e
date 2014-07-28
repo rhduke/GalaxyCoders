@@ -188,7 +188,7 @@ feature {NONE}
 			index_bounded: across getList.lower |..| getList.upper as j some i = j.item end
 		local
 			temp : ARRAYED_LIST[INVESTMENT]
-			linetemp
+			templine : ARRAYED_LIST [INTEGER_32]
 			k : INTEGER_32
 		do
 			create temp.make (0)

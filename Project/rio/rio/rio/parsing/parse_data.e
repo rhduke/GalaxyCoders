@@ -85,7 +85,7 @@ feature
 				--	print ("d9%N")
 				else
 				--	print ("d10%N")
-					error.custom_msg ("Row number " + row_temp.number.out + ": is invalid.")
+					error.error_custom ("Row number " + row_temp.number.out + ": is invalid.")
 				end --b
 
 --                elseif row_temp.is_empty then
