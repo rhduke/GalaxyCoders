@@ -29,6 +29,8 @@ feature -- Constructor
 			add_boolean_case (agent t13)
 			add_boolean_case (agent t14)
 			add_boolean_case (agent t15)
+			add_boolean_case (agent t16)
+			add_boolean_case (agent t17)
 
 
 
@@ -276,7 +278,7 @@ feature -- tests
 	do
 		comment("Testing parser with non-valid evaluation period")
 		create p.make
-		create row.make ("Evaluation Period: 2009-05-30 to 2007-05-30", 2)
+		create row.make ("Evaluation Period: 2009-05-30 2 2007-05-30", 2)
 		p.parserow (row)
 
 		Result := p.is_successfully_obtain_data = false
@@ -297,12 +299,35 @@ feature -- tests
 
 	end
 
+	t16 : BOOLEAN
+	local
+		p : PARSE_TABLE
+		row : ROW
+	do
+		comment("Testing parser with valid table row")
+		create p.make
+		create row.make ("Transaction Date,Market Value,Cash Flow,Agent Fees,Benchmark", 7)
+		p.parserow (row)
+
+		Result := p.is_successfully_obtain_data = true
+
+	end
+
+	t17 : BOOLEAN
+	local
+		p : PARSE_TABLE
+		row : ROW
+	do
+		comment("Testing parser with non-valid table row")
+		create p.make
+		create row.make ("Transaction Date,Cash Flow,Market Value,Agent Fees,Benchmark", 8)
+		p.parserow (row)
+
+		Result := p.is_successfully_obtain_data = false
+
+	end
+
 
 
 
 end
-
---problems
---evaluation period problem
---shouldn't everything else if found on first row should be invalid if name is only valid on first row
---parsing data problem
