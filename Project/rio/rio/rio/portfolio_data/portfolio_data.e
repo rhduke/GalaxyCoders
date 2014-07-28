@@ -108,6 +108,11 @@ feature {NONE} -- checking validity of data
 		local
 			i : INTEGER_32
 		do
+			across line_numbers as ln
+			loop
+				print(ln.item.as_integer_32)
+				io.new_line
+			end
 			if statements_size > 0 then
 				from
 					i := 1
@@ -115,9 +120,11 @@ feature {NONE} -- checking validity of data
 					i > statements_size
 				loop
 					if invest_history [i.item].mv.getvalue < 0 then
-						error.error_statement (" has market value that is negative. ", line_numbers.array_at (i.item))
+						--error.error_statement (" has market value that is negative. ", 12)
 						remove_investment_line (i.item)
 						has_at_least_two_investments
+						print(i)
+						io.new_line
 					else
 						i := i + 1
 					end
@@ -192,6 +199,7 @@ feature {NONE}
 			k : INTEGER_32
 		do
 			create temp.make (0)
+			create templine.make (0)
 			from
 				k := 1
 			until
@@ -199,10 +207,12 @@ feature {NONE}
 			loop
 				if (k /= i) then
 					temp.extend (invest_history[k])
+					templine.extend (line_numbers[k])
 				end
 				k := k + 1
 			end
 			invest_history.copy (temp)
+			line_numbers.copy (templine)
 		ensure
 			less_statments: invest_history.count = old invest_history.count - 1
 		end
