@@ -96,6 +96,8 @@ feature -- getters and adders
 					invest_history [i.item - 1].cf.getvalue = 0 implies invest_history [i.item].mv.getvalue = 0 end and
 					across 2 |..| statements_size as i all invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue >= 0 end
 		end
+
+
 	is_eval_per_in_range : BOOLEAN
 	do
 		Result := across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.x) end and

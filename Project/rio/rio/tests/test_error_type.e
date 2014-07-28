@@ -22,9 +22,9 @@ feature
 			add_to_list
 			from
 --				csv_iteration_cursor := csv_doc.new_cursor
-				csv_iteration_cursor := rd_file.get_cursor
+				csv_iteration_cursor := rd_file.init_new_cursor
 			until
-				rd_file.is_end_of_file
+				csv_iteration_cursor.after
 			loop
 				pass_to_list(csv_iteration_cursor.item)
 				csv_iteration_cursor.forth
@@ -59,8 +59,6 @@ feature
 			list.force (create {PARSING_CONTEXT}.make, i)
 			i := i + 1
 		end
---		list.force (create {PARSING_CONTEXT}.make, 1)
---		list.force (create {PARSING_CONTEXT}.make, 2)
 		list[1].setparsingstrategy (create {PARSE_DESCR}.make)
 		list[2].setparsingstrategy (create {PARSE_NAME}.make)
 		list[3].setparsingstrategy (create {PARSE_EMAIL}.make)

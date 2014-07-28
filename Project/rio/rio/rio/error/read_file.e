@@ -18,44 +18,25 @@ feature
 	require
 		path_not_void: path /= void
 	do
-		create csv_doc.make_from_file_name (path)
-		csv_iteration_cursor := csv_doc.new_cursor
-	ensure
-		doc_is_not_void
+			create csv_doc.make_from_file_name (path)
 	end
 
-	is_end_of_file : BOOLEAN
+	init_new_cursor : CSV_DOC_ITERATION_CURSOR
 	require
-		not_void : doc_is_not_void
+		file_reachable : is_path_valid
 	do
-		result := csv_iteration_cursor.after
-	ensure
-		result = csv_iteration_cursor.after
+		Result := csv_doc.new_cursor
+		ensure
+			Result /= void
 	end
 
-	get_cursor : CSV_DOC_ITERATION_CURSOR
+
+	is_path_valid : BOOLEAN
 	do
-		result := csv_iteration_cursor.twin
+		Result := csv_doc.stream.is_open_read
+		ensure
+			Result = csv_doc.stream.is_open_read
 	end
-
-	doc_is_not_void : BOOLEAN
-	do
-		Result := csv_doc /= void
-	ensure
-		Result = csv_doc /= void
-	end
-
-	flush
-		do
-			if csv_doc /= void then
-				csv_doc.stream.close
-			end
-			if csv_iteration_cursor /= void then
-				csv_iteration_cursor.exit
-			end
-
-		end
 feature {NONE }
 	csv_doc : CSV_DOCUMENT
-	csv_iteration_cursor: CSV_DOC_ITERATION_CURSOR
 end
