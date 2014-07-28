@@ -77,15 +77,12 @@ feature
 				--		print ("d62%N")
 						create bench_mark.make_not_exist
 					end --4
-
+					obtained_data := true
 				--	print ("d7%N")
 					create invest.make ([trans_date, market_value, cash_flow, agent_fee, bench_mark])
 				--	print ("d8%N")
 					inv_history.add (invest,row_temp.number)
 				--	print ("d9%N")
-				else
-				--	print ("d10%N")
-					error.error_custom ("Row number " + row_temp.number.out + ": is invalid.")
 				end --b
 
 --                elseif row_temp.is_empty then
@@ -106,6 +103,9 @@ feature
 	detect_error
 			-- detect errors and call error class
 		do
+			if not is_successfully_obtain_data then
+				error.error_custom ("Row number is invalid.")
+			end
 		end
 
 feature {NONE} -- global variable
