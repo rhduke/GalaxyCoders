@@ -55,6 +55,14 @@ feature -- getters and adders
 			Result.is_equal (eval_pr.getvalue)
 	end
 
+	get_pt_line_num ( i :INTEGER_32) : INTEGER_32
+		-- return the line number at which that portfolio statement located in the document is located
+	do
+		Result := line_numbers[i]
+	ensure
+		Result = line_numbers[i]
+	end
+
 	flush
 		do
 			invest_history.wipe_out

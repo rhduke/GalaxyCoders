@@ -75,35 +75,47 @@ feature
 			tr [Result].date.getvalue ~ d.getvalue
 		end
 
-	twr (a_start, a_end: PF_DATE): REAL_64
+	twr (a_start, a_end: PF_DATE): TUPLE [answer: REAL_64; found: BOOLEAN]
 		require
 			a_start_is_date_domain: dates.has (a_start)
 			a_end_is_date_domain: dates.has (a_end)
 			a_end_is_after_a_start: a_end.getvalue.is_greater (a_start.getvalue)
 			--across 2 |..| count as i all tr [i.item - 1].mv.getvalue + tr [i.item - 1].cf.getvalue /= 0 end
 		do
-			Result := product_of_wealth (di (a_start) + 1, di (a_end)) - 1
+			create Result.default_create
+
+			if not product_of_wealth (di (a_start) + 1, di (a_end)).found then
+				sh_classes.init_error.error_custom ("TWR will not proceed because there is zero market and cash flow value.%N")
+				Result.answer := product_of_wealth (di (a_start) + 1, di (a_end)).answer - 1
+				Result.found := false
+			else
+				Result.answer := product_of_wealth (di (a_start) + 1, di (a_end)).answer - 1
+				Result.found := true
+			end
 		ensure
-			Result = product_of_wealth (di (a_start) + 1, di (a_end)) - 1
+			Result.answer = product_of_wealth (di (a_start) + 1, di (a_end)).answer - 1
+			Result.found = product_of_wealth (di (a_start) + 1, di (a_end)).found
 		end
 
-	compounded_twr: REAL_64
+	compounded_twr:  TUPLE [answer: REAL_64; found: BOOLEAN]
 		do
 			Result := twr (start_date, end_date)
 		ensure
 			Result = twr (start_date, end_date)
 		end
 
-	anual_compounded_twr: REAL_64
+	anual_compounded_twr: TUPLE [answer: REAL_64; found: BOOLEAN]
 		do
 			if (duration >= 1) then
-				Result := exponent ((1 + compounded_twr), (1 / duration)) - 1
+				Result.answer := exponent ((1 + compounded_twr.answer), (1 / duration)) - 1
+				Result.found := compounded_twr.found
 			else
-				REsult := compounded_twr
+				Result.answer := compounded_twr.answer
+				Result.found := compounded_twr.found
 			end
 		ensure
-			(duration >= 1) implies Result = exponent ((1 + compounded_twr), (1 / duration)) - 1
-			(duration < 1) implies Result = compounded_twr
+			(duration >= 1) implies Result.answer = exponent ((1 + compounded_twr.answer), (1 / duration)) - 1 and Result.found = compounded_twr.found
+			(duration < 1) implies Result.answer = compounded_twr.answer and  Result.found = compounded_twr.found
 		end
 
 feature
@@ -113,7 +125,7 @@ feature
 			across 2 |..| count as j some i = j.item end
 		do
 			create Result.default_create
-			if ((tr [i - 1].mv.getvalue + tr [i - 1].cf.getvalue - tr [i - 1].af.getvalue) = 0) or (tr [i].mv.getvalue = 0) then
+			if ((tr [i - 1].mv.getvalue + tr [i - 1].cf.getvalue - tr [i - 1].af.getvalue) = 0)  then
 				Result.answer := 0
 				Result.found := false
 			else
@@ -124,18 +136,21 @@ feature
 			Result.answer = (tr [i].mv.getvalue / (tr [i - 1].mv.getvalue + tr [i - 1].cf.getvalue - tr [i - 1].af.getvalue)) or Result.answer = 0
 		end
 
-	product_of_wealth (i, j: INTEGER): REAL_64
+	product_of_wealth (i, j: INTEGER):  TUPLE [answer: REAL_64; found: BOOLEAN]
 		require
 			across 2 |..| count as c some i = c.item end
 		do
-			Result := 1.0
+			create Result.default_create
+			Result.answer := 1.0
 			across
 				i |..| j as c
 			loop
-				if wealth (c.item).answer = 0 then
-					Result := Result * 0.0
+				if not  wealth (c.item).found  then
+					Result.answer := 	Result.answer * 0
+					Result.found := false
 				else
-					Result := Result * wealth (c.item).answer
+					Result.answer := Result.answer * wealth (c.item).answer
+					Result.found := true
 				end
 			end
 		end
