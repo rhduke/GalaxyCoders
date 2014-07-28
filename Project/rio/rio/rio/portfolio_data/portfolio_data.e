@@ -53,10 +53,10 @@ feature -- getters and adders
 			commands: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 		do
 			create commands.make (0)
---			commands.extend (agent inv_history_not_empty)
---			commands.extend (agent has_at_least_two_investments)
+			commands.extend (agent inv_history_not_empty)
+			commands.extend (agent has_at_least_two_investments)
 			commands.extend (agent row_has_non_negative_mk)
---			commands.extend (agent dates_ordered)
+			commands.extend (agent dates_uniq_order)
 --			commands.extend (agent no_grow_from_zero)
 --			commands.extend (agent cant_withdraw_more_market_value)
 			from
@@ -108,11 +108,6 @@ feature {NONE} -- checking validity of data
 		local
 			i : INTEGER_32
 		do
-			across line_numbers as ln
-			loop
-				print(ln.item.as_integer_32)
-				io.new_line
-			end
 			if statements_size > 0 then
 				from
 					i := 1
@@ -120,11 +115,9 @@ feature {NONE} -- checking validity of data
 					i > statements_size
 				loop
 					if invest_history [i.item].mv.getvalue < 0 then
-						--error.error_statement (" has market value that is negative. ", 12)
+						error.error_statement (" has market value that is negative. ", line_numbers[i.item])
 						remove_investment_line (i.item)
 						has_at_least_two_investments
-						print(i)
-						io.new_line
 					else
 						i := i + 1
 					end
@@ -132,8 +125,8 @@ feature {NONE} -- checking validity of data
 			end
 		end
 
-	dates_ordered
-			-- checks , fix and report if dates are ordered
+	dates_uniq_order
+			-- checks , fix and report if dates are ordered and unique
 			-- if not then it attempts to delete the row that has invalid date
 		local
 			i : INTEGER_32
@@ -146,7 +139,7 @@ feature {NONE} -- checking validity of data
 					i > statements_size
 				loop
 					if not invest_history [i.item].date.getvalue.is_greater (invest_history [i.item - 1].date.getvalue) then
-						error.error_statement (" has date that earlier than previous statements. ", line_numbers.array_at (i.item))
+						error.error_statement (" has date that's earlier than or equal to previous statements. Dates must be in increasing order and unique. ", line_numbers.array_at (i.item))
 						remove_investment_line (i.item)
 					else
 						i := i + 1
@@ -175,13 +168,16 @@ feature {NONE} -- checking validity of data
 	cant_withdraw_more_market_value
 			-- checks , fix and report if cash flow
 			-- withdraw more than  its current market value
+		local
+			temp : INTEGER_32
 		do
 			if statements_size >= 2 then
 				across
 					2 |..| statements_size as i
 				loop
 					if invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue < 0 then
-						error.error_statement ("has amount of cash flow greater than its current value. ", line_numbers.array_at (i.item))
+						temp := line_numbers.array_at (i.item)
+						error.error_statement ("has amount of cash flow greater than its current value. ", temp)
 						remove_investment_line (i.item)
 					end
 				end
@@ -215,6 +211,7 @@ feature {NONE}
 			line_numbers.copy (templine)
 		ensure
 			less_statments: invest_history.count = old invest_history.count - 1
+			less_linenum: line_numbers.count = old line_numbers.count - 1
 		end
 
 

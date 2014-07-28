@@ -15,11 +15,12 @@ feature -- Constructor
 	make
 		do
 			create flush.make
---			add_boolean_case (agent empty)
---			add_boolean_case (agent one_inv)
---			add_boolean_case (agent neg_mk)
+			add_boolean_case (agent empty)
+			add_boolean_case (agent one_inv)
+			add_boolean_case (agent neg_mk)
 			add_boolean_case (agent one_inv_rem)
---			add_boolean_case (agent date_order)
+			add_boolean_case (agent date_order)
+--			add_boolean_case (agent same_date)
 		end
 
 feature -- Data Storage
@@ -119,7 +120,7 @@ feature -- Test cases
 			until
 				i > err.size
 			loop
-				if (err[i] ~ "Warning! the statment at line 11 has market value that is negative. This statement will be ignored in ROI calculation.%N") then
+				if (err[i] ~ "Warning! the statment at line 10 has market value that is negative. This statement will be ignored in ROI calculation.%N") then
 					Result := true
 					check Result end
 				end
@@ -145,7 +146,7 @@ feature -- Test cases
 			loop
 				if (err[i] ~ "Error! Only found one valid investment entry. Need at least two.%N") then
 					f1 := true
-				elseif (err[i] ~ "Warning! the statment at line 12 has market value that is negative. This statement will be ignored in ROI calculation.%N") then
+				elseif (err[i] ~ "Warning! the statment at line 11 has market value that is negative. This statement will be ignored in ROI calculation.%N") then
 					f2 := true
 				end
 				i := i + 1
@@ -164,13 +165,35 @@ feature -- Test cases
 			err := sh_classes.init_error
 			parsedata("rio/csv-inputs/test-validity/date_order.csv")
 			inv_hist.run_validation
-			err.print_errors
 			from
 				i := 1
 			until
 				i > err.size
 			loop
-				if (err[i] ~ "Warning! the statment at line 13 has date that earlier than previous statements. This statement will be ignored in ROI calculation.%N") then
+				if (err[i] ~ "Warning! the statment at line 13 has date that's earlier than or equal to previous statements. Dates must be in increasing order and unique. This statement will be ignored in ROI calculation.%N") then
+					Result := true
+					check Result end
+				end
+				i := i + 1
+			end
+		end
+
+	same_date : BOOLEAN
+		local
+			i : INTEGER_32
+			s : STRING
+		do
+			comment("check date_order.csv has dates out of order")
+			flush.flushall
+			err := sh_classes.init_error
+			parsedata("rio/csv-inputs/test-validity/date_order.csv")
+			inv_hist.run_validation
+			from
+				i := 1
+			until
+				i > err.size
+			loop
+				if (err[i] ~ "Warning! the statment at line 13 has date that's earlier than or equal to previous statements. Dates must be in increasing order and unique. This statement will be ignored in ROI calculation.%N") then
 					Result := true
 					check Result end
 				end
