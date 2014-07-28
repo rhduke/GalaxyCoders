@@ -29,7 +29,6 @@ feature
 
 			pd.flush
 			er.flush
-			rf.flush
 		end
 
 feature {FLUSH_SHARED}
