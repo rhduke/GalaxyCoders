@@ -43,7 +43,6 @@ feature
 													across row_temp.capture_strings_in_row ("(\d{4}-\d{2}-\d{2}|\d{2}/\d{2}/\d{4})\s*(to)?\s*(\d{4}-\d{2}-\d{2}|\d{2}/\d{2}/\d{4})*\s*") as
 													c loop Evaluation_period := Evaluation_period + c.item + " " end
 												create pf_eval.make(Evaluation_period)
-												obtained_data := true
 											else
 												-- the fields have empty string
 												string_err := "Evaluation period is invalid on line" + row_temp.number.out+". make sure to have the right date format.%N"

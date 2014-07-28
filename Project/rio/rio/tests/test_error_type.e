@@ -39,7 +39,6 @@ feature
           create twr.make
 		    print(twr.compounded_twr)
 		    print("%N" + twr.anual_compounded_twr.out)
-		    sh_classes.init_genaral_info.print_info
 			err.print_errors
 
 	end
