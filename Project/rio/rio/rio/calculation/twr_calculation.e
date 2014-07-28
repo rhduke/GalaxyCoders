@@ -99,13 +99,19 @@ feature
 
 	compounded_twr:  TUPLE [answer: REAL_64; found: BOOLEAN]
 		do
-			Result := twr (start_date, end_date)
+			create Result.default_create
+
+			Result.answer := twr(start_date, end_date).answer
+			Result.found := twr(start_date, end_date).found
 		ensure
-			Result = twr (start_date, end_date)
+	     	Result.answer = twr (start_date, end_date).answer
+			Result.found = twr (start_date, end_date).found
 		end
 
 	anual_compounded_twr: TUPLE [answer: REAL_64; found: BOOLEAN]
 		do
+			create Result.default_create
+
 			if (duration >= 1) then
 				Result.answer := exponent ((1 + compounded_twr.answer), (1 / duration)) - 1
 				Result.found := compounded_twr.found
