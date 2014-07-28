@@ -21,11 +21,9 @@ feature
 		local
 			pd : PORTFOLIO_DATA
 			er : ERROR_TYPE
-			rf : READ_FILE
 		do
 			pd := sh_classes.init_portfolio_data
 			er := sh_classes.init_error
-			rf := sh_classes.init_file_read
 
 			pd.flush
 			er.flush

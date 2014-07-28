@@ -54,10 +54,12 @@ feature -- getters and adders
 		ensure
 			Result.is_equal (eval_pr.getvalue)
 	end
+	
 	flush
 		do
 			invest_history.wipe_out
 			line_numbers.wipe_out
+			eval_pr := void
 		end
 
 	run_validation

@@ -15,13 +15,12 @@ feature -- Constructor
 	make
 		do
 			create flush.make
-			flush.flushall
-			parsedata
 			add_boolean_case (agent t1)
 		end
 
 feature -- Data Storage
 	sh_classes : SHARED_CLASSES
+	inv_hist: PORTFOLIO_DATA
 	flush : FLUSH_SHARED
 
 feature -- Globals
@@ -31,7 +30,6 @@ feature -- Globals
 feature -- parse data
 	parsedata
 		local
-			inv_hist: PORTFOLIO_DATA
 			parse : PARSING_CONTEXT
 		do
 			create csv_doc.make_from_file_name ("rio/csv-inputs/new_ac1.csv")
@@ -66,11 +64,13 @@ feature -- Test cases
 	t1 : BOOLEAN
 		local
 			precise : PRECISE_CALCULATION
-			soln : REAL_64
+			soln : TUPLE[s:REAL_64; f:BOOLEAN]
 		do
 			comment ("t1: check precise roi is 22.751")
+			flush.flushall
+			parsedata
 			create precise.make
 			soln := precise.anual_precise
-			Result := almost_equal (soln, 22.751)
+			Result := almost_equal (soln.s, 22.751)
 		end
 end
