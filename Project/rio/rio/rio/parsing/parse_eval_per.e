@@ -89,7 +89,7 @@ feature
 			-- detect errors and call error class
 	do
 			if not string_err.is_empty then
-				error.custom_msg(string_err)
+				error.error_custom(string_err)
 			end
 	end
 
