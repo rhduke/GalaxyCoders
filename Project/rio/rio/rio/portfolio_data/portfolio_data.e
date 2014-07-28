@@ -200,9 +200,9 @@ feature {NONE} -- checking validity of data
 				until
 					i > statements_size
 				loop
-					if invest_history [i].mv.getvalue > 0 and invest_history [i - 1].mv.getvalue = 0 and invest_history [i - 1].cf.getvalue = 0 then
+					if invest_history [i].mv.getvalue /= 0 and ( invest_history [i - 1].mv.getvalue + invest_history [i - 1].cf.getvalue = 0) then
 						error.error_statement (" has grown market value from previous zero cash flow and market value. ", line_numbers[i])
-						remove_investment_line (i-1)
+						remove_investment_line (i)
 						has_at_least_two_investments
 					else
 						i := i + 1
