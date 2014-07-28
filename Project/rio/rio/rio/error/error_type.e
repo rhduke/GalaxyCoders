@@ -26,59 +26,59 @@ feature {NONE} -- initialize
 
 feature --  arbitrary data errors
 
-	name_error
+	error_name
 		do
-			error_list.extend ("Error!. Name was not found on the first line.%N")
+			error_list.extend ("Error! Name was not found on the first line.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
 
-	description_error (line_number: INTEGER_32)
+	error_description (line_number: INTEGER_32)
 		require
 			line_num_pos: line_number >= 1
 		do
-			error_list.extend ("Error!.The line " + line_number.out + " is not valid description.")
+			error_list.extend ("Error! The line " + line_number.out + " is not valid description.")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
 
-	accout_num_error (line_num: INTEGER_32)
+	error_accout_num (line_num: INTEGER_32)
 		require
 			line_num_pos: line_num >= 1
 		do
-			error_list.extend ("Error!. The line " + line_num.out + " is not valid  account number.")
+			error_list.extend ("Error! The line " + line_num.out + " is not valid  account number.")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
 
-	email_error (line_num: INTEGER_32)
+	error_email (line_num: INTEGER_32)
 		require
 			line_num_pos: line_num >= 1
 		do
-			error_list.extend ("Error!. The line " + line_num.out + " is not valid email.")
+			error_list.extend ("Error! The line " + line_num.out + " is not valid email.")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
 
-	address_error (line_num: INTEGER_32)
+	error_address (line_num: INTEGER_32)
 		require
 			line_num_pos: line_num >= 1
 		do
-			error_list.extend ("Error!. The line " + line_num.out + " is valid address. ")
+			error_list.extend ("Error! The line " + line_num.out + " is valid address. ")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
 
-	phone_num_error (line_num: INTEGER_32)
+	error_phone_num (line_num: INTEGER_32)
 		require
 			line_num_pos: line_num >= 1
 		do
-			error_list.extend ("Error!. The line" + line_num.out + " is not valid phone number.")
+			error_list.extend ("Error! The line" + line_num.out + " is not valid phone number.")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
 
-	custom_msg (string: STRING)
+	error_custom (string: STRING)
 		require
 			string_not_void: string /= void
 		do
@@ -89,20 +89,37 @@ feature --  arbitrary data errors
 
 feature -- errors for portfolio
 
-	two_or_less_stm
+	error_no_inv_history
 		do
-			error_list.extend ("ROI calculation can't be done because your "
-			+ "portfolio history has less than two statements due to error fixing." +
-			"Or you original input file had less than two statements.%N")
+			error_list.extend ("Error! No investment history found.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
 
-	statement_error (statement: STRING; line_num: INTEGER_32)
+	error_one_inv
 		do
-			error_list.extend ("Warning! the statment at line" + line_num.out + statement + ".This statement will be ignored in ROI calculation.%N")
+			error_list.extend ("Error! Only found one valid investment entry. Need at least two.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
+		end
+
+	error_statement (statement: STRING; line_num: INTEGER_32)
+		do
+			error_list.extend ("Warning! the statment at line " + line_num.out + statement + "This statement will be ignored in ROI calculation.%N")
+		ensure
+			error_added: error_list.count = old error_list.count + 1
+		end
+
+feature -- get errors from list
+
+	item alias "[]" (i:INTEGER_32): STRING
+		do
+			Result := create {STRING}.make_from_string (error_list[i])
+		end
+
+	size : INTEGER_32
+		do
+			Result := error_list.count
 		end
 
 feature
@@ -116,6 +133,9 @@ feature
 					io.put_string (c.item);
 					io.put_new_line
 				end
+			else
+				print("no errors")
+				io.new_line
 			end
 		end
 
