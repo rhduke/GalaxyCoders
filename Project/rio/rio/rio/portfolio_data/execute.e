@@ -8,13 +8,16 @@ class
 	EXECUTE
 create
 	make
-feature {NONE}
+
+feature {NONE} -- execution
 	make
 	do
 		read_from_input
 		read_file
 	end
-feature {NONE}
+
+feature {NONE} -- reading
+
 	read_from_input
 	do
 		io.put_string ("roi ")
@@ -24,101 +27,144 @@ feature {NONE}
 
 
 	read_file
-	local
-			rd_file : READ_FILE
-	do
-			rd_file := sh_classes.init_file_read
-			rd_file.open_file (file_path)
-			if  rd_file.is_path_valid then
-				parse_file
-			else
-				io.put_string ("Unable to read file. Invalid file path")
-			end
+		local
+				rd_file : READ_FILE
+		do
+				rd_file := sh_classes.init_file_read
+				rd_file.open_file (file_path)
+				if  rd_file.is_path_valid then
+					parse_file
+				else
+					io.put_string ("Unable to read file. Invalid file path")
+				end
 
-	end
+		end
 
+feature {NONE} -- parse implementation
 	parse_file
-	local
-			csv_iteration_cursor: CSV_DOC_ITERATION_CURSOR
-	do
-			from
-				csv_iteration_cursor :=  sh_classes.init_file_read.init_new_cursor
-			until
-				csv_iteration_cursor.after
-			loop
-				obtain_data(csv_iteration_cursor.item)	-- will obtain data from filr
-				csv_iteration_cursor.forth
-			end
-			across context_list as  c  loop c.item.error_examine end -- if any parsing class left an error will be reported
-			sh_classes.init_portfolio_data.printout -- just test to print portfolio data
+		local
+				csv_iteration_cursor: CSV_DOC_ITERATION_CURSOR
+		do
+				from
+					csv_iteration_cursor :=  sh_classes.init_file_read.init_new_cursor
+				until
+					csv_iteration_cursor.after
+				loop
+					obtain_data(csv_iteration_cursor.item)	-- will obtain data from filr
+					csv_iteration_cursor.forth
+				end
+				across context_list as  c  loop c.item.error_examine end -- if any parsing class left an error will be reported
+				sh_classes.init_portfolio_data.printout -- just test to print portfolio data
 
 
-	end
+		end
 
 	obtain_data ( row : ROW)
-	local
-		i : INTEGER
-	do
-		init_context_list
-		from
-				i := context_list.lower
-				invariant
-						i >= context_list.lower
-						i <= context_list.count + 1
-			until
-				i > context_list.upper
-			loop
-				context_list[i].getrowinfo (row)
-				if context_list[i].has_obtained_data then
-					remove_at(i)
+		local
+			i : INTEGER
+		do
+			init_context_list
+			from
+					i := context_list.lower
+					invariant
+							i >= context_list.lower
+							i <= context_list.count + 1
+				until
+					i > context_list.upper
+				loop
+					context_list[i].getrowinfo (row)
+					if context_list[i].has_obtained_data then
+						remove_at(i)
+					end
+					i := i + 1
+				variant
+				context_list.count + 1 - i
 				end
+
+		end
+
+	init_context_list
+		do
+			create context_list.make_empty
+			context_list.grow (9)
+			across 1 |..| 9 as i loop context_list.force (create {PARSING_CONTEXT}.make, i.item)  end
+			context_list[1].setparsingstrategy (create {PARSE_DESCR}.make)
+			context_list[2].setparsingstrategy (create {PARSE_NAME}.make)
+			context_list[3].setparsingstrategy (create {PARSE_EMAIL}.make)
+			context_list[4].setparsingstrategy (create {PARSE_PHONE}.make)
+			context_list[5].setparsingstrategy (create {PARSE_ADDR}.make)
+			context_list[6].setparsingstrategy (create {PARSE_ACCOUNT}.make)
+			context_list[7].setparsingstrategy (create {PARSE_EVAL_PER}.make)
+			context_list[8].setparsingstrategy (create {PARSE_DATA}.make)
+			context_list[9].setparsingstrategy (create {PARSE_TABLE}.make)
+		end
+
+feature{NONE} -- parse routine helpers\
+	remove_at( j : INTEGER)
+		-- remove element from context list
+		local
+				i : INTEGER
+		do
+
+			from
+				i := j
+			invariant
+				i >= j
+				i <= context_list.count
+			until
+				i = context_list.count
+			loop
+				context_list[i] := context_list[i+1]
 				i := i + 1
 			variant
-			context_list.count + 1 - i
+				context_list.count - i
 			end
-
-	end
-	init_context_list
-	do
-		create context_list.make_empty
-		context_list.grow (9)
-		across 1 |..| 9 as i loop context_list.force (create {PARSING_CONTEXT}.make, i.item)  end
-		context_list[1].setparsingstrategy (create {PARSE_DESCR}.make)
-		context_list[2].setparsingstrategy (create {PARSE_NAME}.make)
-		context_list[3].setparsingstrategy (create {PARSE_EMAIL}.make)
-		context_list[4].setparsingstrategy (create {PARSE_PHONE}.make)
-		context_list[5].setparsingstrategy (create {PARSE_ADDR}.make)
-		context_list[6].setparsingstrategy (create {PARSE_ACCOUNT}.make)
-		context_list[7].setparsingstrategy (create {PARSE_EVAL_PER}.make)
-		context_list[8].setparsingstrategy (create {PARSE_DATA}.make)
-		context_list[9].setparsingstrategy (create {PARSE_TABLE}.make)
-	end
-
-feature -- routine helpers\
-	remove_at( j : INTEGER)
-			-- remove element from context list
-local
-			i : INTEGER
-	do
-
-		from
-			i := j
-		invariant
-			i >= j
-			i <= context_list.count
-		until
-			i = context_list.count
-		loop
-			context_list[i] := context_list[i+1]
-			i := i + 1
-		variant
-			context_list.count - i
+			context_list.remove_tail (1)
 		end
-		context_list.remove_tail (1)
-	end
 
+feature {NONE} -- calculation implementation
 
-feature {NONE}
+	calculate_twr : TUPLE[whole_found:BOOLEAN; whole:REAL_64;
+						part_exists:BOOLEAN; part_found:BOOLEAN; part:REAL_64]
+		local
+			twr : TWR_CALCULATION
+			inv_hist : PORTFOLIO_DATA
+		do
+			inv_hist := sh_classes.init_portfolio_data
+			create twr.make
+
+			-- TWR If not a full year
+--			Result.whole := twr.compounded_twr
+--			Result.whole_found := twr.found
+
+			-- TWR More than a year
+			Result.whole := twr.anual_compounded_twr
+--			Result.whole_found := twr.found
+
+			-- TWR Part period
+			Result.part_exists := inv_hist.get_eval_per.exists
+			if inv_hist.get_eval_per.exists then
+				Result.part := twr.twr (inv_hist.get_eval_per.getvalue.x, inv_hist.get_eval_per.getvalue.y)
+--				Result.part_found := twr.found
+			end
+		end
+
+	calculate_precise : TUPLE[whole_found:BOOLEAN; whole:REAL_64;
+						part_exists:BOOLEAN; part_found:BOOLEAN; part:REAL_64]
+		local
+			precise : PRECISE_CALCULATION
+			inv_hist : PORTFOLIO_DATA
+		do
+			inv_hist := sh_classes.init_portfolio_data
+			create precise.make
+
+			-- Precise whole
+			
+
+			-- Precise part
+		end
+
+feature {NONE} -- implementation
 	file_path : STRING
 	sh_classes : SHARED_CLASSES
 	context_list :ARRAY[PARSING_CONTEXT]

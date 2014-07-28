@@ -32,7 +32,7 @@ feature {NONE} -- constructor
 			exist := false
 		end
 
-feature {PORTFOLIO_DATA} -- inherited
+feature -- inherited
 
 	getValue: TUPLE [x, y: DATE]
 		do

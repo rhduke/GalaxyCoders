@@ -48,12 +48,11 @@ feature -- getters and adders
 		do
 			Result := invest_history.twin
 		end
-	get_eval_per : TUPLE[x,y:DATE]
-	do
-		Result := eval_pr.getvalue.twin
-		ensure
-			Result.is_equal (eval_pr.getvalue)
-	end
+
+	get_eval_per : PF_EVAL_PER
+		do
+			Result := eval_pr
+		end
 
 	get_pt_line_num ( i :INTEGER_32) : INTEGER_32
 		-- return the line number at which that portfolio statement located in the document is located
