@@ -60,11 +60,11 @@ feature --  arbitrary data errors
 			error_added: error_list.count = old error_list.count + 1
 		end
 
-	error_address (line_num: INTEGER_32)
+	error_benchmark (line_num: INTEGER_32)
 		require
 			line_num_pos: line_num >= 1
 		do
-			error_list.extend ("Error! The line " + line_num.out + " is valid address.%N")
+			error_list.extend ("Error!. The line " + line_num.out + " contains date the corresponds benchmark at line has month-day that is not Jan-01 or not in last satement.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
@@ -126,12 +126,12 @@ feature -- errors for portfolio
 
 feature -- get errors from list
 
-	item alias "[]" (i:INTEGER_32): STRING
+	item alias "[]" (i: INTEGER_32): STRING
 		do
-			Result := create {STRING}.make_from_string (error_list[i])
+			Result := create {STRING}.make_from_string (error_list [i])
 		end
 
-	size : INTEGER_32
+	size: INTEGER_32
 		do
 			Result := error_list.count
 		end
@@ -148,7 +148,7 @@ feature
 					io.put_new_line
 				end
 			else
-				print("no errors")
+				print ("no errors")
 				io.new_line
 			end
 		end

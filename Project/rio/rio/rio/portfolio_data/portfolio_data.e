@@ -28,12 +28,12 @@ feature -- getters and adders
 			line_numbers.extend (line_num)
 		end
 
-	add_eval_pr ( eval_per : PF_EVAL_PER)
-	require
-			not_void : eval_per /= void
-	do
-		eval_pr  := eval_per
-	end
+	add_eval_pr (eval_per: PF_EVAL_PER)
+		require
+			not_void: eval_per /= void
+		do
+			eval_pr := eval_per
+		end
 
 	item alias "[]" (i: INTEGER_32): INVESTMENT
 		require
@@ -49,18 +49,18 @@ feature -- getters and adders
 			Result := invest_history.twin
 		end
 
-	get_eval_per : PF_EVAL_PER
+	get_eval_per: PF_EVAL_PER
 		do
 			Result := eval_pr
 		end
 
-	get_pt_line_num ( i :INTEGER_32) : INTEGER_32
-		-- return the line number at which that portfolio statement located in the document is located
-	do
-		Result := line_numbers[i]
-	ensure
-		Result = line_numbers[i]
-	end
+	get_pt_line_num (i: INTEGER_32): INTEGER_32
+			-- return the line number at which that portfolio statement located in the document is located
+		do
+			Result := line_numbers [i]
+		ensure
+			Result = line_numbers [i]
+		end
 
 	flush
 		do
@@ -76,6 +76,7 @@ feature -- getters and adders
 		do
 			create commands.make (0)
 			commands.extend (agent invalid_eval_per)
+			commands.extend (agent check_benchmark)
 			commands.extend (agent inv_history_not_empty)
 			commands.extend (agent has_at_least_two_investments)
 			commands.extend (agent row_has_non_negative_mk)
@@ -94,30 +95,17 @@ feature -- getters and adders
 
 	is_valid_portfolio: BOOLEAN
 		do
-			Result := statements_size >= 2 and across 1 |..| statements_size as i all invest_history [i.item].mv.getvalue >= 0 end and
-			across 2 |..| statements_size as i all invest_history [i.item].date.getvalue.is_greater (invest_history [i.item - 1].date.getvalue) end and
-			across 2 |..| statements_size as i all invest_history [i.item - 1].mv.getvalue = 0 and
-			invest_history [i.item - 1].cf.getvalue = 0 implies invest_history [i.item].mv.getvalue = 0 end and
-			across 2 |..| statements_size as i all invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue >= 0 end
+			Result := statements_size >= 2 and across 1 |..| statements_size as i all invest_history [i.item].mv.getvalue >= 0 end and across 2 |..| statements_size as i all invest_history [i.item].date.getvalue.is_greater (invest_history [i.item - 1].date.getvalue) end and across 2 |..| statements_size as i all invest_history [i.item - 1].mv.getvalue = 0 and invest_history [i.item - 1].cf.getvalue = 0 implies invest_history [i.item].mv.getvalue = 0 end and across 2 |..| statements_size as i all invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue >= 0 end
 		ensure
-			Result = (statements_size >= 2) and across 1 |..| statements_size as i all invest_history [i.item].mv.getvalue >= 0 end and
-					across 2 |..| statements_size as i all invest_history [i.item].date.getvalue.is_greater (invest_history [i.item - 1].date.getvalue) end and
-					across 2 |..| statements_size as i all invest_history [i.item - 1].mv.getvalue = 0 and
-					invest_history [i.item - 1].cf.getvalue = 0 implies invest_history [i.item].mv.getvalue = 0 end and
-					across 2 |..| statements_size as i all invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue >= 0 end
+			Result = (statements_size >= 2) and across 1 |..| statements_size as i all invest_history [i.item].mv.getvalue >= 0 end and across 2 |..| statements_size as i all invest_history [i.item].date.getvalue.is_greater (invest_history [i.item - 1].date.getvalue) end and across 2 |..| statements_size as i all invest_history [i.item - 1].mv.getvalue = 0 and invest_history [i.item - 1].cf.getvalue = 0 implies invest_history [i.item].mv.getvalue = 0 end and across 2 |..| statements_size as i all invest_history [i.item].mv.getvalue + invest_history [i.item].cf.getvalue >= 0 end
 		end
 
-
-	is_eval_per_in_range : BOOLEAN
-	do
-		Result := across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.x) end and
-		across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.y) end and
-		is_valid_portfolio
-	ensure
-		Result = ((across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.x) end) and
-		(across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.y) end) and
-		(is_valid_portfolio))
-	end
+	is_eval_per_in_range: BOOLEAN
+		do
+			Result := across 1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.x) end and across 1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.y) end and is_valid_portfolio
+		ensure
+			Result = ((across 1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.x) end) and (across 1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.y) end) and (is_valid_portfolio))
+		end
 
 feature {NONE} -- checking validity of data
 
@@ -149,7 +137,7 @@ feature {NONE} -- checking validity of data
 			-- checks , fix and report if row has
 			--negative market value
 		local
-			i : INTEGER_32
+			i: INTEGER_32
 		do
 			if statements_size > 0 then
 				from
@@ -161,7 +149,7 @@ feature {NONE} -- checking validity of data
 					i > statements_size
 				loop
 					if invest_history [i].mv.getvalue < 0 then
-						error.error_statement (" has market value that is negative. ", line_numbers[i])
+						error.error_statement (" has market value that is negative. ", line_numbers [i])
 						remove_investment_line (i)
 						has_at_least_two_investments
 					else
@@ -177,9 +165,8 @@ feature {NONE} -- checking validity of data
 			-- checks , fix and report if dates are ordered and unique
 			-- if not then it attempts to delete the row that has invalid date
 		local
-			i : INTEGER_32
+			i: INTEGER_32
 		do
-
 			if statements_size >= 2 then
 				from
 					i := 2
@@ -189,8 +176,8 @@ feature {NONE} -- checking validity of data
 				until
 					i > statements_size
 				loop
-					if not invest_history [i].date.getvalue.is_greater (invest_history [i- 1].date.getvalue) then
-						error.error_statement (" has date that's earlier than or equal to previous statements. Dates must be in increasing order and unique. ", line_numbers[i.item])
+					if not invest_history [i].date.getvalue.is_greater (invest_history [i - 1].date.getvalue) then
+						error.error_statement (" has date that's earlier than or equal to previous statements. Dates must be in increasing order and unique. ", line_numbers [i.item])
 						remove_investment_line (i)
 						has_at_least_two_investments
 					else
@@ -199,7 +186,6 @@ feature {NONE} -- checking validity of data
 				variant
 					statements_size + 1 - i
 				end
-
 			end
 		end
 
@@ -207,7 +193,7 @@ feature {NONE} -- checking validity of data
 			-- checks , fix and report if market has grown from previous
 			-- zero cash flow and market value
 		local
-			i : INTEGER_32
+			i: INTEGER_32
 		do
 			if statements_size >= 2 then
 				from
@@ -218,9 +204,9 @@ feature {NONE} -- checking validity of data
 				until
 					i > statements_size
 				loop
-					if invest_history [i].mv.getvalue /= 0 and ( invest_history [i - 1].mv.getvalue + invest_history [i - 1].cf.getvalue = 0) then
-						error.error_statement (" has grown market value from previous zero cash flow and market value. ", line_numbers[i])
-						remove_investment_line (i-1)
+					if invest_history [i].mv.getvalue /= 0 and (invest_history [i - 1].mv.getvalue + invest_history [i - 1].cf.getvalue = 0) then
+						error.error_statement (" has grown market value from previous zero cash flow and market value. ", line_numbers [i])
+						remove_investment_line (i - 1)
 						has_at_least_two_investments
 					else
 						i := i + 1
@@ -235,7 +221,7 @@ feature {NONE} -- checking validity of data
 			-- checks , fix and report if cash flow
 			-- withdraw more than  its current market value
 		local
-			i : INTEGER_32
+			i: INTEGER_32
 		do
 			if statements_size >= 2 then
 				from
@@ -246,8 +232,8 @@ feature {NONE} -- checking validity of data
 				until
 					i > statements_size
 				loop
-					if (invest_history [i].mv.getvalue + invest_history [i].cf.getvalue - invest_history[i].af.getvalue) < 0 then
-						error.error_statement (" has amount of cash flow greater than its current value. ", line_numbers[i])
+					if (invest_history [i].mv.getvalue + invest_history [i].cf.getvalue - invest_history [i].af.getvalue) < 0 then
+						error.error_statement (" has amount of cash flow greater than its current value. ", line_numbers [i])
 						remove_investment_line (i)
 						has_at_least_two_investments
 					else
@@ -259,15 +245,27 @@ feature {NONE} -- checking validity of data
 			end
 		end
 
+	check_benchmark
+		local
+		do
+			across
+				getList.lower |..| (getList.upper - 1) as i
+			loop
+				if invest_history [i.item].bm.getvalue /= 0 and invest_history [i.item].date.getvalue.month /= 1 and invest_history [i.item].date.getvalue.day /= 1 then
+					error.error_benchmark (line_numbers [i.item])
+				end
+			end
+		end
+
 feature {NONE}
 
 	remove_investment_line (i: INTEGER_32)
 		require
 			index_bounded: across getList.lower |..| getList.upper as j some i = j.item end
 		local
-			temp : ARRAYED_LIST[INVESTMENT]
-			templine : ARRAYED_LIST [INTEGER_32]
-			k : INTEGER_32
+			temp: ARRAYED_LIST [INVESTMENT]
+			templine: ARRAYED_LIST [INTEGER_32]
+			k: INTEGER_32
 		do
 			create temp.make (0)
 			create templine.make (0)
@@ -277,8 +275,8 @@ feature {NONE}
 				k > (statements_size)
 			loop
 				if (k /= i) then
-					temp.extend (invest_history[k])
-					templine.extend (line_numbers[k])
+					temp.extend (invest_history [k])
+					templine.extend (line_numbers [k])
 				end
 				k := k + 1
 			end
@@ -288,8 +286,6 @@ feature {NONE}
 			less_statments: invest_history.count = old invest_history.count - 1
 			less_linenum: line_numbers.count = old line_numbers.count - 1
 		end
-
-
 
 feature
 
@@ -324,6 +320,6 @@ feature {NONE} -- implementation
 
 	error: ERROR_TYPE
 
-	eval_pr : PF_EVAL_PER
+	eval_pr: PF_EVAL_PER
 
 end
