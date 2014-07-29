@@ -60,7 +60,7 @@ feature
 
 	di (d: PF_DATE): INTEGER
 		require
-			dates.has (d)
+			across dates as h some h.item.getValue.is_equal (d.getValue) end
 		do
 			across
 				1 |..| count as i
@@ -77,13 +77,12 @@ feature
 
 	twr (a_start, a_end: PF_DATE): TUPLE [answer: REAL_64; found: BOOLEAN]
 		require
-			a_start_is_date_domain: dates.has (a_start)
-			a_end_is_date_domain: dates.has (a_end)
+			across dates as h some h.item.getValue.is_equal (a_start.getValue) end
+			across dates as h some h.item.getValue.is_equal (a_end.getValue) end
 			a_end_is_after_a_start: a_end.getvalue.is_greater (a_start.getvalue)
 			--across 2 |..| count as i all tr [i.item - 1].mv.getvalue + tr [i.item - 1].cf.getvalue /= 0 end
 		do
 			create Result.default_create
-
 			if not product_of_wealth (di (a_start) + 1, di (a_end)).found then
 				sh_classes.init_error.error_custom ("TWR will not proceed because there is zero market and cash flow value.%N")
 				Result.answer := product_of_wealth (di (a_start) + 1, di (a_end)).answer - 1
@@ -97,21 +96,19 @@ feature
 			Result.found = product_of_wealth (di (a_start) + 1, di (a_end)).found
 		end
 
-	compounded_twr:  TUPLE [answer: REAL_64; found: BOOLEAN]
+	compounded_twr: TUPLE [answer: REAL_64; found: BOOLEAN]
 		do
 			create Result.default_create
-
-			Result.answer := twr(start_date, end_date).answer
-			Result.found := twr(start_date, end_date).found
+			Result.answer := twr (start_date, end_date).answer
+			Result.found := twr (start_date, end_date).found
 		ensure
-	     	Result.answer = twr (start_date, end_date).answer
+			Result.answer = twr (start_date, end_date).answer
 			Result.found = twr (start_date, end_date).found
 		end
 
 	anual_compounded_twr: TUPLE [answer: REAL_64; found: BOOLEAN]
 		do
 			create Result.default_create
-
 			if (duration >= 1) then
 				Result.answer := exponent ((1 + compounded_twr.answer), (1 / duration)) - 1
 				Result.found := compounded_twr.found
@@ -121,7 +118,7 @@ feature
 			end
 		ensure
 			(duration >= 1) implies (Result.answer = exponent ((1 + compounded_twr.answer), (1 / duration)) - 1) and (Result.found = compounded_twr.found)
-			(duration < 1) implies (Result.answer = compounded_twr.answer) and  (Result.found = compounded_twr.found)
+			(duration < 1) implies (Result.answer = compounded_twr.answer) and (Result.found = compounded_twr.found)
 		end
 
 feature
@@ -131,7 +128,7 @@ feature
 			across 2 |..| count as j some i = j.item end
 		do
 			create Result.default_create
-			if ((tr [i - 1].mv.getvalue + tr [i - 1].cf.getvalue - tr [i - 1].af.getvalue) = 0)  then
+			if ((tr [i - 1].mv.getvalue + tr [i - 1].cf.getvalue - tr [i - 1].af.getvalue) = 0) then
 				Result.answer := 0
 				Result.found := false
 			else
@@ -142,29 +139,25 @@ feature
 			Result.answer = (tr [i].mv.getvalue / (tr [i - 1].mv.getvalue + tr [i - 1].cf.getvalue - tr [i - 1].af.getvalue)) or Result.answer = 0
 		end
 
-	product_of_wealth (i, j: INTEGER):  TUPLE [answer: REAL_64; found: BOOLEAN]
+	product_of_wealth (i, j: INTEGER): TUPLE [answer: REAL_64; found: BOOLEAN]
 		require
 			across 2 |..| count as c some i = c.item end
-
-			local
-				terminate : BOOLEAN
-				index : INTEGER
+		local
+			terminate: BOOLEAN
+			index: INTEGER
 		do
 			create Result.default_create
 			Result.answer := 1.0
 			terminate := false
-
-            from
-            	index := i
-            	invariant
-
-            	 index >= i
-            	 index <= j+1
-
-            until
-            	index > j or terminate
-            loop
-            	if not  wealth (index).found  then
+			from
+				index := i
+			invariant
+				index >= i
+				index <= j + 1
+			until
+				index > j or terminate
+			loop
+				if not wealth (index).found then
 					Result.answer := Result.answer * 0
 					Result.found := false
 					terminate := true
@@ -172,10 +165,10 @@ feature
 					Result.answer := Result.answer * wealth (index).answer
 					Result.found := true
 				end
-                index := index + 1
-                variant
-                	j + 1 - index
-            end
+				index := index + 1
+			variant
+				j + 1 - index
+			end
 		end
 
 	exponent (value, power: REAL_64): REAL_64

@@ -60,7 +60,7 @@ feature
 
 	di (d: PF_DATE): INTEGER
 		require
-			dates.has (d)
+			across dates as h some h.item.getValue.is_equal (d.getValue) end
 		do
 			across
 				1 |..| count as i
@@ -72,10 +72,11 @@ feature
 
 		end
 
-	precise (a_start, a_end: PF_DATE): TUPLE[answer : REAL_64 ; found : BOOLEAN]
+	precise (a_start, a_end: PF_DATE): TUPLE [answer: REAL_64; found: BOOLEAN]
 		require
-			a_start_is_date_domain: dates.has (a_start)
-			a_end_is_date_domain: dates.has (a_end)
+				--	a_start_is_date_domain: dates.has (a_start)
+			across dates as h some h.item.getValue.is_equal (a_start.getValue) end
+			across dates as h some h.item.getValue.is_equal (a_end.getValue) end
 			a_end_is_after_a_start: a_end.getvalue.is_greater (a_start.getvalue)
 		local
 			ls: ARRAYED_LIST [TUPLE [REAL_64, REAL_64]]
@@ -83,9 +84,9 @@ feature
 			i: INTEGER_32
 		do
 			create ls.make (di (a_end))
-			ls.force ([tr [1].mv.getValue, duration (a_start)])
+			ls.force ([tr [di (a_start)].mv.getValue, duration (a_start)])
 			from
-				i := 2
+				i := di (a_start) + 1
 			until
 				i >= di (a_end)
 			loop
@@ -97,18 +98,21 @@ feature
 			c.calculate
 			create Result.default_create
 			if c.solution_not_found then
+				ls.wipe_out
 				Result.answer := -100
 				Result.found := false
 			else
 				Result.answer := (c.solution - 1) * 100
+				ls.wipe_out
 				Result.found := true
 			end
 		end
 
-	anual_precise: TUPLE[answer : REAL_64 ; found : BOOLEAN]
+	anual_precise: TUPLE [answer: REAL_64; found: BOOLEAN]
 		do
-			Result := precise (start_date, end_date)
-
+			create Result.default_create
+			Result.answer := precise (start_date, end_date).answer
+			Result.found := precise (start_date, end_date).found
 		end
 
 feature --class variables

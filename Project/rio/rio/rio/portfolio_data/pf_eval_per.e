@@ -37,8 +37,8 @@ feature -- inherited
 	getValue: TUPLE [x, y: DATE]
 		do
 			Result := evaluation_period.twin
-		ensure then
-				Result = evaluation_period.twin
+--		ensure then
+--				Result.evaluation_period.twin
 		end
 
 	exists: BOOLEAN
