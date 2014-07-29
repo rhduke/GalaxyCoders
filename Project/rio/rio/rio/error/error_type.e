@@ -28,7 +28,7 @@ feature --  arbitrary data errors
 
 	error_name
 		do
-			error_list.extend ("Error! Name was not found on the first line.%N")
+			error_list.extend ("Warning! Name was not found on the first line.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
@@ -37,7 +37,7 @@ feature --  arbitrary data errors
 		require
 			line_num_pos: line_number >= 1
 		do
-			error_list.extend ("Error! The line " + line_number.out + " is not valid description.%N")
+			error_list.extend ("Warning! The line " + line_number.out + " is not valid description.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
@@ -46,7 +46,7 @@ feature --  arbitrary data errors
 		require
 			line_num_pos: line_num >= 1
 		do
-			error_list.extend ("Error! The line " + line_num.out + " is not valid  account number.%N")
+			error_list.extend ("Warning! The line " + line_num.out + " is not valid  account number.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
@@ -55,7 +55,7 @@ feature --  arbitrary data errors
 		require
 			line_num_pos: line_num >= 1
 		do
-			error_list.extend ("Error! The line " + line_num.out + " is not valid email.%N")
+			error_list.extend ("Warning! The line " + line_num.out + " is not valid email.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
@@ -64,7 +64,7 @@ feature --  arbitrary data errors
 		require
 			line_num_pos: line_num >= 1
 		do
-			error_list.extend ("Error!. The line " + line_num.out + " contains date the corresponds benchmark at line has month-day that is not Jan-01 or not in last satement.%N")
+			error_list.extend ("Warning! The line " + line_num.out + " contains date the corresponds benchmark at line has month-day that is not Jan-01 or not in last satement.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
@@ -73,14 +73,14 @@ feature --  arbitrary data errors
 		require
 			line_num_pos: line_num >= 1
 		do
-			error_list.extend ("Error! The line " + line_num.out + " is not valid phone number.%N")
+			error_list.extend ("Warning! The line " + line_num.out + " is not valid phone number.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
 
 	error_table
 		do
-			error_list.extend ("Error! The table title is invalid. The proper format is: Transaction Date,Market Value,Cash Flow,Agent Fees,Benchmark%N")
+			error_list.extend ("Warning! The table title is invalid. The proper format is: Transaction Date,Market Value,Cash Flow,Agent Fees,Benchmark%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
