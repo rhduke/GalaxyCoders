@@ -54,8 +54,10 @@ feature {NONE} -- routines to help extract and validate dates
 			regexp_2: RX_PCRE_REGULAR_EXPRESSION
 			arr_string: LIST [STRING]
 			counter: INTEGER
+			l_date : DATE
 		do
 			create regexp.make ; create regexp_2.make
+			create l_date.make_day_month_year (1, 1, 1900)
 			create evaluation_period.default_create
 			arr_string := string.split (' ')
 			regexp.compile ("\d{4}-\d{2}-\d{2}")
@@ -69,7 +71,7 @@ feature {NONE} -- routines to help extract and validate dates
 			across	arr_string as c loop
 				regexp.match (c.item)
 				regexp_2.match (c.item)
-				if regexp.has_matched then
+				if regexp.has_matched and l_date.date_valid (c.item, "yyyy-mm-dd")   then
 					if counter = 1 then
 						 evaluation_period.x := create {DATE}.make_from_string (regexp.captured_substring (0), "yyyy-mm-dd")
 					end
@@ -78,7 +80,7 @@ feature {NONE} -- routines to help extract and validate dates
 					end
 					counter := counter + 1
 				end
-				if regexp_2.has_matched then
+				if regexp_2.has_matched or l_date.date_valid (c.item, "mm/dd/yyyy") then
 								if counter = 1 then
 									 evaluation_period.x := create {DATE}.make_from_string (regexp_2.captured_substring (0), "mm/dd/yyyy")
 								end
