@@ -66,7 +66,7 @@ feature -- getters and adders
 		do
 			invest_history.wipe_out
 			line_numbers.wipe_out
-			eval_pr := void
+			eval_pr := create {PF_EVAL_PER}.make_not_exist
 		end
 
 	run_validation
@@ -112,7 +112,7 @@ feature {NONE} -- checking validity of data
 	invalid_eval_per
 			-- checks if eval per is invalid
 		do
-			if not is_eval_per_in_range then
+			if not is_eval_per_in_range and get_eval_per.exists then
 				error.error_eval_per
 			end
 		end
@@ -251,7 +251,7 @@ feature {NONE} -- checking validity of data
 			across
 				getList.lower |..| (getList.upper - 1) as i
 			loop
-				if invest_history [i.item].bm.getvalue /= 0 and invest_history [i.item].date.getvalue.month /= 1 and invest_history [i.item].date.getvalue.day /= 1 then
+				if invest_history [i.item].bm.getvalue /= 0 and (invest_history [i.item].date.getvalue.month /= 1 or invest_history [i.item].date.getvalue.day /= 1) then
 					error.error_benchmark (line_numbers [i.item])
 				end
 			end

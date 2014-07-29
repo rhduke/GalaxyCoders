@@ -41,6 +41,13 @@ feature -- inherited routines
 			end
 		end
 
+	flush
+		do
+			if gen_info /= void then
+				gen_info.wipe_out
+			end
+		end
+
 feature {PARSING_STRATEGY} -- add info routines
 
 	add_name (name: STRING)

@@ -134,7 +134,7 @@ feature -- errors for TWR and precise
 				twr_no_sol_found := true
 			end
 		ensure
-			error_added: (twr_no_sol_found = true) implies ( error_list.count = old error_list.count + 1)
+			error_added: ( error_list.count = old error_list.count + 1) implies (twr_no_sol_found = true)
 		end
 
 feature -- get errors from list
