@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {ACCEPTANCE_SET2}."
+	description: "Summary description for {ACCEPTANCE_SET3}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ACCEPTANCE_SET2
+	ACCEPTANCE_SET3
 inherit
 	ES_TEST
 create
@@ -14,10 +14,10 @@ create
 feature
 	make
 		do
-			add_boolean_case (agent is_correct ("roi/csv-inputs/accept2(warning)/WAR-T1.csv", 1))
-			add_boolean_case (agent is_correct ("roi/csv-inputs/accept2(warning)/WAR-T2.csv", 1))
-			add_boolean_case (agent is_correct ("roi/csv-inputs/accept2(warning)/WAR-T3.csv", 1))
-			add_boolean_case (agent is_correct ("roi/csv-inputs/accept2(warning)/WAR-T4.csv", 5))
+			add_boolean_case (agent is_correct ("rio/csv-inputs/accept3(error)/ERR-T1.csv", 1))
+			add_boolean_case (agent is_correct ("rio/csv-inputs/accept3(error)/ERR-T2.csv", 1))
+			add_boolean_case (agent is_correct ("rio/csv-inputs/accept3(error)/ERR-T3.csv", 1))
+			add_boolean_case (agent is_correct ("rio/csv-inputs/accept3(error)/ERR-T4.csv", 2))
 		end
 
 

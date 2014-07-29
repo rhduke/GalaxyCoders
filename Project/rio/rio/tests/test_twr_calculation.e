@@ -34,7 +34,7 @@ feature -- parse data
 		local
 			parse : PARSING_CONTEXT
 		do
-			create csv_doc.make_from_file_name ("roi/csv-inputs/new_ac2.csv")
+			create csv_doc.make_from_file_name ("rio/csv-inputs/new_ac2.csv")
 			inv_hist := sh_classes.init_portfolio_data
 			create parse.make
 			parse.setparsingstrategy (create {PARSE_DATA}.make)
