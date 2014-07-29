@@ -29,13 +29,14 @@ feature {NONE} -- execution
 					output_twr
 					output_precise
 					output_errors
-					io.read_line
+
 				else
 					io.put_string ("Input file is empty!.%N")
 				end
 			else
 				io.put_string ("Unable to read file. Invalid file path.%N")
 			end
+			io.read_line
 		end
 
 	make_from_path (path : STRING)

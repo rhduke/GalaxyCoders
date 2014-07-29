@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			exe: EXECUTE
 			enable_test: BOOLEAN
 		do
-			enable_test := true
+			enable_test := false -- set true to test
 			if enable_test then
 				add_test (create {ACCEPTANCE_SET1}.make)
 				add_test (create {ACCEPTANCE_SET2}.make)
