@@ -84,7 +84,7 @@ feature
 		do
 			create Result.default_create
 			if not product_of_wealth (di (a_start) + 1, di (a_end)).found then
-				sh_classes.init_error.error_custom ("TWR will not proceed because there is zero market and cash flow value.%N")
+				sh_classes.init_error.twr_no_sol
 				Result.answer := product_of_wealth (di (a_start) + 1, di (a_end)).answer - 1
 				Result.found := false
 			else

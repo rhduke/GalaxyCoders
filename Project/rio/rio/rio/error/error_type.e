@@ -22,6 +22,7 @@ feature {NONE} -- initialize
 		do
 			create err_list.make
 			error_list := err_list
+			twr_no_sol_found := false
 		end
 
 feature --  arbitrary data errors
@@ -124,6 +125,18 @@ feature -- errors for portfolio
 			error_added: error_list.count = old error_list.count + 1
 		end
 
+feature -- errors for TWR and precise
+
+	twr_no_sol
+		do
+			if not twr_no_sol_found then
+				error_list.extend ("TWR will not proceed because there is zero market and cash flow value.%N")
+				twr_no_sol_found := true
+			end
+		ensure
+			error_added: error_list.count = old error_list.count + 1
+		end
+
 feature -- get errors from list
 
 	item alias "[]" (i: INTEGER_32): STRING
@@ -161,6 +174,8 @@ feature
 feature {NONE} -- add error
 
 	error_list: LIST [STRING]
+
+	twr_no_sol_found: BOOLEAN
 
 invariant
 	list_not_void: error_list /= void
