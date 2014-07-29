@@ -14,19 +14,25 @@ feature {NONE} -- execution
 	do
 --		read_from_input
 		is_context_arr_init := false
-		file_path := "rio/csv-inputs/roi-test1.csv"
-		read_file
-		validate_input
-		print("-- General Info --%N%N")
-		output_general_info
-		print("%N-- Periods --%N%N")
-		output_whole_period
-		output_part_period
-		print("%N-- Return on Investment --%N%N")
-		output_twr
-		output_precise
+		file_path := "rio/csv-inputs/empty.csv"
+		if read_file then
+			validate_input
+			print("-- General Info --%N%N")
+			output_general_info
+			print("%N-- Periods --%N%N")
+			output_whole_period
+			output_part_period
+			print("%N-- Return on Investment --%N%N")
+			output_twr
+			output_precise
 
-		output_errors
+			output_errors
+		else
+			io.put_string ("Unable to read file. Invalid file path")
+		end
+
+
+
 	end
 
 feature {NONE} -- reading
@@ -39,7 +45,7 @@ feature {NONE} -- reading
 		end
 
 
-	read_file
+	read_file : BOOLEAN
 		local
 				rd_file : READ_FILE
 		do
@@ -47,8 +53,9 @@ feature {NONE} -- reading
 				rd_file.open_file (file_path)
 				if  rd_file.is_path_valid then
 					parse_file
+					Result := true
 				else
-					io.put_string ("Unable to read file. Invalid file path")
+					Result := false
 				end
 
 		end
