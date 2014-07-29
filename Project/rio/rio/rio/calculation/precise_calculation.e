@@ -27,11 +27,11 @@ feature
 			Result = tr.count
 		end
 
-	duration (given: PF_DATE): REAL_64
+	duration (a_end,given: PF_DATE): REAL_64
 		do
-			Result := (end_date.getValue.days - given.getValue.days) / (365.2422)
+			Result := (a_end.getValue.days - given.getValue.days) / (365.2422)
 		ensure
-			Result = ((end_date.getValue.days - given.getValue.days) / (365.2422))
+			Result = ((a_end.getValue.days - given.getValue.days) / (365.2422))
 		end
 
 	start_date: PF_DATE
@@ -84,13 +84,13 @@ feature
 			i: INTEGER_32
 		do
 			create ls.make (di (a_end))
-			ls.force ([tr [di (a_start)].mv.getValue, duration (a_start)])
+			ls.force ([tr [di (a_start)].mv.getValue, duration (a_end,a_start)])
 			from
 				i := di (a_start) + 1
 			until
 				i >= di (a_end)
 			loop
-				ls.force ([(tr [i].cf.getValue - tr [i].af.getValue), duration (tr [i].date)])
+				ls.force ([(tr [i].cf.getValue - tr [i].af.getValue), duration (a_end,tr [i].date)])
 				i := i + 1
 			end
 			ls.force ([((tr [di (a_end)].mv.getValue) * -1), 0.0])

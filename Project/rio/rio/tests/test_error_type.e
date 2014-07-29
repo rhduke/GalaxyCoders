@@ -43,16 +43,20 @@ feature
 			pt.run_validation
 			if pt.is_valid_portfolio then
 				sh_classes.init_portfolio_data.printout
-				create temp_1.make (pt.get_eval_per.getvalue.x)
-				create temp_2.make (pt.get_eval_per.getvalue.y)
 				create p.make
-				print ("PRECISE (part): " + p.precise (temp_1, temp_2).out + "%N")
 				print ("PRECISE (whole): " + p.anual_precise.out + "%N")
+				if pt.is_eval_per_in_range then
+					create temp_1.make (pt.get_eval_per.getvalue.x)
+					create temp_2.make (pt.get_eval_per.getvalue.y)
+					print ("PRECISE (part): " + p.precise (temp_1, temp_2).out + "%N")
+				end
 				create twr.make
-				print (twr.dates.has (temp_1))
-				print ("COMPOUNDED: " + twr.compounded_twr.out + "%N")
-				print ("COMPOUNDED (part): " + twr.twr (temp_1, temp_2).out + "%N")
-				print ("ANNUAL: " + twr.anual_compounded_twr.out + "%N")
+				print ("TWR (whole): " + twr.anual_compounded_twr (twr.start_date, twr.end_date).out + "%N")
+				if pt.is_eval_per_in_range then
+					create temp_1.make (pt.get_eval_per.getvalue.x)
+					create temp_2.make (pt.get_eval_per.getvalue.y)
+					print ("TWR (part): " + twr.anual_compounded_twr (temp_1, temp_2).out + "%N")
+				end
 			else
 				print ("error")
 			end

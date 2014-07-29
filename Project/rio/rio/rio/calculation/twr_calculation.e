@@ -51,11 +51,11 @@ feature
 			Result = tr [tr.count].date
 		end
 
-	duration: REAL_64
+	duration (a_start, a_end: PF_DATE): REAL_64
 		do
-			Result := (end_date.getValue.days - start_date.getValue.days) / (365.2422)
+			Result := (a_end.getValue.days - a_start.getValue.days) / (365.2422)
 		ensure
-			Result = ((end_date.getValue.days - start_date.getValue.days) / (365.2422))
+			Result = ((a_end.getValue.days - a_start.getValue.days) / (365.2422))
 		end
 
 	di (d: PF_DATE): INTEGER
@@ -96,29 +96,29 @@ feature
 			Result.found = product_of_wealth (di (a_start) + 1, di (a_end)).found
 		end
 
-	compounded_twr: TUPLE [answer: REAL_64; found: BOOLEAN]
+	compounded_twr (a_start, a_end: PF_DATE): TUPLE [answer: REAL_64; found: BOOLEAN]
 		do
 			create Result.default_create
-			Result.answer := twr (start_date, end_date).answer
-			Result.found := twr (start_date, end_date).found
+			Result.answer := twr (a_start, a_end).answer
+			Result.found := twr (a_start, a_end).found
 		ensure
-			Result.answer = twr (start_date, end_date).answer
-			Result.found = twr (start_date, end_date).found
+			Result.answer = twr (a_start, a_end).answer
+			Result.found = twr (a_start, a_end).found
 		end
 
-	anual_compounded_twr: TUPLE [answer: REAL_64; found: BOOLEAN]
+	anual_compounded_twr (a_start, a_end: PF_DATE): TUPLE [answer: REAL_64; found: BOOLEAN]
 		do
 			create Result.default_create
-			if (duration >= 1) then
-				Result.answer := exponent ((1 + compounded_twr.answer), (1 / duration)) - 1
-				Result.found := compounded_twr.found
+			if (duration (a_start, a_end) >= 1) then
+				Result.answer := exponent ((1 + compounded_twr (a_start, a_end).answer), (1 / duration (a_start, a_end))) - 1
+				Result.found := compounded_twr (a_start, a_end).found
 			else
-				Result.answer := compounded_twr.answer
-				Result.found := compounded_twr.found
+				Result.answer := compounded_twr (a_start, a_end).answer
+				Result.found := compounded_twr (a_start, a_end).found
 			end
 		ensure
-			(duration >= 1) implies (Result.answer = exponent ((1 + compounded_twr.answer), (1 / duration)) - 1) and (Result.found = compounded_twr.found)
-			(duration < 1) implies (Result.answer = compounded_twr.answer) and (Result.found = compounded_twr.found)
+			(duration (a_start, a_end) >= 1) implies (Result.answer = exponent ((1 + compounded_twr (a_start, a_end).answer), (1 / duration (a_start, a_end))) - 1) and (Result.found = compounded_twr (a_start, a_end).found)
+			(duration (a_start, a_end) < 1) implies (Result.answer = compounded_twr (a_start, a_end).answer) and (Result.found = compounded_twr (a_start, a_end).found)
 		end
 
 feature

@@ -113,9 +113,9 @@ feature -- getters and adders
 		across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.y) end and
 		is_valid_portfolio
 	ensure
-		Result = across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.x) end and
-		across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.y) end and
-		is_valid_portfolio
+		Result = ((across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.x) end) and
+		(across  1 |..| statements_size as i some invest_history [i.item].date.getvalue.is_equal (eval_pr.getvalue.y) end) and
+		(is_valid_portfolio))
 	end
 
 feature {NONE} -- checking validity of data
