@@ -29,6 +29,7 @@ feature {NONE} -- execution
 					output_twr
 					output_precise
 					output_errors
+					io.read_line
 				else
 					io.put_string ("Input file is empty!.%N")
 				end

@@ -18,6 +18,8 @@ feature
 			add_boolean_case (agent is_correct ("rio/csv-inputs/accept3(error)/ERR-T2.csv", 1))
 			add_boolean_case (agent is_correct ("rio/csv-inputs/accept3(error)/ERR-T3.csv", 1))
 			add_boolean_case (agent is_correct ("rio/csv-inputs/accept3(error)/ERR-T4.csv", 2))
+			add_boolean_case (agent is_correct ("rio/csv-inputs/accept3(error)/ERR-T5.csv", 3))
+			add_boolean_case (agent is_correct ("rio/csv-inputs/accept3(error)/ERR-T6.csv", 0))
 		end
 
 
