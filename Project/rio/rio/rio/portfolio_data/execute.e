@@ -13,6 +13,7 @@ feature {NONE} -- execution
 	make
 	do
 --		read_from_input
+		is_context_arr_init := false
 		file_path := "rio/csv-inputs/roi-test1.csv"
 		read_file
 		validate_input
@@ -75,8 +76,9 @@ feature {NONE} -- parse implementation
 		local
 			i : INTEGER
 		do
-				init_context_list
-
+				if not is_context_arr_init then
+					init_context_list
+				end
 				from
 					i := context_list.lower
 				invariant
@@ -101,7 +103,6 @@ feature {NONE} -- parse implementation
 	init_context_list
 		do
 			create context_list.make_empty
---			context_list.grow (9)
 			across 1 |..| 9 as i loop context_list.force (create {PARSING_CONTEXT}.make, i.item)  end
 			context_list[1].setparsingstrategy (create {PARSE_DESCR}.make)
 			context_list[2].setparsingstrategy (create {PARSE_NAME}.make)
@@ -112,6 +113,7 @@ feature {NONE} -- parse implementation
 			context_list[7].setparsingstrategy (create {PARSE_EVAL_PER}.make)
 			context_list[8].setparsingstrategy (create {PARSE_DATA}.make)
 			context_list[9].setparsingstrategy (create {PARSE_TABLE}.make)
+			is_context_arr_init :=  true
 		end
 
 	validate_input
@@ -315,5 +317,6 @@ feature {NONE} -- implementation
 	file_path : STRING
 	sh_classes : SHARED_CLASSES
 	context_list :ARRAY[PARSING_CONTEXT]
+	is_context_arr_init : BOOLEAN
 
 end
