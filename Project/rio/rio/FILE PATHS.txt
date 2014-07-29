@@ -1,0 +1,25 @@
+rio/csv-inputs/new_ac1.csv
+
+rio/csv-inputs/new_ac2.csv
+
+rio/csv-inputs/roi-test1-E1.csv
+
+rio/csv-inputs/roi-test1-Linux.csv
+
+rio/csv-inputs/roi-test1.csv
+
+rio/csv-inputs/roi-test3.csv
+
+rio/csv-inputs/roi-test4.csv
+
+rio/csv-inputs/SJO (excel).csv
+
+rio/csv-inputs/SJO.csv
+
+rio/csv-inputs/T4.csv
+
+rio/csv-inputs/T26.csv
+
+rio/csv-inputs/TESTB1.csv
+
+rio/csv-inputs/TN2.csv

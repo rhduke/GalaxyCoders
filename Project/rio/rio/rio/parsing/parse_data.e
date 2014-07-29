@@ -79,7 +79,6 @@ feature
 						create bench_mark.make_not_exist
 					end --4
 						--	print ("d7%N")
-					obtained_data := true
 					create invest.make ([trans_date, market_value, cash_flow, agent_fee, bench_mark])
 						--	print ("d8%N")
 					inv_history.add (invest, row_temp.number)
