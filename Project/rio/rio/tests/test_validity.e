@@ -15,17 +15,17 @@ feature -- Constructor
 	make
 		do
 			create flush.make
-			add_boolean_case (agent empty)
-			add_boolean_case (agent one_inv)
+--			add_boolean_case (agent empty)
+--			add_boolean_case (agent one_inv)
 			add_boolean_case (agent neg_mv)
-			add_boolean_case (agent neg_mv_one)
-			add_boolean_case (agent date_order)
-			add_boolean_case (agent same_date)
-			add_boolean_case (agent same_date_one)
-			add_boolean_case (agent from_zero)
-			add_boolean_case (agent from_zero_one)
-			add_boolean_case (agent no_cash)
-			add_boolean_case (agent no_cash_one)
+--			add_boolean_case (agent neg_mv_one)
+--			add_boolean_case (agent date_order)
+--			add_boolean_case (agent same_date)
+--			add_boolean_case (agent same_date_one)
+--			add_boolean_case (agent from_zero)
+--			add_boolean_case (agent from_zero_one)
+--			add_boolean_case (agent no_cash)
+--			add_boolean_case (agent no_cash_one)
 			-- test is valid list
 			-- test valid eval period
 		end
@@ -122,6 +122,7 @@ feature -- Test cases
 			err := sh_classes.init_error
 			parsedata("rio/csv-inputs/test-validity/neg_mv.csv")
 			inv_hist.run_validation
+			err.print_errors
 			from
 				i := 1
 			until

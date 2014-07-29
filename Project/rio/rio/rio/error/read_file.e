@@ -33,7 +33,7 @@ feature
 
 	is_path_valid : BOOLEAN
 	do
-		Result := csv_doc.stream.is_open_read
+		Result := csv_doc.stream.is_open_read and (csv_doc.stream.end_of_input /= void)
 		ensure
 			Result = csv_doc.stream.is_open_read
 	end
