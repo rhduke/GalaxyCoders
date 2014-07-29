@@ -87,11 +87,8 @@ feature -- parse CSV
 			data.compare_objects
 
 			parse_csv_document
-
+			print(data.count)
 			Result := not error and data.count = 11
-			check
-				Result
-			end
 		end
 
 	t2 : BOOLEAN
