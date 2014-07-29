@@ -37,7 +37,7 @@ feature --  arbitrary data errors
 		require
 			line_num_pos: line_number >= 1
 		do
-			error_list.extend ("Error! The line " + line_number.out + " is not valid description.")
+			error_list.extend ("Error! The line " + line_number.out + " is not valid description.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
@@ -46,7 +46,7 @@ feature --  arbitrary data errors
 		require
 			line_num_pos: line_num >= 1
 		do
-			error_list.extend ("Error! The line " + line_num.out + " is not valid  account number.")
+			error_list.extend ("Error! The line " + line_num.out + " is not valid  account number.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
@@ -55,7 +55,7 @@ feature --  arbitrary data errors
 		require
 			line_num_pos: line_num >= 1
 		do
-			error_list.extend ("Error! The line " + line_num.out + " is not valid email.")
+			error_list.extend ("Error! The line " + line_num.out + " is not valid email.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
@@ -64,7 +64,7 @@ feature --  arbitrary data errors
 		require
 			line_num_pos: line_num >= 1
 		do
-			error_list.extend ("Error! The line " + line_num.out + " is valid address. ")
+			error_list.extend ("Error! The line " + line_num.out + " is valid address.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
@@ -73,14 +73,14 @@ feature --  arbitrary data errors
 		require
 			line_num_pos: line_num >= 1
 		do
-			error_list.extend ("Error! The line " + line_num.out + " is not valid phone number.")
+			error_list.extend ("Error! The line " + line_num.out + " is not valid phone number.%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end
 
 	error_table
 		do
-			error_list.extend ("Error! The table title is invalid. The proper format is: Transaction Date,Market Value,Cash Flow,Agent Fees,Benchmark")
+			error_list.extend ("Error! The table title is invalid. The proper format is: Transaction Date,Market Value,Cash Flow,Agent Fees,Benchmark%N")
 		ensure
 			error_added: error_list.count = old error_list.count + 1
 		end

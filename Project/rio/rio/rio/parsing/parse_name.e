@@ -36,7 +36,6 @@ feature
 						--  but does not contains person's name
 					if row_temp.is_empty_from (row_temp.index_of ("Name") + 1) then
 							-- the line does not contain person's name
-						error.error_custom ("Name content is empty on line 1. only Name keyword is found%N")
 					else
 							-- contains words
 						if row_temp.matches_regex ("^\s*[a-zA-Z]+[\s|,]*[a-zA-Z]*\s*$") then
@@ -48,11 +47,9 @@ feature
 								c.item.trim
 								name := name + c.item
 							end
+							obtained_data := true
 							gen_info := sh_classes.init_genaral_info
 							gen_info.add_name (name)
-							obtained_data := true
-						else
-							error.error_custom ("Name content is empty on line 1. only Name keyword is found%N")
 						end
 					end
 				end
@@ -64,9 +61,9 @@ feature
 					loop
 						name := name + c.item
 					end
+					obtained_data := true
 					gen_info := sh_classes.init_genaral_info
 					gen_info.add_name (name)
-					obtained_data := true
 				end
 			end
 		end

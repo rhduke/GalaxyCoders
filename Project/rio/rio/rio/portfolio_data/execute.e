@@ -13,10 +13,19 @@ feature {NONE} -- execution
 	make
 	do
 --		read_from_input
-		file_path := "rio/csv-inputs/new_ac1.csv"
+		file_path := "rio/csv-inputs/roi-test1.csv"
 		read_file
-		twr_calc_output
-		precise_calc_output
+		validate_input
+		print("-- General Info --%N%N")
+		output_general_info
+		print("%N-- Periods --%N%N")
+		output_whole_period
+		output_part_period
+		print("%N-- Return on Investment --%N%N")
+		output_twr
+		output_precise
+
+		output_errors
 	end
 
 feature {NONE} -- reading
@@ -56,8 +65,8 @@ feature {NONE} -- parse implementation
 					obtain_data(csv_iteration_cursor.item)	-- will obtain data from file
 					csv_iteration_cursor.forth
 				end
-				across context_list as  c  loop c.item.error_examine end -- if any parsing class left an error will be reported
-				--sh_classes.init_portfolio_data.printout -- just test to print portfolio data
+
+			--	sh_classes.init_portfolio_data.printout -- just test to print portfolio data
 
 
 		end
@@ -105,6 +114,20 @@ feature {NONE} -- parse implementation
 			context_list[9].setparsingstrategy (create {PARSE_TABLE}.make)
 		end
 
+	validate_input
+		do
+			across context_list as  c  loop c.item.error_examine end -- if any parsing class left an error will be reported
+			sh_classes.init_portfolio_data.run_validation
+		end
+
+	output_errors
+		do
+			if sh_classes.init_error.size > 0 then
+				print("%N-- Errors Detected --%N%N")
+				sh_classes.init_error.print_errors
+			end
+		end
+
 feature{NONE} -- parse routine helpers\
 	remove_at( j : INTEGER)
 		-- remove element from context list
@@ -128,15 +151,47 @@ feature{NONE} -- parse routine helpers\
 			context_list.remove_tail (1)
 		end
 
+feature {NONE} -- general output
+
+	output_general_info
+		do
+			sh_classes.init_genaral_info.print_info
+		end
+
+	output_whole_period
+		do
+			if sh_classes.init_portfolio_data.is_valid_portfolio then
+				print("Whole period: ")
+				print(sh_classes.init_portfolio_data.getlist[1].date.getvalue)
+				print(" to ")
+				print(sh_classes.init_portfolio_data.getlist[sh_classes.init_portfolio_data.getlist.upper].date.getvalue)
+				io.new_line
+			end
+		end
+
+	output_part_period
+		do
+			if
+				sh_classes.init_portfolio_data.get_eval_per.exists
+			then
+				print("Part period: ")
+				print(sh_classes.init_portfolio_data.get_eval_per.getvalue.x)
+				print(" to ")
+				print(sh_classes.init_portfolio_data.get_eval_per.getvalue.y)
+				io.new_line
+			end
+		end
+
 feature {NONE} -- calculation implementation
 
-	twr_calc_output
+	output_twr
 		local
 			twr_soln : TUPLE[whole : TUPLE [sol:REAL_64; found:BOOLEAN];
 									part_exists:BOOLEAN;
 									part : TUPLE[sol:REAL_64; found:BOOLEAN]]
+			fd : FORMAT_DOUBLE
 		do
-
+			create fd.make (7, 2)
 			-- OUPTUT TWR	
 			twr_soln := calculate_twr
 
@@ -145,32 +200,35 @@ feature {NONE} -- calculation implementation
 			-- whole
 			print("  Whole Period: ")
 			if twr_soln.whole.found then
-				print(twr_soln.whole.sol)
+				print(fd.formatted(twr_soln.whole.sol * 100) + "%%")
 			else
 				print("Could not be calculated!")
 			end
 			io.new_line
 			-- part
---			if twr_soln.part_exists then
---				print("\tPart Period: ")
---				if twr_soln.part.found then
---					print(twr_soln.part.sol)
---				else
---					print("Could not be calculated!")
---				end
---				io.new_line
---			end
+			if twr_soln.part_exists then
+				print("  Part Period:  ")
+				if twr_soln.part.found then
+					print(fd.formatted(twr_soln.part.sol * 100)+ "%%")
+				else
+					print("Could not be calculated!")
+				end
+				io.new_line
+			end
 
 
 
 		end
 
-	precise_calc_output
+	output_precise
 		local
 			precise_soln : TUPLE[whole : TUPLE [sol:REAL_64; found:BOOLEAN];
 									part_exists:BOOLEAN;
 									part : TUPLE[sol:REAL_64; found:BOOLEAN]]
+			fd : FORMAT_DOUBLE
 		do
+			create fd.make (7, 2)
+
 			-- OUPTUT PRECISE
 			precise_soln := calculate_precise
 
@@ -179,21 +237,21 @@ feature {NONE} -- calculation implementation
 			-- whole
 			print("  Whole Period: ")
 			if precise_soln.whole.found then
-				print(precise_soln.whole.sol)
+				print(fd.formatted (precise_soln.whole.sol)+ "%%")
 			else
 				print("Could not be calculated!")
 			end
 			io.new_line
 			-- part
---			if precise_soln.part_exists then
---				print("\tPart Period: ")
---				if precise_soln.part.found then
---					print(precise_soln.part.sol)
---				else
---					print("Could not be calculated!")
---				end
---				io.new_line
---			end
+			if precise_soln.part_exists then
+				print("  Part Period:  ")
+				if precise_soln.part.found then
+					print(fd.formatted(precise_soln.part.sol)+ "%%")
+				else
+					print("Could not be calculated!")
+				end
+				io.new_line
+			end
 		end
 
 	calculate_twr : TUPLE[whole : TUPLE [sol:REAL_64; found:BOOLEAN];
@@ -202,22 +260,27 @@ feature {NONE} -- calculation implementation
 		local
 			twr : TWR_CALCULATION
 			inv_hist : PORTFOLIO_DATA
-			a_start, a_end : PF_DATE -- for Evaliation period
+			a_start, a_end : PF_DATE
 		do
 			create Result.default_create
+			Result := [[0.0,false],false,[0.0,false]]
 			inv_hist := sh_classes.init_portfolio_data
-			create twr.make
 
-			-- TWR Whole
-				Result.whole := twr.anual_compounded_twr
+			if inv_hist.is_valid_portfolio then
+				create twr.make
 
-			-- TWR Part period
---			Result.part_exists := inv_hist.get_eval_per.exists
---			if inv_hist.get_eval_per.exists then
---				create a_start.make(inv_hist.get_eval_per.getvalue.x)
---				create a_end.make(inv_hist.get_eval_per.getvalue.y)
---				Result.part := twr.twr (a_start,a_end)
---			end
+				-- TWR Whole
+					Result.whole := twr.anual_compounded_twr(twr.start_date, twr.end_date)
+
+				-- TWR Part period
+				Result.part_exists := inv_hist.get_eval_per.exists
+				if inv_hist.get_eval_per.exists  and inv_hist.is_eval_per_in_range then
+					create a_start.make(inv_hist.get_eval_per.getvalue.x)
+					create a_end.make(inv_hist.get_eval_per.getvalue.y)
+					Result.part := twr.anual_compounded_twr (a_start,a_end)
+				end
+			end
+
 		end
 
 	calculate_precise : TUPLE[whole : TUPLE [sol:REAL_64; found:BOOLEAN];
@@ -229,19 +292,23 @@ feature {NONE} -- calculation implementation
 			a_start, a_end : PF_DATE -- for Evaliation period
 		do
 			create Result.default_create
+			Result := [[0.0,false],false,[0.0,false]]
 			inv_hist := sh_classes.init_portfolio_data
-			create precise.make
 
-			-- Precise whole
-			Result.whole := precise.anual_precise
+			if inv_hist.is_valid_portfolio then
+				create precise.make
 
-			-- Precise part
---			Result.part_exists := inv_hist.get_eval_per.exists
---			if inv_hist.get_eval_per.exists then
---				create a_start.make(inv_hist.get_eval_per.getvalue.x)
---				create a_end.make(inv_hist.get_eval_per.getvalue.y)
---				Result.part := precise.precise (a_start,a_end)
---			end
+				-- Precise whole
+				Result.whole := precise.anual_precise
+
+				-- Precise part
+				Result.part_exists := inv_hist.get_eval_per.exists
+				if inv_hist.get_eval_per.exists and inv_hist.is_eval_per_in_range then
+					create a_start.make(inv_hist.get_eval_per.getvalue.x)
+					create a_end.make(inv_hist.get_eval_per.getvalue.y)
+					Result.part := precise.precise (a_start,a_end)
+				end
+			end
 		end
 
 feature {NONE} -- implementation
