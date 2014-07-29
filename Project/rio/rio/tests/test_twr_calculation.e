@@ -66,7 +66,7 @@ feature -- Test cases
 		local
 			twr : TWR_CALCULATION
 			soln : TUPLE[s: REAL_64; f : BOOLEAN]
-			soln2 : REAL_64
+			soln2 : TUPLE[s: REAL_64; f : BOOLEAN]
 		do
 			comment ("t1: checks the wealths are 1.05, 1.08, 1.31852 and the product of wealth is 1.4952")
 			flush.flushall
@@ -87,35 +87,35 @@ feature -- Test cases
 
 			-- check product_of_wealth method
 			soln2 := twr.product_of_wealth (2, 4)
-			Result := almost_equal(soln2,1.4952)
+			Result := almost_equal(soln2.s,1.4952)
 			check Result end
 		end
 
 	t2 : BOOLEAN
 		local
 			twr : TWR_CALCULATION
-			soln : REAL_64
+			soln : TUPLE[sln:REAL_64; found :BOOLEAN]
 		do
 			comment ("t2: checks the compounded TWR is 0.4952")
 			flush.flushall
 			parsedata
 			create twr.make
-			soln := twr.compounded_twr
-			Result := almost_equal(soln,0.4952)
+			soln := twr.compounded_twr(twr.start_date,twr.end_date)
+			Result := almost_equal(soln.sln,0.4952)
 			check Result end
 		end
 
 	t3 : BOOLEAN
 		local
 			twr : TWR_CALCULATION
-			soln : REAL_64
+			soln : TUPLE[sln:REAL_64; found :BOOLEAN]
 		do
 			comment ("t3: checks the compounded Annual TWR is 0.22245")
 			flush.flushall
 			parsedata
 			create twr.make
-			soln := twr.anual_compounded_twr
-			Result := almost_equal(soln,0.22245)
+			soln := twr.anual_compounded_twr(twr.start_date,twr.end_date)
+			Result := almost_equal(soln.sln,0.22245)
 			check Result end
 
 		end

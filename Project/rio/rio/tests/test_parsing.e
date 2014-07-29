@@ -28,7 +28,7 @@ feature -- Constructor
 			add_boolean_case (agent t12)
 			add_boolean_case (agent t13)
 			add_boolean_case (agent t14)
-			add_boolean_case (agent t15)
+--			add_boolean_case (agent t15)
 			add_boolean_case (agent t16)
 			add_boolean_case (agent t17)
 			add_boolean_case (agent t18)
