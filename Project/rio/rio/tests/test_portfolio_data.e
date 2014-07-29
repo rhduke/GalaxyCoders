@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {TEST_PORTFOLIO_DATA}."
+	description: "Testing Portfolio data ."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ feature -- Constructor
 			add_boolean_case (agent t8)
 			add_boolean_case (agent t9)
 			add_boolean_case (agent t10)
---			add_boolean_case (agent t11)
+			add_boolean_case (agent t11)
 			add_boolean_case (agent t12)
 			add_boolean_case (agent t13)
 			add_boolean_case (agent t14)
@@ -128,10 +128,7 @@ feature -- tests
 	do
 		comment("Testing non-existing date")
 
-		create date.make_by_days (0)
 		create d.make_not_exist
-		Result := d.getvalue ~ date
-		check Result end
 		Result := d.exists = false
 
 	end
@@ -159,23 +156,24 @@ feature -- tests
 
 	end
 
---	t11 : BOOLEAN
---	local
---		ep : PF_EVAL_PER
---		d1 : DATE
---		d2 : DATE
---		tup : TUPLE[x,y:DATE]
---	do
---		comment("Testing existing evaluation period")
---		create d1.make (1993, 8, 30)
---		create d2.make (1994, 9, 25)
+	t11 : BOOLEAN
+	local
+		ep : PF_EVAL_PER
+		d1 : DATE
+		d2 : DATE
+		tup : TUPLE[x,y:DATE]
+	do
+		comment("Testing existing evaluation period")
+		create d1.make_month_day_year (1,1,1900)
+		create d2.make_month_day_year (1,1,1901)
 
---		tup := [d1, d2]
---		create ep.make (tup)
---		Result := ep.getvalue = tup
---		check Result end
+		tup := [d1, d2]
+		create ep.make ("1900-01-01 to 1901-01-01")
+		Result := ep.getvalue.x.days = tup.x.days
+		check Result end
+		Result := ep.getvalue.y.days = tup.y.days
 --		Result := ep.exists = true
---	end
+	end
 
 	t12 : BOOLEAN
 	local
@@ -187,7 +185,7 @@ feature -- tests
 		comment("Testing non-existing evaluation period")
 
 		create ep.make_not_exist
---		Result := ep.exists = false
+		Result := ep.exists = false
 	end
 
 	t13 : BOOLEAN
@@ -239,7 +237,7 @@ feature -- tests
 	do
 		comment("Testing Investment tuple with non-existant values")
 
-		create date.make_by_days (0)
+
 
 		create mk.make_not_exist
 		create af.make_not_exist
@@ -258,7 +256,7 @@ feature -- tests
 		check Result end
 		Result := i.cf.getvalue = cf.getvalue
 		check Result end
-		Result := i.date.getvalue ~ date
+		Result := i.date.exists = false
 		check Result end
 	end
 
@@ -291,8 +289,9 @@ feature -- tests
 		create inv2.make(t)
 
 		PF := sc.init_portfolio_data
-
-		Result := PF.getlist.is_empty
+		PF.flush
+		PF.printout
+		Result := PF.getlist.is_empty = true
 		check Result end
 
 		PF.add (inv1, 1)

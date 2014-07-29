@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {TEST_PARSING}."
+	description: "Testing Parsing classes."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,6 +31,7 @@ feature -- Constructor
 			add_boolean_case (agent t15)
 			add_boolean_case (agent t16)
 			add_boolean_case (agent t17)
+			add_boolean_case (agent t18)
 
 
 
@@ -57,7 +58,7 @@ feature -- tests
 		p : PARSE_ACCOUNT
 		row : ROW
 	do
-		comment("Testing parser with non-valid account")
+		comment("Testing parser with non-valid account rows")
 		create p.make
 		create row.make ("not valid", 17)
 		p.parserow (row)
@@ -96,7 +97,7 @@ feature -- tests
 	do
 		comment("Testing parser with non-valid address")
 		create p.make
-		create row.make ("this is not a valid address", 30)
+		create row.make ("this is not a valid address rows", 30)
 		p.parserow (row)
 
 		Result := p.is_successfully_obtain_data = false
@@ -130,7 +131,7 @@ feature -- tests
 		p : PARSE_DESCR
 		row : ROW
 	do
-		comment("Testing parser with non-valid description")
+		comment("Testing parser with non-valid description rows")
 		create p.make
 		create row.make ("this is not a valid description", 30)
 		p.parserow (row)
@@ -168,7 +169,7 @@ feature -- tests
 	do
 		comment("Testing parser with non-valid email")
 		create p.make
-		create row.make ("this is not a valid email", 30)
+		create row.make ("this is not a valid email rows", 30)
 		p.parserow (row)
 
 		Result := p.is_successfully_obtain_data = false
@@ -202,7 +203,7 @@ feature -- tests
 		p : PARSE_PHONE
 		row : ROW
 	do
-		comment("Testing parser with non-valid phone number")
+		comment("Testing parser with non-valid phone number rows")
 		create p.make
 		create row.make ("this is not a valid phone number", 30)
 		p.parserow (row)
@@ -239,7 +240,7 @@ feature -- tests
 		p : PARSE_NAME
 		row : ROW
 	do
-		comment("Testing parser with invalid names")
+		comment("Testing parser with invalid names rows")
 		create p.make
 		create row.make ("Name : Khurram Saleem", 2) -- not on first line
 		p.parserow (row)
@@ -263,7 +264,7 @@ feature -- tests
 	do
 		comment("Testing parser with valid evaluation period")
 		create p.make
-		create row.make ("Evaluation Period: 2007-08-30 to 2009-05-30", 1)
+		create row.make ("Evaluation Period: 2007-08-30 to 2009-05-30", 5)
 		p.parserow (row)
 
 		Result := p.is_successfully_obtain_data = true
@@ -290,14 +291,52 @@ feature -- tests
 		p : PARSE_DATA
 		row : ROW
 	do
-		comment("Testing parser with valid data")
+		comment("Testing parser with valid data rows")
 		create p.make
-		create row.make ("2009-12-21,10000,0,0,", 7)
+		create row.make ("2010-01-01,10000,9,8,", 100)
 		p.parserow (row)
-
 		Result := p.is_successfully_obtain_data = true
+		check Result end
+		create row.make ("2010-01-05,,,,", 100)
+		p.parserow (row)
+		Result := p.is_successfully_obtain_data = true
+		check Result end
+		create row.make ("2016-01-05,34,56,78,", 100)
+		p.parserow (row)
+		Result := p.is_successfully_obtain_data = true
+		check Result end
+		create row.make ("2010-01-05,,,,,,,,,,,,,,,,,,,,,,,,,,,", 100)
+		p.parserow (row)
+		Result := p.is_successfully_obtain_data = true
+     	check Result end
+     	create row.make ("2010-01-05,45,1,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,", 100)
+		p.parserow (row)
+		Result := p.is_successfully_obtain_data = true
+		check Result end
 
 	end
+
+	t18 : BOOLEAN
+	local
+		p : PARSE_DATA
+		row : ROW
+	do
+		comment("Testing parser with non-valid data rows")
+		create p.make
+		create row.make (",12,34,56,78,54,32", 100)
+		p.parserow (row)
+
+		Result := p.is_successfully_obtain_data = false
+		Check Result end
+		create row.make ("2010-02-01,-4S,67,4", 17)
+		p.parserow (row)
+		Result := p.is_successfully_obtain_data = false
+		create row.make ("12-91-34,-10,-78-90", 17)
+		p.parserow (row)
+		Result := p.is_successfully_obtain_data = false
+
+	end
+
 
 	t16 : BOOLEAN
 	local
