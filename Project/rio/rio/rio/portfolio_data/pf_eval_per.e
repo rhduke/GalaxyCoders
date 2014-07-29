@@ -80,7 +80,7 @@ feature {NONE} -- routines to help extract and validate dates
 					end
 					counter := counter + 1
 				end
-				if regexp_2.has_matched or l_date.date_valid (c.item, "mm/dd/yyyy") then
+				if regexp_2.has_matched and l_date.date_valid (c.item, "mm/dd/yyyy") then
 								if counter = 1 then
 									 evaluation_period.x := create {DATE}.make_from_string (regexp_2.captured_substring (0), "mm/dd/yyyy")
 								end
