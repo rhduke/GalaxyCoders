@@ -85,6 +85,13 @@ feature --  arbitrary data errors
 			error_added: error_list.count = old error_list.count + 1
 		end
 
+	error_eval_per
+		do
+			error_list.extend ("Error! The dates in the evaluation period are invalid or don't exist.%N")
+		ensure
+			error_added: error_list.count = old error_list.count + 1
+		end
+
 	error_custom (string: STRING)
 		require
 			string_not_void: string /= void

@@ -75,6 +75,7 @@ feature -- getters and adders
 			commands: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 		do
 			create commands.make (0)
+			commands.extend (agent invalid_eval_per)
 			commands.extend (agent inv_history_not_empty)
 			commands.extend (agent has_at_least_two_investments)
 			commands.extend (agent row_has_non_negative_mk)
@@ -119,6 +120,14 @@ feature -- getters and adders
 	end
 
 feature {NONE} -- checking validity of data
+
+	invalid_eval_per
+			-- checks if eval per is invalid
+		do
+			if not is_eval_per_in_range then
+				error.error_eval_per
+			end
+		end
 
 	inv_history_not_empty
 			-- checks if there's any data
