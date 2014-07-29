@@ -28,8 +28,8 @@ feature -- Test cases
 			csv_doc_it : CSV_DOC_ITERATION_CURSOR
 			row : ROW
 		do
-			comment ("t1: rio/csv-inputs\roi-test1.csv")
-			create input_file.make ("rio/csv-inputs/roi-test1.csv")
+			comment ("t1: roi/csv-inputs\roi-test1.csv")
+			create input_file.make ("roi/csv-inputs/roi-test1.csv")
 			input_file.open_read
 			create csv_doc.make (input_file)
 			csv_doc_it := csv_doc.new_cursor
@@ -97,12 +97,12 @@ feature -- Test cases
 						(across 2 |..| 6 as i all row.is_empty_from (i.item) end)
 			check Result end
 
-			-- test on line 7: Evaluation Period: 2008-01-01 to 2009-04-01,,,,,
+			-- test on line 7: Evaluation Peroid: 2008-01-01 to 2009-04-01,,,,,
 			csv_doc_it.forth
 			row := csv_doc_it.item
 			Result := row.number_of_specified_fields = 6 and
 						row.number = 7 and
-						row [1] ~ create {FIELD}.make ("Evaluation Period: 2008-01-01 to 2009-04-01") and
+						row [1] ~ create {FIELD}.make ("Evaluation Peroid: 2008-01-01 to 2009-04-01") and
 						not row [1].is_date and
 						(across 1 |..| 1 as i all not row.is_empty_from (i.item) end) and
 						(across 2 |..| 6 as i all row.is_empty_from (i.item) end)
@@ -198,8 +198,8 @@ feature -- Test cases
 			row : ROW
 			num_rows : INTEGER
 		do
-			comment ("t2: rio/csv-inputs\T4.csv (a 219-line file) -- Part I")
-			create input_file.make ("rio/csv-inputs/T4.csv")
+			comment ("t2: roi/csv-inputs\T4.csv (a 219-line file) -- Part I")
+			create input_file.make ("roi/csv-inputs/T4.csv")
 			input_file.open_read
 			create csv_doc.make (input_file)
 
@@ -263,9 +263,9 @@ feature -- Test cases
 								(across 2 |..| 5 as i all row.is_empty_from (i.item) end)
 					check Result end
 				elseif num_rows = 7 then
-					-- test on line 7: Evaluation Period: 2008-01-01 to 2009-04-01,,,,
+					-- test on line 7: Evaluation Peroid: 2008-01-01 to 2009-04-01,,,,
 					Result := row.number_of_specified_fields = 5 and
-								row [1] ~ create {FIELD}.make ("Evaluation Period: 1925-06-16 to 1978-01-13") and
+								row [1] ~ create {FIELD}.make ("Evaluation Peroid: 1925-06-16 to 1978-01-13") and
 								not row [1].is_date and
 								(across 1 |..| 1 as i all not row.is_empty_from (i.item) end) and
 								(across 2 |..| 5 as i all row.is_empty_from (i.item) end)
@@ -365,8 +365,8 @@ feature -- Test cases
 			date1, date2 : STRING
 			i : INTEGER
 		do
-			comment ("t3: rio/csv-inputs\T4.csv -- Part II : searching and extracting dates")
-			create input_file.make ("rio/csv-inputs/T4.csv")
+			comment ("t3: roi/csv-inputs\T4.csv -- Part II : searching and extracting dates")
+			create input_file.make ("roi/csv-inputs/T4.csv")
 			input_file.open_read
 			create csv_doc.make (input_file)
 
@@ -379,8 +379,8 @@ feature -- Test cases
 			loop
 				row := csv_doc_it.item
 
-				if row.contains ("Evaluation Period") then
-					pattern := " *Evaluation +Period *: *(\d\d\d\d-\d\d-\d\d) +to +(\d\d\d\d-\d\d-\d\d) *"
+				if row.contains ("Evaluation Peroid") then
+					pattern := " *Evaluation +Peroid *: *(\d\d\d\d-\d\d-\d\d) +to +(\d\d\d\d-\d\d-\d\d) *"
 					create regexp.make
 					regexp.compile (pattern)
 					check regexp.is_compiled end
@@ -407,8 +407,8 @@ feature -- Test cases
 			i : INTEGER
 			cash_flow_header_passed : BOOLEAN
 		do
-			comment ("t4: rio/csv-inputs\T4.csv -- Part II : searching and extracting a single date")
-			create input_file.make ("rio/csv-inputs/T4.csv")
+			comment ("t4: roi/csv-inputs\T4.csv -- Part II : searching and extracting a single date")
+			create input_file.make ("roi/csv-inputs/T4.csv")
 			input_file.open_read
 			create csv_doc.make (input_file)
 

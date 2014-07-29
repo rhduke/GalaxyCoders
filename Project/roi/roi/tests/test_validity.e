@@ -27,7 +27,7 @@ feature -- Constructor
 			add_boolean_case (agent no_cash)
 			add_boolean_case (agent no_cash_one)
 			-- test is valid list
-			-- test valid eval period
+			-- test valid eval peroid
 		end
 
 feature -- Data Storage
@@ -71,7 +71,7 @@ feature -- Test cases
 			comment("check empty_file.csv")
 			flush.flushall
 			err := sh_classes.init_error
-			parsedata("rio/csv-inputs/test-validity/empty_file.csv")
+			parsedata("roi/csv-inputs/test-validity/empty_file.csv")
 			inv_hist.run_validation
 
 			from
@@ -96,7 +96,7 @@ feature -- Test cases
 			comment("check one_inv.csv has only one investment entry")
 			flush.flushall
 			err := sh_classes.init_error
-			parsedata("rio/csv-inputs/test-validity/one_inv.csv")
+			parsedata("roi/csv-inputs/test-validity/one_inv.csv")
 			inv_hist.run_validation
 
 			from
@@ -120,7 +120,7 @@ feature -- Test cases
 			comment("check neg_mv.csv has a negative market value")
 			flush.flushall
 			err := sh_classes.init_error
-			parsedata("rio/csv-inputs/test-validity/neg_mv.csv")
+			parsedata("roi/csv-inputs/test-validity/neg_mv.csv")
 			inv_hist.run_validation
 			err.print_errors
 			from
@@ -145,7 +145,7 @@ feature -- Test cases
 			comment("check neg_mv(one_left).csv has one investment after removal of invalid investment")
 			flush.flushall
 			err := sh_classes.init_error
-			parsedata("rio/csv-inputs/test-validity/neg_mv(one_left).csv")
+			parsedata("roi/csv-inputs/test-validity/neg_mv(one_left).csv")
 			inv_hist.run_validation
 			from
 				i := 1
@@ -171,7 +171,7 @@ feature -- Test cases
 			comment("check date_order.csv has dates out of order")
 			flush.flushall
 			err := sh_classes.init_error
-			parsedata("rio/csv-inputs/test-validity/date_order.csv")
+			parsedata("roi/csv-inputs/test-validity/date_order.csv")
 			inv_hist.run_validation
 --			err.print_errors
 			from
@@ -196,7 +196,7 @@ feature -- Test cases
 			comment("check same_date.csv has same dates")
 			flush.flushall
 			err := sh_classes.init_error
-			parsedata("rio/csv-inputs/test-validity/same_date.csv")
+			parsedata("roi/csv-inputs/test-validity/same_date.csv")
 			inv_hist.run_validation
 		--	err.print_errors
 			from
@@ -225,7 +225,7 @@ feature -- Test cases
 				comment("check same_date(one_left).csv has one investment after removal of invalid investment")
 				flush.flushall
 				err := sh_classes.init_error
-				parsedata("rio/csv-inputs/test-validity/same_date(one_left).csv")
+				parsedata("roi/csv-inputs/test-validity/same_date(one_left).csv")
 				inv_hist.run_validation
 				--err.print_errors
 				from
@@ -251,7 +251,7 @@ feature -- Test cases
 				comment("check from_zero.csv has market value increased from zero with no cash flow")
 				flush.flushall
 				err := sh_classes.init_error
-				parsedata("rio/csv-inputs/test-validity/from_zero.csv")
+				parsedata("roi/csv-inputs/test-validity/from_zero.csv")
 				inv_hist.run_validation
 				--err.print_errors
 				from
@@ -276,7 +276,7 @@ feature -- Test cases
 				comment("check from_zero(one_left).csv has one investment after removal of invalid investment")
 				flush.flushall
 				err := sh_classes.init_error
-				parsedata("rio/csv-inputs/test-validity/from_zero(one_left).csv")
+				parsedata("roi/csv-inputs/test-validity/from_zero(one_left).csv")
 				inv_hist.run_validation
 				--err.print_errors
 				from
@@ -302,7 +302,7 @@ feature -- Test cases
 				comment("check no_cash.csv has negative cashflow greater than current market value")
 				flush.flushall
 				err := sh_classes.init_error
-				parsedata("rio/csv-inputs/test-validity/no_cash.csv")
+				parsedata("roi/csv-inputs/test-validity/no_cash.csv")
 				inv_hist.run_validation
 			--err.print_errors
 				from
@@ -327,7 +327,7 @@ feature -- Test cases
 				comment("check no_cash(one_left).csv has one investment after removal of invalid investment")
 				flush.flushall
 				err := sh_classes.init_error
-				parsedata("rio/csv-inputs/test-validity/no_cash(one_left).csv")
+				parsedata("roi/csv-inputs/test-validity/no_cash(one_left).csv")
 				inv_hist.run_validation
 			--	err.print_errors
 				from

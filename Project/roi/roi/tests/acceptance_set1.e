@@ -14,14 +14,14 @@ create
 feature
 	make
 		do
-			add_boolean_case (agent is_correct ("rio/csv-inputs/accept1(correct)/ACC-T1.csv"))
-			add_boolean_case (agent is_correct ("rio/csv-inputs/accept1(correct)/ACC-T2.csv"))
-			add_boolean_case (agent is_correct ("rio/csv-inputs/accept1(correct)/ACC-T3.csv"))
-			add_boolean_case (agent is_correct ("rio/csv-inputs/accept1(correct)/ACC-T4.csv"))
-			add_boolean_case (agent is_correct ("rio/csv-inputs/accept1(correct)/ACC-T5.csv"))
-			add_boolean_case (agent is_correct ("rio/csv-inputs/accept1(correct)/ACC-T6.csv"))
-			add_boolean_case (agent is_correct ("rio/csv-inputs/accept1(correct)/ACC-T7.csv"))
-			add_boolean_case (agent no_soln ("rio/csv-inputs/accept1(correct)/ACC-T8.csv"))
+			add_boolean_case (agent is_correct ("roi/csv-inputs/accept1(correct)/ACC-T1.csv"))
+			add_boolean_case (agent is_correct ("roi/csv-inputs/accept1(correct)/ACC-T2.csv"))
+			add_boolean_case (agent is_correct ("roi/csv-inputs/accept1(correct)/ACC-T3.csv"))
+			add_boolean_case (agent is_correct ("roi/csv-inputs/accept1(correct)/ACC-T4.csv"))
+			add_boolean_case (agent is_correct ("roi/csv-inputs/accept1(correct)/ACC-T5.csv"))
+			add_boolean_case (agent is_correct ("roi/csv-inputs/accept1(correct)/ACC-T6.csv"))
+			add_boolean_case (agent is_correct ("roi/csv-inputs/accept1(correct)/ACC-T7.csv"))
+			add_boolean_case (agent no_soln ("roi/csv-inputs/accept1(correct)/ACC-T8.csv"))
 		end
 
 
