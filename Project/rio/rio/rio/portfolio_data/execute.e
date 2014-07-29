@@ -8,14 +8,38 @@ class
 	EXECUTE
 
 create
-	make
+	make,
+	make_from_path
 
 feature {NONE} -- execution
 
 	make
 		do
-				--		read_from_input
-			file_path := "rio/csv-inputs/empty.csv"
+			read_from_input
+			--file_path := "rio/csv-inputs/test-validity/no_cash.csv"
+			if read_file then
+				if not file_empty then
+					validate_input
+					print ("-- General Info --%N%N")
+					output_general_info
+					print ("%N-- Periods --%N%N")
+					output_whole_period
+					output_part_period
+					print ("%N-- Return on Investment --%N%N")
+					output_twr
+					output_precise
+					output_errors
+				else
+					io.put_string ("Input file is empty!.%N")
+				end
+			else
+				io.put_string ("Unable to read file. Invalid file path.%N")
+			end
+		end
+
+	make_from_path (path : STRING)
+		do
+			file_path := path
 			if read_file then
 				if not file_empty then
 					validate_input
@@ -184,7 +208,7 @@ feature {NONE} -- general output
 
 	output_part_period
 		do
-			if sh_classes.init_portfolio_data.get_eval_per.exists then
+			if sh_classes.init_portfolio_data.get_eval_per.exists and sh_classes.init_portfolio_data.is_eval_per_in_range then
 				print ("Part period: ")
 				print (sh_classes.init_portfolio_data.get_eval_per.getvalue.x)
 				print (" to ")
@@ -214,7 +238,7 @@ feature {NONE} -- calculation implementation
 			end
 			io.new_line
 				-- part
-			if twr_soln.part_exists then
+			if twr_soln.part_exists and sh_classes.init_portfolio_data.is_eval_per_in_range then
 				print ("  Part Period:  ")
 				if twr_soln.part.found then
 					print (fd.formatted (twr_soln.part.sol * 100) + "%%")
@@ -245,7 +269,7 @@ feature {NONE} -- calculation implementation
 			end
 			io.new_line
 				-- part
-			if precise_soln.part_exists then
+			if precise_soln.part_exists and sh_classes.init_portfolio_data.is_eval_per_in_range then
 				print ("  Part Period:  ")
 				if precise_soln.part.found then
 					print (fd.formatted (precise_soln.part.sol) + "%%")
@@ -305,6 +329,18 @@ feature {NONE} -- calculation implementation
 				end
 			end
 		end
+
+feature -- errors
+	has_errors : BOOLEAN
+		do
+			Result := sh_classes.init_error.size > 0
+		end
+
+	count_errors : INTEGER_32
+		do
+			Result := sh_classes.init_error.size
+		end
+
 
 feature {NONE} -- implementation
 
