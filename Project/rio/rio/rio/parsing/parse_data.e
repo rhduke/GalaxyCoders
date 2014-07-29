@@ -83,10 +83,9 @@ feature
 						--	print ("d8%N")
 					inv_history.add (invest, row_temp.number)
 						--	print ("d9%N")
+				else
+					error_str := "Line number " + row_temp.number.out + " : contain a data that that does not follow format [yyyy-mm-dd,number,number,number,number%%].%N"
 				end --b
-
-			else
-				error_str := "Row number " + row_temp.number.out + ": a data item row should have a date as its first field." + "%N"
 			end
 		end --parse
 
