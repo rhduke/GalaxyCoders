@@ -15,21 +15,24 @@ feature {NONE} -- execution
 	make
 		do
 				--		read_from_input
-			is_context_arr_init := false
 			file_path := "rio/csv-inputs/empty.csv"
 			if read_file then
-				validate_input
-				print ("-- General Info --%N%N")
-				output_general_info
-				print ("%N-- Periods --%N%N")
-				output_whole_period
-				output_part_period
-				print ("%N-- Return on Investment --%N%N")
-				output_twr
-				output_precise
-				output_errors
+				if not file_empty then
+					validate_input
+					print ("-- General Info --%N%N")
+					output_general_info
+					print ("%N-- Periods --%N%N")
+					output_whole_period
+					output_part_period
+					print ("%N-- Return on Investment --%N%N")
+					output_twr
+					output_precise
+					output_errors
+				else
+					io.put_string ("Input file is empty!.%N")
+				end
 			else
-				io.put_string ("Unable to read file. Invalid file path")
+				io.put_string ("Unable to read file. Invalid file path.%N")
 			end
 		end
 
@@ -49,6 +52,7 @@ feature {NONE} -- reading
 			rd_file := sh_classes.init_file_read
 			rd_file.open_file (file_path)
 			if rd_file.is_path_valid then
+				file_empty := true
 				parse_file
 				Result := true
 			else
@@ -62,9 +66,7 @@ feature {NONE} -- parse implementation
 		local
 			csv_iteration_cursor: CSV_DOC_ITERATION_CURSOR
 		do
-			if not is_context_arr_init then
-				init_context_list
-			end
+			init_context_list
 			from
 				csv_iteration_cursor := sh_classes.init_file_read.init_new_cursor
 			until
@@ -72,6 +74,7 @@ feature {NONE} -- parse implementation
 			loop
 				obtain_data (csv_iteration_cursor.item) -- will obtain data from file
 				csv_iteration_cursor.forth
+				file_empty := false
 			end
 
 				--	sh_classes.init_portfolio_data.printout -- just test to print portfolio data
@@ -118,7 +121,6 @@ feature {NONE} -- parse implementation
 			context_list [7].setparsingstrategy (create {PARSE_EVAL_PER}.make)
 			context_list [8].setparsingstrategy (create {PARSE_DATA}.make)
 			context_list [9].setparsingstrategy (create {PARSE_TABLE}.make)
-			is_context_arr_init := true
 		end
 
 	validate_input
@@ -312,6 +314,6 @@ feature {NONE} -- implementation
 
 	context_list: ARRAY [PARSING_CONTEXT]
 
-	is_context_arr_init: BOOLEAN
+	file_empty: BOOLEAN
 
 end
